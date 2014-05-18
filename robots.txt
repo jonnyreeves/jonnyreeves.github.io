@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://jonnyreeves.github.io/sitemap.xml 
+Sitemap: http://jonnyreeves.co.uk/sitemap.xml 
