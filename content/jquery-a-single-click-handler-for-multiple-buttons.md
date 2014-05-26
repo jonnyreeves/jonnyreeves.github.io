@@ -71,7 +71,7 @@ function onButtonClicked(event : MouseEvent) : void {
 }
 ```
 
-The buttons created by jQuery mobile don't offer any form of name identifier; one simple solution would be to simply add an id attribute to the `<a>` tag; however [element id's must always be unique](http://www.w3.org/TR/html401/struct/global.html#h-7.5.2) which isn't really want we are after (we just want to identify this button group apart, rather than having to ensure these buttons have a unique id across the entire DOM). The option I've settled on is to add a [custom data attribute](http://ejohn.org/blog/html-5-data-attributes/) to each <a> tag in the form of a data-name attribute:
+The buttons created by jQuery mobile don't offer any form of name identifier; one simple solution would be to simply add an id attribute to the `<a>` tag; however [element id's must always be unique](http://www.w3.org/TR/html401/struct/global.html#h-7.5.2) which isn't really want we are after (we just want to identify this button group apart, rather than having to ensure these buttons have a unique id across the entire DOM). The option I've settled on is to add a [custom data attribute](http://ejohn.org/blog/html-5-data-attributes/) to each `<a>` tag in the form of a data-name attribute:
 
 ```html
 <div id="screen-selector" data-role="navbar">
