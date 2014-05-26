@@ -1,3 +1,7 @@
+Title: Modular Javascript Unit Testing with QUnit and RequireJS
+Date: 2012-08-14 16:15
+Category: JavaScript
+
 Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere to [Single Responsibility Principle](http://www.codinghorror.com/blog/2007/03/curlys-law-do-one-thing.html). This is all well and good for your application code, but what about the Unit Tests which support it – how can we decompose these tests into modules so they’re well organized and easy to find?
 
 ### Test Case Structure
