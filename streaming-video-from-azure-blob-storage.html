@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet/less" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.less">
+  <script src="http://jonnyreeves.co.uk/theme/js/less-1.5.0.min.js" type="text/javascript"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.css"> -->
+
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Jonny Reeves">
+  <meta name="description" content="Posts and writings by Jonny Reeves">
+
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Full Atom Feed" />
+
+<meta name="keywords" content="">
+
+  <title>
+Streaming Video from Azure Blob Storage  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="logo">
+      </a>
+      <h2><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h2>
+      <p></p>
+      <ul>
+        <li><a href="http://github.com/jonnyreeves" target="_blank">Github</a></li>
+        <li><a href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank">Stack Overflow</a></li>
+        <li><a href="https://plus.google.com/+JohnReeves" target="_blank">+JonnyReeves</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+<p>Posted on Fri 20 July 2012</p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h3><a href="http://jonnyreeves.co.uk/streaming-video-from-azure-blob-storage.html">Streaming Video from Azure Blob Storage</a></h3>
+  </div>
+  <div class="article_text">
+    <p>By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually <code>video/mp4</code>).</p>
+<p>The next problem that you’ll face is that the video will not seek correctly; trying to jump forward or backwards in the video won’t work.</p>
+<p>This is resolved by changing the <code>DefaultServiceVersion</code> to 2011-08-18 which can be achieved via the Azure’s REST API, or the Managed C# Library as laid out at the end of <a href="http://blogs.msdn.com/b/windowsazurestorage/archive/2011/09/15/windows-azure-blobs-improved-http-headers-for-resume-on-download-and-a-change-in-if-match-conditions.aspx">this MSDN blog post</a>.</p>
+<div class="highlight"><pre><span class="n">var</span> <span class="n">account</span> <span class="o">=</span> <span class="n">CloudStorageAccount</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">ConnectionString</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">blobClient</span> <span class="o">=</span> <span class="n">account</span><span class="p">.</span><span class="n">CreateCloudBlobClient</span><span class="p">();</span>
+<span class="n">blobClient</span><span class="p">.</span><span class="n">SetServiceSettings</span><span class="p">(</span><span class="n">new</span> <span class="n">ServiceSettings</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">DefaultServiceVersion</span> <span class="o">=</span> <span class="s">&quot;2011-08-18&quot;</span>
+    <span class="p">});</span>
+</pre></div>
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="http://jonnyreeves.co.uk/category/azure.html">Azure</a></p>
+  </div>
+
+
+</article>
+
+    <footer>
+<p><a href="http://jonnyreeves.co.uk/" class="button_accent">&larr; Back to Index</a></p>
+<script language="javascript">
+    function toggleComments() {
+        var commentDiv = document.getElementById("article_comments");
+        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
+        return false;
+    }
+</script>
+    </footer>
+
+    <div id="ending_message">
+      <p>&copy; Jonny Reeves. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
+    </div>
+  </main>
+</body>
+</html>
