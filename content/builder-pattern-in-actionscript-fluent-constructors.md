@@ -1,5 +1,5 @@
 Title: Builder Pattern in ActionScript – Fluent Constructors
-Date: 2013-01-25 16:15
+Date: 2011-03-25 16:15
 Category: ActionScript
 
 How many times have you come across a class which looks like this:
