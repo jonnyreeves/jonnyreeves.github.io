@@ -4,7 +4,7 @@ Category: ActionScript
 
 A lot of people are excited about the news that Native JSON support is coming with [Flash Player 11](https://web.archive.org/web/20120104112810/http://www.bytearray.org/?p=3066); however, I’ve also seen a lot of people get a bit confused by what this actually means – if you were hoping that Flash would be able to magically convert your parsed JSON Strings into your own Model objects then you’re going to be left a touch disappointed – until now!
 
-## That’s Just Weak...
+### That’s Just Weak...
 Let’s start by using the new native JSON methods to parse some JSON and see what we get back, for this example I will be making use of the Yahoo! Weather API to get the forcast for London.
 
 ```actionscript
@@ -33,7 +33,7 @@ The above code given provides me with a `jsonObject` property, however, it’s c
 trace("The weather in " + jsonObject.location.city + " is " + jsonObject.forecast[0].condition + " " + jsonObject.forecast[0].day);
 ```
 
-## Getting Harder...
+### Getting Harder...
 If you plan on passing the forecast data around in your application then you are going to start wishing you were making use of Strongly typed Model objects (for example, if you rely on using dyanmic objects then a simple typo in another class may cause you a headache) – ok, not a problem, the first step is to create a couple: (note I am not representing the entire Object Graph here to save space.
 
 ```actionscript
@@ -141,7 +141,7 @@ public class Location {
 
 If you look closely you will notice how some of the field names do not map to the JSON, for example, the field “country_abbreviation” in the JSON is not present in the Model (I’ve named the field countryAbbreviation, as per the AS3 camelCase convention), so how does Vanilla know what to do? Simple answer, it doesn’t – nothing will be mapped and Location.country Abbreviation will be null. 
 
-## Using Metadata to define Marshalling Rules
+### Using Metadata to define Marshalling Rules
 In the above example the JSON field `country_abbreviation` was not being mapped to our model’s “countryAbbreviation” property because Vanilla didn’t know that these two were related – so how can we tell Vanilla about that relationship? Like this:
 
 ```actionscript
@@ -158,5 +158,5 @@ public class Location {
 
 Here we have annotated the public fields of the Location model object with the [Marshall] Metadata tag – this tells Vanilla that if we see a field named ‘country_abbreviation’ on the source (JSON) object, then we should copy that value to the annotated filed.
 
-## Have It Your Way
+### Have It Your Way
 Although Vanilla aims to be as easy to use as possible, it also tries to be flexible to adapt to different ways of working – lots of teams make use of explicit getter/setter methods instead of using fields; don’t worry – Vanilla can detect metadata on these methods too!

@@ -4,7 +4,7 @@ Category: JavaScript
 
 [Mustache](http://mustache.github.com/) is a language independent, logicless [templating engine](http://en.wikipedia.org/wiki/Template_engine_(web)) which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the [JavaScript implementation](https://github.com/janl/mustache.js).
 
-## Why Bother With Templating At All?
+### Why Bother With Templating At All?
 Fair question; when it comes simple JavaScript powered sites it’s pretty easy to just build up your HTML inline:
 
 ```javascript
@@ -76,7 +76,7 @@ var template = '<dl>\
 </dl>';
 ```
 
-## Would you declare your JavaScript in HTML?
+### Would you declare your JavaScript in HTML?
 So we have managed to simplify our code by replacing String concatenation with token substiution (templating); but we are still having to declare our template’s HTML in JavaScript which is far from ideal. What we really want is to be able to write our template in raw HTML as opposed to a String literal – time for some external templates. John Resig is widely regarded as having coined the concept of [declaring templates in script blocks](https://web.archive.org/web/20120406204734/http://ejohn.org/blog/javascript-micro-templating/); ie:
 
 ```html
@@ -109,7 +109,7 @@ So we have managed to simplify our code by replacing String concatenation with t
 
 Much nicer! Now we are able to write our template in HTML as opposed to simply mashing Strings together; however, this method still isn’t ideal; in order for it to work we have to define our template in the parent HTML Document; this is fine for a simple example, but in a real world web application you won’t be writing your JavaScript in a script block, you’ll be using external .js files instead – and you don’t really want to have to send all the HTML Templates down in the original page – let’s externalise those templates and load them in as we need them.
 
-## Loading External HTML Templates
+### Loading External HTML Templates
 jQuery makes it really easy to load external content via its `jQuery.get()` method. We can use this to load an external HTML file which contains our template:
 
 ```html
