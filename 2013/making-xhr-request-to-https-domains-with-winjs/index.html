@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet/less" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.less">
+  <script src="http://jonnyreeves.co.uk/theme/js/less-1.5.0.min.js" type="text/javascript"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.css"> -->
+
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Jonny Reeves">
+  <meta name="description" content="Posts and writings by Jonny Reeves">
+
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Full Atom Feed" />
+
+<meta name="keywords" content="">
+
+  <title>
+Making XHR Request to HTTPS domains with WinJS  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="logo">
+      </a>
+      <h2><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h2>
+      <p></p>
+      <ul>
+        <li><a href="http://github.com/jonnyreeves" target="_blank">Github</a></li>
+        <li><a href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank">Stack Overflow</a></li>
+        <li><a href="https://plus.google.com/+JohnReeves" target="_blank">+JonnyReeves</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+<p>Posted on Fri 25 January 2013</p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h3><a href="http://jonnyreeves.co.uk/2013/making-xhr-request-to-https-domains-with-winjs/">Making XHR Request to HTTPS domains with WinJS</a></h3>
+  </div>
+  <div class="article_text">
+    <p>I recently came across an interesting caveat when working with WinJS (the JavaScript layer for creating Windows 8 Store applications). If you attempt to make an HTTP POST request to a server over the HTTPS protocol you may run into the following error:</p>
+<div class="highlight"><pre><span class="n">XMLHttpRequest</span><span class="o">:</span> <span class="n">Network</span> <span class="n">Error</span> <span class="mh">0x2ef3</span><span class="o">,</span> <span class="n">Could</span> <span class="n">not</span> <span class="n">complete</span> <span class="n">the</span> <span class="n">operation</span> <span class="n">due</span> <span class="n">to</span> <span class="n">error</span> <span class="mi">00002</span><span class="n">ef3</span><span class="o">.</span>
+</pre></div>
+
+
+<p>This error appears to be caused by a security certificate issue; however the solution is pretty straight forward – you just need to make a GET request before attempting subsequent POST request, for example:</p>
+<div class="highlight"><pre><span class="c1">// Before making a POST request we first have to issue a GET against the target</span>
+<span class="c1">// server to work around Network Error 0x2ef3.  Note you only need to do this</span>
+<span class="c1">// ONCE in your app, not every time.</span>
+<span class="nx">WinJS</span><span class="p">.</span><span class="nx">xhr</span><span class="p">({</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://my.server/&quot;</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// After a single GET request we can now invoke POST requests.</span>
+    <span class="nx">WinJS</span><span class="p">.</span><span class="nx">xhr</span><span class="p">({</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://my.server/endpoint&quot;</span><span class="p">,</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">foo</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;HTTPS POST request complete!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="http://jonnyreeves.co.uk/category/winjs.html">WinJS</a></p>
+  </div>
+
+
+</article>
+
+    <footer>
+<p><a href="http://jonnyreeves.co.uk/" class="button_accent">&larr; Back to Index</a></p>
+<script language="javascript">
+    function toggleComments() {
+        var commentDiv = document.getElementById("article_comments");
+        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
+        return false;
+    }
+</script>
+    </footer>
+
+    <div id="ending_message">
+      <p>&copy; Jonny Reeves. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
+    </div>
+  </main>
+</body>
+</html>

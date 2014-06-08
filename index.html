@@ -48,6 +48,16 @@ Jonny Reeves  </title>
 
 <article>
   <div class="article_title">
+    <h3><a href="http://jonnyreeves.co.uk/2013/making-xhr-request-to-https-domains-with-winjs/">Making XHR Request to HTTPS domains with WinJS</a></h3>
+  </div>
+  <div class="article_text">
+    <p>I recently came across an interesting caveat when working with WinJS (the JavaScript layer for creating Windows 8 Store applications). If you attempt to make an HTTP POST request to a server over the HTTPS protocol you may run into the following error:</p>
+<div class="highlight"><pre><span class="n">XMLHttpRequest</span><span class="o">:</span> <span class="n">Network</span> <span class="n">Error</span> <span class="mh">0x2ef3</span><span class="o">,</span> <span class="n">Could</span> <span class="n">not</span> <span class="n">complete ...</span></pre></div>
+  </div>
+</article>
+<hr />
+<article>
+  <div class="article_title">
     <h3><a href="http://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/">Modular Javascript Unit Testing with QUnit and RequireJS</a></h3>
   </div>
   <div class="article_text">
@@ -89,6 +99,52 @@ Jonny Reeves  </title>
   </div>
   <div class="article_text">
     <p>Event bubbling is a wonderful thing; in ActionScript mouse events would readily <a href="http://www.rubenswieringa.com/blog/eventbubbles-eventcancelable-and-eventcurrenttarget">bubble up through the DisplayList</a> all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the <code>event.target</code> property to determine which child button the user ...</p>
+  </div>
+</article>
+<hr />
+<article>
+  <div class="article_title">
+    <h3><a href="http://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/">Using External Templates with Mustache.js and jQuery</a></h3>
+  </div>
+  <div class="article_text">
+    <p><a href="http://mustache.github.com/">Mustache</a> is a language independent, logicless <a href="http://en.wikipedia.org/wiki/Template_engine_(web)">templating engine</a> which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the <a href="https://github.com/janl/mustache.js">JavaScript ...</a></p>
+  </div>
+</article>
+<hr />
+<article>
+  <div class="article_title">
+    <h3><a href="http://jonnyreeves.co.uk/2011/getting-started-with-as3-vanilla/">Getting Started with AS3 Vanilla</a></h3>
+  </div>
+  <div class="article_text">
+    <p>A lot of people are excited about the news that Native JSON support is coming with <a href="https://web.archive.org/web/20120104112810/http://www.bytearray.org/?p=3066">Flash Player 11</a>; however, I’ve also seen a lot of people get a bit confused by what this actually means – if you were hoping that Flash would be able to magically convert your ...</p>
+  </div>
+</article>
+<hr />
+<article>
+  <div class="article_title">
+    <h3><a href="http://jonnyreeves.co.uk/2011/maven-and-ant-managing-your-flash-projects-build-dependencies/">Maven and ANT – Managing Your Flash Project’s Build Dependencies</a></h3>
+  </div>
+  <div class="article_text">
+    <p>Project build dependency management and resolution is one of the more difficult problems you’ll face as your project grows in size; however even the smallest of projects (and teams) can benefit greatly from getting automatic dependency resolution in place.</p>
+<h2>What Are My Project’s Build Dependencies?</h2>
+<p>Most of us ...</p>
+  </div>
+</article>
+<hr />
+<article>
+  <div class="article_title">
+    <h3><a href="http://jonnyreeves.co.uk/2011/builder-pattern-in-actionscript-fluent-constructors/">Builder Pattern in ActionScript – Fluent Constructors</a></h3>
+  </div>
+  <div class="article_text">
+    <p>How many times have you come across a class which looks like this:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>    <span class="c1">// (mL) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (per container) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>        <span class="c1">// (g) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (mg) optional</span>
+        <span class="kd">private ...</span></pre></div>
   </div>
 </article>
 
