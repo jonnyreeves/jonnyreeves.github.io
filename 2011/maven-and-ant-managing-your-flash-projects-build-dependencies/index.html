@@ -46,11 +46,11 @@ Maven and ANT – Managing Your Flash Project’s Build Dependencies  </title>
 
 <article>
   <div class="article_title">
-    <h3><a href="http://jonnyreeves.co.uk/2011/maven-and-ant-managing-your-flash-projects-build-dependencies/">Maven and ANT – Managing Your Flash Project’s Build Dependencies</a></h3>
+    <h2><a href="http://jonnyreeves.co.uk/2011/maven-and-ant-managing-your-flash-projects-build-dependencies/">Maven and ANT – Managing Your Flash Project’s Build Dependencies</a></h2>
   </div>
   <div class="article_text">
     <p>Project build dependency management and resolution is one of the more difficult problems you’ll face as your project grows in size; however even the smallest of projects (and teams) can benefit greatly from getting automatic dependency resolution in place.</p>
-<h2>What Are My Project’s Build Dependencies?</h2>
+<h3>What Are My Project’s Build Dependencies?</h3>
 <p>Most of us are aware of dependencies in object orientated programming – these are the objects that our class in question needs to operate and most of us know the design patterns which we can use to externalise these dependency. Project build dependencies aren’t radically different; instead of referring to objects and instances; we are talking about the source code files (.as) that your project needs when it compiles. Any source code that you haven’t directly written for your project is a build dependency.</p>
 <p>Imagine a simple project which makes use of TweenLite and where the source files (.as) for the TwenLite library have been copied into the source folder (src). Now if this were a real project it would result in the greensock code also being committed to our source repository. So, what’s the problem with this? Here’s a couple of potential issues:</p>
 <ul>
@@ -60,7 +60,7 @@ Maven and ANT – Managing Your Flash Project’s Build Dependencies  </title>
 </ul>
 <h2>Using Linked Resource Folders To Share Dependencies Across Projects</h2>
 <p>Most IDEs allow you to create <a href="http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fconcepts-13.htm">Linked Resource Folders</a>; the concept is simple – projects can import other projects source folders to allow them to share code, similar to unix symlinks – sounds great – however in practice it can cause lots of headaches!</p>
-<p>Image a workspace that includes three folders/libraries which are linked:</p>
+<p>Imagine a workspace that includes three folders/libraries which are linked:</p>
 <ul>
 <li>
 <p>3rdparty – This project doesn’t compile or create anything, it simply serves as a dumping ground for all application’s shared dependencies, in this case, TweenLite.</p>
@@ -87,7 +87,7 @@ Maven and ANT – Managing Your Flash Project’s Build Dependencies  </title>
 </li>
 </ul>
 <p>By using linked resources we have broken these rules – the whole Linked Resource concept is tightly coupled to a given IDE; even if you check in all your .project and .settings files it isn’t going to work if someone decides they want to give IntelliJ a spin.</p>
-<h2>SWCs To The Rescue!</h2>
+<h3>SWCs To The Rescue!</h3>
 <p>When ActionScript 3 became available, Adobe provided Flash developers with a new tool, the SWC. SWCs are just zip files in disguise (if you don’t believe me, rename the extension from .swc to .swc.zip and then open it) which contain a SWF file and an XML catalouge which allows your IDE to parse all the class definitions the SWF contains. All the major Actionscript IDEs provide tools for working with SWC files.</p>
 <p>SWCs are preferable to just dumping the source code into your project for a number of reasons – infact they solve nearly all the points we listed above.</p>
 <ul>
@@ -156,7 +156,7 @@ Maven and ANT – Managing Your Flash Project’s Build Dependencies  </title>
 
 
 <p>The above target breaks down into two major parts – the <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/ant-tasks/reference.html#dependencies"><code>artifact:dependencies</code> task</a> lists and resolves the project’s dependencies and the copy task then copies these dependencies into the “libs” folder in the project. The two interesting lines int he artifact:dependenciestask are the dependency line which lists as3commons-logging as a dependency (note how we specify the type as “swc” (Maven defaults the type to “jar”) and the version at 1.2). and the remoteRepository line which tells Maven which Maven Repository the dependency should be resolved from – in this project’s case we are using <a href="https://web.archive.org/web/20120406204734/http://opensource.adobe.com/svn/opensource/cairngorm3/maven-repository/">Adobe’s OpenSource Maven Repository</a>; however as mentioned in the comments, you will probably want to create and maintain your own Maven Repo to house your project’s artifacts in (I’m hoping to cover how to setup your own Repo in another post).</p>
-<h2>Next Steps</h2>
+<h3>Next Steps</h3>
 <p>The above is really just the tip of the iceberg; if you want to really get to grips with dependency management through Maven then you are going to want to start listing your dependencies (and the Maven Repositories they can be resolved from) in a <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/pom.html#What_is_the_POM">POM file</a> (Project Object Model). POM files not only serve as a place to list dependencies and the URLs of Repositories, but they can define the entire build cycle of the project when using Maven (and in the case of Flash, <a href="https://web.archive.org/web/20120406204734/http://flexmojos.sonatype.org/">FlexMojos</a>) to compile. POM files include an <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/pom.html#Inheritance">inheritance model</a> (so a Modules’ POM file can extend the main Project’s POM file) allowing you to keep all your dependency definitions in a central place.</p>
 <p>Also, this tutorial hasn’t touched on one of the most powerful feature of Maven, <a href="https://web.archive.org/web/20120406204734/http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-transitive.html">transitive dependency resolution</a>. A quick example would be if your project depends on the RobotLegs Framework; from the example above you can see how you could define a dependency on RobotLegs:</p>
 <p>Now, you would expect Maven to pull down RobotLegs.swc for you – but those of you familiar with RobotLegs will remember that RobotLegs itself has a dependency upon SwiftSuspenders.swc – Maven will automatically pull down both RobotLegs.swc AND the required version of the SwiftSuspenders.swc for you, even tho you only listed RobotLegs as a dependency! However, in order for this to work, RobotLegs needs to be uploaded to a Maven Repo along with a POM file which lists SwiftSuspenders as a dependency (and where it can be fetched from in turn) – The Java community is all over this and it works like magic – unfortunatley the Flash community is lagging quite far behind – it would be amazing if FlashDevs started pushing their SWCs up to the Central Maven Repo (it would certainly save people from having to setup and maintain their own local repos!)</p>

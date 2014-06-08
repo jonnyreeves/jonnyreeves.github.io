@@ -312,7 +312,7 @@
 
 &lt;p&gt;Which gives us our desired effect! :)&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-click-handler.png" /&gt;&lt;/p&gt;</summary></entry><entry><title>Using External Templates with Mustache.js and jQuery</title><link href="http://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/" rel="alternate"></link><updated>2012-02-12T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-02-12:2012/using-external-templates-with-mustachejs-and-jquery/</id><summary type="html">&lt;p&gt;&lt;a href="http://mustache.github.com/"&gt;Mustache&lt;/a&gt; is a language independent, logicless &lt;a href="http://en.wikipedia.org/wiki/Template_engine_(web)"&gt;templating engine&lt;/a&gt; which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the &lt;a href="https://github.com/janl/mustache.js"&gt;JavaScript implementation&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Why Bother With Templating At All?&lt;/h2&gt;
+&lt;h3&gt;Why Bother With Templating At All?&lt;/h3&gt;
 &lt;p&gt;Fair question; when it comes simple JavaScript powered sites it’s pretty easy to just build up your HTML inline:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;lt;p&amp;gt;Hello John, it is 11:19.&amp;lt;/p&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -378,7 +378,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Would you declare your JavaScript in HTML?&lt;/h2&gt;
+&lt;h3&gt;Would you declare your JavaScript in HTML?&lt;/h3&gt;
 &lt;p&gt;So we have managed to simplify our code by replacing String concatenation with token substiution (templating); but we are still having to declare our template’s HTML in JavaScript which is far from ideal. What we really want is to be able to write our template in raw HTML as opposed to a String literal – time for some external templates. John Resig is widely regarded as having coined the concept of &lt;a href="https://web.archive.org/web/20120406204734/http://ejohn.org/blog/javascript-micro-templating/"&gt;declaring templates in script blocks&lt;/a&gt;; ie:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;&amp;lt;!-- Our Template is declared in a script block, but we&lt;/span&gt;
 &lt;span class="c"&gt;     can just use regular HTML markup --&amp;gt;&lt;/span&gt;
@@ -409,7 +409,7 @@
 
 
 &lt;p&gt;Much nicer! Now we are able to write our template in HTML as opposed to simply mashing Strings together; however, this method still isn’t ideal; in order for it to work we have to define our template in the parent HTML Document; this is fine for a simple example, but in a real world web application you won’t be writing your JavaScript in a script block, you’ll be using external .js files instead – and you don’t really want to have to send all the HTML Templates down in the original page – let’s externalise those templates and load them in as we need them.&lt;/p&gt;
-&lt;h2&gt;Loading External HTML Templates&lt;/h2&gt;
+&lt;h3&gt;Loading External HTML Templates&lt;/h3&gt;
 &lt;p&gt;jQuery makes it really easy to load external content via its &lt;code&gt;jQuery.get()&lt;/code&gt; method. We can use this to load an external HTML file which contains our template:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;&amp;lt;!-- You can define as many templates as you like in a single&lt;/span&gt;
 &lt;span class="c"&gt;    .htm file; just add additional &amp;lt;script /&amp;gt; blocks with&lt;/span&gt;
