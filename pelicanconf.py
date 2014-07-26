@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 AUTHOR = u'Jonny Reeves'
 SITENAME = u'Jonny Reeves'
 SITEURL = ''
-TIMEZONE = 'Europe/Paris'
+TIMEZONE = 'Europe/London'
 DEFAULT_LANG = u'en'
 
 ARTICLE_URL = '{date:%Y}/{slug}/'
