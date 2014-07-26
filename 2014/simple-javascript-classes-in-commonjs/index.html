@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet/less" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.less">
+  <script src="http://jonnyreeves.co.uk/theme/js/less-1.5.0.min.js" type="text/javascript"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.css"> -->
+
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Jonny Reeves">
+  <meta name="description" content="Posts and writings by Jonny Reeves">
+
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Full Atom Feed" />
+
+<meta name="keywords" content="">
+
+  <title>
+Simple JavaScript Classes in CommonJS  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="logo">
+      </a>
+      <h2><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h2>
+      <p></p>
+      <ul>
+        <li><a href="http://github.com/jonnyreeves" target="_blank">Github</a></li>
+        <li><a href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank">Stack Overflow</a></li>
+        <li><a href="https://plus.google.com/+JohnReeves" target="_blank">+JonnyReeves</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+<p>Posted on Sat 26 July 2014</p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h2><a href="http://jonnyreeves.co.uk/2014/simple-javascript-classes-in-commonjs/">Simple JavaScript Classes in CommonJS</a></h2>
+  </div>
+  <div class="article_text">
+    <p>Having recently become an advocate of CommonJS modules and Browserify our team was looking for a simple way to define Plain old JavaScript Classes in our modules.  We've settled on the following style, making use of <a href="https://github.com/justmoon/node-extend">extend</a> and <a href="https://github.com/isaacs/inherits">inherits</a>; two tiny, focused CommonJS modules which will add a whopping 2kb to our project when unminified.</p>
+<div class="highlight"><pre><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">inherits</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;inherits&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">extend</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">);</span>
+
+<span class="c1">// Declare the constructor and member properties.</span>
+<span class="kd">function</span> <span class="nx">MyClass</span><span class="p">(</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">bar</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Make a call to the Parent Class&#39; constructor. The `_super` </span>
+  <span class="c1">// member is provided by the `inherits` call below and is</span>
+  <span class="c1">// preferred to calling the `MyParentClass` constructor function</span>
+  <span class="c1">// directly should we want to alter the inheritence.</span>
+  <span class="nx">MyClass</span><span class="p">.</span><span class="nx">super_</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">foo</span><span class="p">);</span>
+
+  <span class="c1">// Keep things straight forward and performant by simply hinting</span>
+  <span class="c1">// at privacy with a leading underscore.</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_bar</span> <span class="o">=</span> <span class="nx">bar</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Establish an inheritance relationship with another Class.</span>
+<span class="nx">inherits</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,</span> <span class="nx">MyParentClass</span><span class="p">);</span>
+
+<span class="c1">// Define static members directly on the Constructor function.</span>
+<span class="nx">MyClass</span><span class="p">.</span><span class="nx">explode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;KABOOM!&quot;</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// Declare instance methods.</span>
+<span class="nx">extend</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span>
+
+  <span class="c1">// Place all methods on the prototype so they&#39;re shared amongst</span>
+  <span class="c1">// all instances.  Using `extends` in this fashion ensures that</span>
+  <span class="c1">// the `constructor` property remains correctly pointed at the</span>
+  <span class="c1">// `MyClass` function so `instanceof` checks work as expected.</span>
+  <span class="nx">greet</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">someone</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Make a call to the Parent Class&#39; `greet` method.</span>
+    <span class="kd">var</span> <span class="nx">greeting</span> <span class="o">=</span> <span class="nx">MyClass</span><span class="p">.</span><span class="nx">super_</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">greet</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">someone</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nx">greeting</span> <span class="o">+</span> <span class="s2">&quot;, dude!&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
+
+  <span class="c1">// Again, just hint at privacy with a leading underscore; doing</span>
+  <span class="c1">// so ensures you have easy access to `this` in each method.</span>
+  <span class="nx">_throbulate</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Implementation omitted for brevity.</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="kr">export</span> <span class="o">=</span> <span class="nx">MyClass</span><span class="p">;</span>
+</pre></div>
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a></p>
+  </div>
+
+
+</article>
+
+    <footer>
+<p><a href="http://jonnyreeves.co.uk/" class="button_accent">&larr; Back to Index</a></p>
+<script language="javascript">
+    function toggleComments() {
+        var commentDiv = document.getElementById("article_comments");
+        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
+        return false;
+    }
+</script>
+    </footer>
+
+    <div id="ending_message">
+      <p>&copy; Jonny Reeves. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
+    </div>
+  </main>
+</body>
+</html>
