@@ -28,13 +28,11 @@ Now let's grab Mocha for our tests
 Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, `index.ts` in the project root
 
 ```typescript
-class Calculator {
+export default class Calculator {
 	add(x : number, y : number) : number {
 		return 0;
 	}
 }
-
-export = Calculator;	
 ```
 
 And now to compile this down to ES5 so we can execute it under node:
@@ -85,7 +83,7 @@ Now we can reference the mocha type definition using a `/// <reference />` comme
 
 ```typescript
 /// <reference path="../typings/mocha/mocha.d.ts" />
-import Calculator = require('../index');
+import Calculator from '../index';
 
 describe('Calculator', () => {
 	var subject : Calculator;
