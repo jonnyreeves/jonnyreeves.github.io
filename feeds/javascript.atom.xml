@@ -52,35 +52,35 @@
 &lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</summary></entry><entry><title>Using Browserify without a node_modules directory</title><link href="http://jonnyreeves.co.uk/2014/using-browserify-without-a-node_modules-directory/" rel="alternate"></link><updated>2014-07-19T18:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2014-07-19:2014/using-browserify-without-a-node_modules-directory/</id><summary type="html">&lt;p&gt;NPM and Bower are pretty awesome; they provides both NodeJS and web developers a way to share CommonJS modules (aka packages) amongst code-bases without relying on copy/pasting concatenated .js files.  Browserify fills in the missing link for deploying an application to the web; it gathers up disparate CommonJS modules which NPM/Bower resolved and bundles them up into a single .js file ready to be dropped into a &lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt; tag.&lt;/p&gt;
 &lt;p&gt;When writing CommonJS code, you can import files by two methods, either relativley, (typically used internally inside your app / module), ie:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="n"&gt;MakePizzaCommand&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;./commands/MakePizzaCommand&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;var MakePizzaCommand = require(&amp;quot;./commands/MakePizzaCommand&amp;quot;);
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Or you can import entire libraries, eg: those which were resolved by Bower / NPM&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="n"&gt;reqwest&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;reqwest&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;var reqwest = require(&amp;quot;reqwest&amp;quot;);
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;In the first example, Browserify will locate the &lt;code&gt;MakePizzaCommand&lt;/code&gt; object by reading the file relative from the host file making the &lt;code&gt;require&lt;/code&gt; call; ie:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;├── app.js &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; makes the require call
+&lt;div class="highlight"&gt;&lt;pre&gt;├── app.js &amp;lt;-- makes the require call
 └── commands
-    └── MakePizzaCommand.js  &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; gets included
+    └── MakePizzaCommand.js  &amp;lt;-- gets included
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;In the second example, Browserify identifies that you are not referencing a local file (as the &lt;code&gt;require&lt;/code&gt; argument does not look like a path), so instead it starts looking up the directory tree for a &lt;code&gt;node_modules&lt;/code&gt; folder which contains a subfolder for the module the host file making the require call is trying to import.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;pizzajs
-├── node_modules &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; &lt;span class="m"&gt;3&lt;/span&gt;. found it&lt;span class="o"&gt;!&lt;/span&gt; now look &lt;span class="kr"&gt;in&lt;/span&gt; each subfolder
-│   │                  &lt;span class="kr"&gt;for&lt;/span&gt; a package.json file with the name of
+├── node_modules &amp;lt;-- 3. found it! now look in each subfolder
+│   │                  for a package.json file with the name of
 │   │                  the module we are trying to import.
 │   └── reqwest
 │       └── package.json
 │
-├── src &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; &lt;span class="m"&gt;2&lt;/span&gt;. no &lt;span class="sb"&gt;`node_modules`&lt;/span&gt; dir here either&lt;span class="p"&gt;,&lt;/span&gt; so look &lt;span class="kr"&gt;in&lt;/span&gt; the
-│   │               parent dir &lt;span class="p"&gt;(&lt;/span&gt;pizzajs&lt;span class="p"&gt;)&lt;/span&gt;
+├── src &amp;lt;-- 2. no `node_modules` dir here either, so look in the
+│   │               parent dir (pizzajs)
 │   │
-│   ├── app.js &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;. makes the require call&lt;span class="p"&gt;,&lt;/span&gt; no &lt;span class="sb"&gt;`node_modules`&lt;/span&gt; dir
-│   │               here so look &lt;span class="kr"&gt;in&lt;/span&gt; parent dir &lt;span class="p"&gt;(&lt;/span&gt;src&lt;span class="p"&gt;)&lt;/span&gt;
+│   ├── app.js &amp;lt;-- 1. makes the require call, no `node_modules` dir
+│   │               here so look in parent dir (src)
 │   └── commands
 │       └── MakePizzaCommand.js
 └── test
@@ -96,21 +96,21 @@
 &lt;p&gt;Make use of the &lt;a href="http://nodejs.org/api/modules.html"&gt;&lt;code&gt;NODE_PATH&lt;/code&gt; environment variable&lt;/a&gt;, this provides another absolute URL for browserify to use when looking for CommonJS modules.  This allows you to pull off the following folder structure (which may suit none-javascript-based build systems better):&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pizzajs&lt;/span&gt;
-&lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;lib&lt;/span&gt;
-&lt;span class="err"&gt;│  &lt;/span&gt; &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;reqwest&lt;/span&gt;
-&lt;span class="err"&gt;│  &lt;/span&gt;     &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;package&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;
-&lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;src&lt;/span&gt;
-    &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;pizzajs
+├── lib
+│   └── reqwest
+│       └── package.json
+└── src
+    └── app.js
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;If you're using Grunt, you can easily set the &lt;code&gt;NODE_PATH&lt;/code&gt; environment variable with each build by adding the following to the top of your &lt;code&gt;Gruntfile.js&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// Set NODE_PATH env-var to the cwd.&lt;/span&gt;
-&lt;span class="n"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;NODE_PATH&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;__dirname&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;env&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;NODE_PATH&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;__dirname&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="k"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="n"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</summary></entry><entry><title>Modular Javascript Unit Testing with QUnit and RequireJS</title><link href="http://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/" rel="alternate"></link><updated>2012-08-14T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-08-14:2012/modular-javascript-unit-testing-with-qunit-and-requirejs/</id><summary type="html">&lt;p&gt;Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere to &lt;a href="http://www.codinghorror.com/blog/2007/03/curlys-law-do-one-thing.html"&gt;Single Responsibility Principle&lt;/a&gt;. This is all well and good for your application code, but what about the Unit Tests which support it – how can we decompose these tests into modules so they’re well organized and easy to find?&lt;/p&gt;
 &lt;h3&gt;Test Case Structure&lt;/h3&gt;

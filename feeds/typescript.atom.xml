@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-07-27T20:00:00+01:00</updated><entry><title>Hello Typescript and Mocha!</title><link href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;$ npm init
+name: (hello-ts-mocha)
+version: (1.0.0)
+description: Getting started with TypeScript and mocha
+entry point: (index.js)
+test command: mocha
+git repository:
+keywords:
+license: (ISC)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now let's grab the TypeScript compiler so we can build the project:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;npm install typescript --save
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now let's grab Mocha for our tests&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;npm install mocha --save-dev
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Create a Subject to Test&lt;/h2&gt;
+&lt;p&gt;Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, &lt;code&gt;index.ts&lt;/code&gt; in the project root&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; {
+    &lt;span class="n"&gt;add&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt; : &lt;span class="n"&gt;number&lt;/span&gt;, &lt;span class="n"&gt;y&lt;/span&gt; : &lt;span class="n"&gt;number&lt;/span&gt;) : &lt;span class="n"&gt;number&lt;/span&gt; {
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;;
+    }
+}
+
+&lt;span class="k"&gt;export&lt;/span&gt; = &lt;span class="n"&gt;Calculator&lt;/span&gt;;    
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And now to compile this down to ES5 so we can execute it under node:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;./node_modules/typescript/bin/tsc index.ts --module commonjs
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can simplify the compilation step by adding a prepublish &lt;a href="https://docs.npmjs.com/misc/scripts"&gt;npm script&lt;/a&gt; to the &lt;code&gt;package.json&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;{
+    ...
+    &amp;quot;scripts&amp;quot;: {
+        &amp;quot;prepublish&amp;quot;: &amp;quot;tsc index.ts --module commonjs &amp;quot;,
+        &amp;quot;test&amp;quot;: &amp;quot;mocha&amp;quot;
+    }
+    ...
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can now compile with &lt;code&gt;npm install&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Adding a Test&lt;/h2&gt;
+&lt;p&gt;Let's create our first test; following convention lets create our test-case in &lt;code&gt;test/CalculatorTest&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Before writing the test-case we need to grab the Mocha Type Definitions (requried for the TypeScript compiler (&lt;code&gt;tsc&lt;/code&gt;) to work).  Easiest way to get these it to use the DefinitelyTyped TypeScript Definition manager (&lt;code&gt;tsd&lt;/code&gt;).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;npm install tsd -g
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once installed we can use it to grab mocha's type definitions:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;tsd install mocha --save
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will add a &lt;code&gt;typings/&lt;/code&gt; folder to our project.  Here's what our source tree looks like so far:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;hello-ts-mocha
+├── index.ts
+├── node_modules
+│   └── typescript
+├── package.json
+├── test
+│   └── CalculatorTest.js
+├── tsd.json
+└── typings
+    ├── mocha
+    └── tsd.d.ts
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we can reference the mocha type definition using a &lt;code&gt;/// &amp;lt;reference /&amp;gt;&lt;/code&gt; comment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;///&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;reference&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;../typings/mocha/mocha.d.ts&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;Calculator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;../index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Calculator&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="n"&gt;subject&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;beforeEach&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;subject&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;#add&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;should add two numbers together&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;subject&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;!==&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="n"&gt;throw&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Expected 2 + 3 = 5 but was &amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="p"&gt;});&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Before we can run the tests we need to compile them, best way to do this is to add a &lt;code&gt;preTest&lt;/code&gt; NPM script to invoke the typscript compiler before running mocha. Open up the &lt;code&gt;package.json&lt;/code&gt; file again:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;{
+    ...
+    &amp;quot;scripts&amp;quot;: {
+        &amp;quot;pretest&amp;quot;: &amp;quot;tsc test/*Test.ts --module commonjs&amp;quot;,
+        &amp;quot;test&amp;quot;: &amp;quot;mocha&amp;quot;
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can now run our test-case with &lt;code&gt;npm test&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;$ npm test
+&amp;gt; ts-mocha@1.0.0 pretest /private/tmp/foo
+&amp;gt; tsc test/*Test.ts --module commonjs
+
+&amp;gt; ts-mocha@1.0.0 test /private/tmp/foo
+&amp;gt; mocha
+
+  Calculator
+    #add
+      1) should add two numbers together
+
+
+  0 passing (19ms)
+  1 failing
+
+  1) Calculator #add should add two numbers together:
+     Error: Expected 2 + 3 = 5 but was 0
+      at Context.&amp;lt;anonymous&amp;gt; (test/CalculatorTest.js:12:23)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Have fun fixing the test-case :)&lt;/p&gt;</summary></entry></feed>
