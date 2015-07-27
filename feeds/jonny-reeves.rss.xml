@@ -24,13 +24,11 @@ license: (ISC)
 
 &lt;h2&gt;Create a Subject to Test&lt;/h2&gt;
 &lt;p&gt;Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, &lt;code&gt;index.ts&lt;/code&gt; in the project root&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; {
-    &lt;span class="n"&gt;add&lt;/span&gt;(&lt;span class="o"&gt;x&lt;/span&gt; : &lt;span class="n"&gt;number&lt;/span&gt;, &lt;span class="n"&gt;y&lt;/span&gt; : &lt;span class="n"&gt;number&lt;/span&gt;) : &lt;span class="n"&gt;number&lt;/span&gt; {
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;;
+&lt;div class="highlight"&gt;&lt;pre&gt;export default class Calculator {
+    add(x : number, y : number) : number {
+        return 0;
     }
 }
-
-&lt;span class="k"&gt;export&lt;/span&gt; = &lt;span class="n"&gt;Calculator&lt;/span&gt;;    
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -81,7 +79,7 @@ license: (ISC)
 
 &lt;p&gt;Now we can reference the mocha type definition using a &lt;code&gt;/// &amp;lt;reference /&amp;gt;&lt;/code&gt; comment:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;///&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;reference&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;../typings/mocha/mocha.d.ts&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;/&amp;gt;&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;Calculator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;../index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;Calculator&lt;/span&gt; &lt;span class="nn"&gt;from&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;../index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Calculator&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="n"&gt;subject&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;

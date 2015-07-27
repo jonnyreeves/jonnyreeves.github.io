@@ -74,13 +74,11 @@ license: (ISC)
 
 <h2>Create a Subject to Test</h2>
 <p>Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, <code>index.ts</code> in the project root</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">Calculator</span> {
-    <span class="n">add</span>(<span class="o">x</span> : <span class="n">number</span>, <span class="n">y</span> : <span class="n">number</span>) : <span class="n">number</span> {
-        <span class="k">return</span> <span class="mi">0</span>;
+<div class="highlight"><pre>export default class Calculator {
+    add(x : number, y : number) : number {
+        return 0;
     }
 }
-
-<span class="k">export</span> = <span class="n">Calculator</span>;    
 </pre></div>
 
 
@@ -131,7 +129,7 @@ license: (ISC)
 
 <p>Now we can reference the mocha type definition using a <code>/// &lt;reference /&gt;</code> comment:</p>
 <div class="highlight"><pre><span class="o">///</span> <span class="o">&lt;</span><span class="n">reference</span> <span class="n">path</span><span class="o">=</span><span class="s">&quot;../typings/mocha/mocha.d.ts&quot;</span> <span class="o">/&gt;</span>
-<span class="kn">import</span> <span class="nn">Calculator</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="s">&#39;../index&#39;</span><span class="p">);</span>
+<span class="kn">import</span> <span class="nn">Calculator</span> <span class="nn">from</span> <span class="s">&#39;../index&#39;</span><span class="p">;</span>
 
 <span class="n">describe</span><span class="p">(</span><span class="s">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="n">var</span> <span class="n">subject</span> <span class="p">:</span> <span class="n">Calculator</span><span class="p">;</span>
