@@ -136,4 +136,4 @@ $ npm test
       at Context.<anonymous> (test/CalculatorTest.js:12:23)
 ```
 
-Have fun fixing the test-case :)
+Have fun fixing the test-case :)  Full source over over at [github.com/jonnyreeves/hello-ts-mocha](https://github.com/jonnyreeves/hello-ts-mocha)
