@@ -17,6 +17,8 @@ FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 
+GOOGLE_ANALYTICS = 'UA-30309890-1'
+
 # Blogroll
 LINKS = (
 	('Github', 'http://github.com/jonnyreeves'),
