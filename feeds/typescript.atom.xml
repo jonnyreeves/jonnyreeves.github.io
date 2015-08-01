@@ -1,5 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-07-27T20:00:00+01:00</updated><entry><title>Hello Typescript and Mocha!</title><link href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-01T21:00:00+01:00</updated><entry><title>Basic Typescript Dependency Injection with Decorators</title><link href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/" rel="alternate"></link><updated>2015-08-01T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-01:2015/basic-typescript-dependency-injection-with-decorators/</id><summary type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.&lt;/p&gt;
+&lt;p&gt;Let's start with an example of what we want to achieve:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;LoginService&lt;/span&gt; {
+  &lt;span class="n"&gt;userModel&lt;/span&gt; : &lt;span class="n"&gt;UserModel&lt;/span&gt;;
+  &lt;span class="n"&gt;performLogin&lt;/span&gt;() : &lt;span class="nb"&gt;void&lt;/span&gt; {
+    &lt;span class="k"&gt;if&lt;/span&gt; (!&lt;span class="n"&gt;this&lt;/span&gt;.&lt;span class="n"&gt;userModel&lt;/span&gt;.&lt;span class="n"&gt;isLoggedIn&lt;/span&gt;()) {
+      // ... &lt;span class="n"&gt;implementation&lt;/span&gt; &lt;span class="n"&gt;omitted&lt;/span&gt;...
+    }
+  }
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Here our &lt;code&gt;LoginService&lt;/code&gt; wants to check if our user is logged in before doing anything; as a result we need to provide a reference to the &lt;code&gt;UserModel&lt;/code&gt; before invoking &lt;code&gt;LoginService#performLogin()&lt;/code&gt;, we can do this manually:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;const myUserModel = new UserModel();
+const myLoginService = new LoginService();
+
+// Manually inject the dependency before using the Service.
+myLoginService.userModel = myUserModel;
+myLoginService.performLogin();
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can use a decorator to record the fact that &lt;code&gt;LoginService&lt;/code&gt; has a dependency on &lt;code&gt;UserModel&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;LoginService&lt;/span&gt; {
+  &lt;span class="nv"&gt;@inject&lt;/span&gt;(&lt;span class="s"&gt;&amp;#39;UserModel&amp;#39;&lt;/span&gt;)
+  &lt;span class="n"&gt;userModel&lt;/span&gt; : &lt;span class="n"&gt;UserModel&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we need to implement our &lt;code&gt;@inject&lt;/code&gt; decorator, the contract requires us to export a factory function (ie: a function which returns a function) - this factory function will be invoked each time a new instance of the supplied Class is constructed giving us a chance to modify the behavior of the program at run-time.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;injectionKey&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// Our decorator provides a factory function which will be invoked with an&lt;/span&gt;
+    &lt;span class="c1"&gt;// instance of the decorated Class and the name of the decorated property.&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;recordInjection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Object&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+
+        &lt;span class="c1"&gt;// Get a reference to the Class of the target object which has been&lt;/span&gt;
+        &lt;span class="c1"&gt;// decorated.&lt;/span&gt;
+        &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;targetType&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;__inject__&lt;/span&gt;&lt;span class="o"&gt;?:&lt;/span&gt; &lt;span class="nb"&gt;Object&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;constructor&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;targetType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;hasOwnProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;__inject__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;targetType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;__inject__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="c1"&gt;// Associate this property with the injectionKey provided in the &lt;/span&gt;
+        &lt;span class="c1"&gt;// decorator call&lt;/span&gt;
+        &lt;span class="nx"&gt;targetType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;__inject__&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;};&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we need somewhere to record injection mappings so we have values to inject into decorated properties:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="nl"&gt;valuesByInjectionKey&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="nl"&gt;injectionKey&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;any&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
+
+    &lt;span class="cm"&gt;/**&lt;/span&gt;
+&lt;span class="cm"&gt;     * Associate an injectionKey with a value so that the supplied value can be &lt;/span&gt;
+&lt;span class="cm"&gt;     * injected into properties of the target Class decorated with the `@inject` &lt;/span&gt;
+&lt;span class="cm"&gt;     * decorator.&lt;/span&gt;
+&lt;span class="cm"&gt;     *&lt;/span&gt;
+&lt;span class="cm"&gt;     * @param {string} injectionKey&lt;/span&gt;
+&lt;span class="cm"&gt;     * @param {*} value&lt;/span&gt;
+&lt;span class="cm"&gt;     */&lt;/span&gt;
+    &lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nl"&gt;injectionKey&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nl"&gt;value&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;any&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;valuesByInjectionKey&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Continuing our original example we would map the injectionKey &lt;code&gt;UserModel&lt;/code&gt; to the instance of &lt;code&gt;UserModel&lt;/code&gt; that we want injected, eg:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;const injector = new Injector();
+injector.mapValue(&amp;#39;UserModel&amp;#39;, new UserModel());
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally we need to introduce a factory function which will instantiate a class but also fulfill injections based on mappings in the Injector - to enable this we add an &lt;code&gt;#instantiate()&lt;/code&gt; method to &lt;code&gt;Injector&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="cm"&gt;/**&lt;/span&gt;
+&lt;span class="cm"&gt;     * Create a new instance of the supplied Class fulfilling any property &lt;/span&gt;
+&lt;span class="cm"&gt;     * injections which are present in the injectionRules map.&lt;/span&gt;
+&lt;span class="cm"&gt;     */&lt;/span&gt;
+    &lt;span class="n"&gt;instantiate&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Class&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nl"&gt;args&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;any&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="c1"&gt;// Start by creating a new instance of the target Class.&lt;/span&gt;
+        &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="nl"&gt;instance&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;any&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="kt"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+        &lt;span class="c1"&gt;// Loop through all properties decorated with `@inject()` in this Class and&lt;/span&gt;
+        &lt;span class="c1"&gt;// try to satisfy them if there is a mapped value.&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;let&lt;/span&gt; &lt;span class="n"&gt;injectionPoint&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getInjectionPoints&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="nl"&gt;injectionValue&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;any&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;valuesByInjectionKey&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;injectionPoint&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+            &lt;span class="c1"&gt;// Perform the injection if we have a value assigned to this injectionKey.&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;injectionValue&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;injectionPoint&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;propertyName&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;injectionValue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;getInjectionPoints&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Class&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;__inject__&lt;/span&gt;&lt;span class="o"&gt;?:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="nl"&gt;prop&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;InjectionPoint&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;var&lt;/span&gt; &lt;span class="nl"&gt;result&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;InjectionPoint&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[];&lt;/span&gt;
+
+        &lt;span class="c1"&gt;// Retrieve the `__inject__` hash created by the @inject decorator from the&lt;/span&gt;
+        &lt;span class="c1"&gt;// target Class.&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hasOwnProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;__inject__&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Object&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;keys&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__inject__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="nl"&gt;propertyName&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                        &lt;span class="nl"&gt;propertyName&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;propertyName&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                        &lt;span class="nl"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__inject__&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;propertyName&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+                    &lt;span class="p"&gt;}&lt;/span&gt;
+                &lt;span class="p"&gt;});&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="n"&gt;interface&lt;/span&gt; &lt;span class="n"&gt;InjectionPoint&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nl"&gt;propertyName&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nl"&gt;injectionKey&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The &lt;code&gt;Injector#intantiate()&lt;/code&gt; method looks for the &lt;code&gt;#__inject__&lt;/code&gt; property added to a Class' constructor function by the &lt;code&gt;@inject&lt;/code&gt; decorator and then uses the values that hash contains to fulfil the decorated dependencies of the target Class - ie:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;const myUserModel = new UserModel();
+injector.mapValue(&amp;#39;UserModel&amp;#39;, myUserModel);
+
+// `#userModel` will be injected automatically by by injector
+var myLoginService = injector.instantiate(LoginService)
+myLoginService.performLogin();
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A complete example with Mocha Tests provided over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt;.  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).&lt;/p&gt;</summary></entry><entry><title>Hello Typescript and Mocha!</title><link href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
