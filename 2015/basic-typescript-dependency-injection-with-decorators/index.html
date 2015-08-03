@@ -124,7 +124,7 @@ myLoginService.performLogin();
 <span class="cm">     * @param {string} injectionKey</span>
 <span class="cm">     * @param {*} value</span>
 <span class="cm">     */</span>
-    <span class="n">map</span><span class="p">(</span><span class="nl">injectionKey</span> <span class="p">:</span> <span class="n">string</span><span class="p">,</span> <span class="nl">value</span> <span class="p">:</span> <span class="n">any</span><span class="p">)</span> <span class="o">:</span> <span class="kt">void</span> <span class="p">{</span>
+    <span class="n">mapValue</span><span class="p">(</span><span class="nl">injectionKey</span> <span class="p">:</span> <span class="n">string</span><span class="p">,</span> <span class="nl">value</span> <span class="p">:</span> <span class="n">any</span><span class="p">)</span> <span class="o">:</span> <span class="kt">void</span> <span class="p">{</span>
         <span class="n">this</span><span class="p">.</span><span class="n">valuesByInjectionKey</span><span class="p">[</span><span class="n">injectionKey</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -197,7 +197,7 @@ myLoginService.performLogin();
 </pre></div>
 
 
-<p>A complete example with Mocha Tests provided over at <a href="https://github.com/jonnyreeves/ts-prop-injection">github.com/jonnyreeves/ts-prop-injection</a>.  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).</p>
+<p>A complete example with Mocha Tests provided over at <a href="https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection">github.com/jonnyreeves/ts-prop-injection</a>.  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).</p>
   </div>
   <div class="article_meta">
     <p>Category: <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>

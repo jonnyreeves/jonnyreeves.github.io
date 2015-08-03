@@ -63,7 +63,7 @@ myLoginService.performLogin();
 &lt;span class="cm"&gt;     * @param {string} injectionKey&lt;/span&gt;
 &lt;span class="cm"&gt;     * @param {*} value&lt;/span&gt;
 &lt;span class="cm"&gt;     */&lt;/span&gt;
-    &lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nl"&gt;injectionKey&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nl"&gt;value&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;any&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;mapValue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nl"&gt;injectionKey&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nl"&gt;value&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;any&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;valuesByInjectionKey&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
@@ -136,7 +136,7 @@ myLoginService.performLogin();
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;A complete example with Mocha Tests provided over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt;.  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).&lt;/p&gt;</summary></entry><entry><title>Hello Typescript and Mocha!</title><link href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
+&lt;p&gt;A complete example with Mocha Tests provided over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt;.  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).&lt;/p&gt;</summary></entry><entry><title>Hello Typescript and Mocha!</title><link href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
