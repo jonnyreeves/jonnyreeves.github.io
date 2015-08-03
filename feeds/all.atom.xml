@@ -1,5 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-01T21:00:00+01:00</updated><entry><title>Basic Typescript Dependency Injection with Decorators</title><link href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/" rel="alternate"></link><updated>2015-08-01T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-01:2015/basic-typescript-dependency-injection-with-decorators/</id><summary type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-03T21:00:00+01:00</updated><entry><title>Injecting into Methods with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/" rel="alternate"></link><updated>2015-08-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-03:2015/injecting-into-methods-with-typescript-decorators/</id><summary type="html">&lt;p&gt;Expanding upon my &lt;a href="http://localhost:8000/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;class Person {
+  private _firstName : string;
+  private _lastName : string;
+
+  @inject(&amp;#39;firstName&amp;#39;, &amp;#39;lastName&amp;#39;)
+  setName(first : string, last : string) {
+    this._firstName = first;
+    this._last = last;
+  }
+
+  getFullName() : string {
+    return `&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;firstName&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt; &lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;lastName&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;`
+  }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Here we are decorating the &lt;code&gt;Person#setName()&lt;/code&gt; method with the &lt;code&gt;@inject&lt;/code&gt; decorator and requesting the values mapped against the 'firstName' and 'lastName' injection keys from the Dependency Container - our test case would look something like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;// Setup the container
+injector.map(&amp;#39;firstName&amp;#39;, &amp;#39;Jonny&amp;#39;);
+injector.map(&amp;#39;lastName&amp;#39;, &amp;#39;Reeves&amp;#39;);
+
+// Instantiate a Person, the container will apply the injections.
+const jonny = injector.instantiate(Person);
+
+// Test it worked.
+if (jonny.getFullName() !== &amp;#39;Jonny Reeves&amp;#39;) {
+    throw new Error(&amp;#39;expected jonny.getFullName() to be Jonny Reeves but was &amp;#39; + jonny.getFullName());
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;First of all we need to modify our &lt;code&gt;@inject&lt;/code&gt; decorator, originally it only expected a single argument (the &lt;code&gt;injectionKey&lt;/code&gt;), as methods can take more than one argument we need to make use of &lt;a href=""&gt;rest parameters&lt;/a&gt; to accept any number of strings:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We face a slightly tricker challenge in the fact that injecting values into methods requires us to inoke a method rather than just assinging a property on the target object, in the previous implementation the &lt;code&gt;__inject__&lt;/code&gt; Object was a simple hash of property name to injectionKey, but in order to inovoke the target method with the injection values in the correct scope we will need access to the target object as well.  To group this data together I've created an &lt;code&gt;InjectionPoint&lt;/code&gt; object and assign this as the new value in the &lt;code&gt;__inject__&lt;/code&gt; map:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; 
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;recordInjection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Object&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="cm"&gt;/* ... */&lt;/span&gt;
+
+    &lt;span class="nx"&gt;targetType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;__inject__&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;InjectionPoint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                                        &lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;injectionKeys&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we're storing the &lt;code&gt;InjectionPoint&lt;/code&gt; data we need to modify &lt;code&gt;Injector#instantiate()&lt;/code&gt; to make use of it when invoked.  The first change is driven by the fact the target Class' &lt;code&gt;__inject__&lt;/code&gt; property is a hash of propertyNames to &lt;code&gt;InjectionPoint&lt;/code&gt;'s and that an &lt;code&gt;InjectionPoint&lt;/code&gt; provides one or more injectionKeys (before it was a hash of propertyNames to a single injectionKey), &lt;code&gt;Injector#getInjectionValues()&lt;/code&gt; makes light work of this returning a collection of values to be injected:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;Injector&lt;/span&gt; {
+  /* ... */
+
+  &lt;span class="n"&gt;private&lt;/span&gt; &lt;span class="n"&gt;getInjectionValues&lt;/span&gt;(&lt;span class="n"&gt;injectionPoint&lt;/span&gt; : &lt;span class="n"&gt;InjectionPoint&lt;/span&gt;) : &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="s"&gt;&amp;lt;any&amp;gt;&lt;/span&gt; {
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;injectionPoint&lt;/span&gt;.&lt;span class="n"&gt;injectionKeys&lt;/span&gt;
+      .&lt;span class="nb"&gt;map&lt;/span&gt;(&lt;span class="nb"&gt;key&lt;/span&gt; =&amp;gt; &lt;span class="n"&gt;this&lt;/span&gt;.&lt;span class="n"&gt;valuesByInjectionKey&lt;/span&gt;[&lt;span class="nb"&gt;key&lt;/span&gt;]);
+  }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we need to determine how these values should be injected (either via a property of the target object, or by invoking a method of the target object).  Seeing as the &lt;code&gt;InjectionPoint&lt;/code&gt; has all the knowledge it needs to perform the correct injection I employed the &lt;a href="http://c2.com/cgi/wiki?HollywoodPrinciple"&gt;Hollywood Principle&lt;/a&gt; and added an &lt;code&gt;InjectionPoint#inject()&lt;/code&gt; method which the &lt;code&gt;Injector&lt;/code&gt; invokes:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;InjectionPoint&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="cm"&gt;/* ... */&lt;/span&gt;
+
+  &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;values&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;any&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;typeof&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;_target&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;this._decoratedPropertyName&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;function&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;_target&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;this._decoratedPropertyName&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;_target&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;values&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="c1"&gt;// Property injection can only use the first value.&lt;/span&gt;
+      &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;_target&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;this._decoratedPropertyName&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;values&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As before, the code and unit tests can be found over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt; - I've also raised a pull request on the repo to highlight the changes: &lt;a href="github.com/jonnyreeves/ts-prop-injection/pull/1"&gt;github.com/jonnyreeves/ts-prop-injection/pull/1&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Basic Typescript Dependency Injection with Decorators</title><link href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/" rel="alternate"></link><updated>2015-08-01T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-01:2015/basic-typescript-dependency-injection-with-decorators/</id><summary type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.&lt;/p&gt;
 &lt;p&gt;Let's start with an example of what we want to achieve:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;LoginService&lt;/span&gt; {
   &lt;span class="n"&gt;userModel&lt;/span&gt; : &lt;span class="n"&gt;UserModel&lt;/span&gt;;
