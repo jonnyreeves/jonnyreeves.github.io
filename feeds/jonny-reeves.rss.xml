@@ -215,7 +215,8 @@ myLoginService.performLogin();
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;A complete example with Mocha Tests provided over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt;.  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jonny Reeves</dc:creator><pubDate>Sat, 01 Aug 2015 21:00:00 +0100</pubDate><guid>tag:jonnyreeves.co.uk,2015-08-01:2015/basic-typescript-dependency-injection-with-decorators/</guid></item><item><title>Hello Typescript and Mocha!</title><link>http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/</link><description>&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
+&lt;p&gt;A complete example with Mocha Tests provided over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt;.  &lt;/p&gt;
+&lt;p&gt;Part 2: &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;Adding support of method injection&lt;/a&gt;.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jonny Reeves</dc:creator><pubDate>Sat, 01 Aug 2015 21:00:00 +0100</pubDate><guid>tag:jonnyreeves.co.uk,2015-08-01:2015/basic-typescript-dependency-injection-with-decorators/</guid></item><item><title>Hello Typescript and Mocha!</title><link>http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/</link><description>&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
