@@ -148,4 +148,6 @@ var myLoginService = injector.instantiate(LoginService)
 myLoginService.performLogin();
 ```
 
-A complete example with Mocha Tests provided over at [github.com/jonnyreeves/ts-prop-injection](https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection).  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).
+A complete example with Mocha Tests provided over at [github.com/jonnyreeves/ts-prop-injection](https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection).  
+
+Part 2: [Adding support of method injection](/2015/injecting-into-methods-with-typescript-decorators/).
