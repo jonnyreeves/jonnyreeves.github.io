@@ -73,7 +73,7 @@ class Injector {
      * @param {string} injectionKey
      * @param {*} value
      */
-    map(injectionKey : string, value : any) : void {
+    mapValue(injectionKey : string, value : any) : void {
         this.valuesByInjectionKey[injectionKey] = value;
     }
 }
@@ -148,4 +148,4 @@ var myLoginService = injector.instantiate(LoginService)
 myLoginService.performLogin();
 ```
 
-A complete example with Mocha Tests provided over at [github.com/jonnyreeves/ts-prop-injection](https://github.com/jonnyreeves/ts-prop-injection).  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).
+A complete example with Mocha Tests provided over at [github.com/jonnyreeves/ts-prop-injection](https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection).  Further exploration could include injection via setter methods / constructor injection and container life-cycle management (ie: singletons vs instance injection).
