@@ -59,6 +59,19 @@ Jonny Reeves  </title>
 
 <article>
   <div class="article_title">
+    <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/">Injecting into Constructors with TypeScript Decorators</a></h2>
+  </div>
+  <div class="article_text">
+    <p>In the <a href="/2015/injecting-into-methods-with-typescript-decorators/">previous post</a> I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with <a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/">AS3 Metadata</a>, you can't annotate the <code>#constructor()</code> method directly:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">MyClass</span> {
+
+  // <span class="n">Although</span> <span class="n">this</span> <span class="n">would</span> <span class="n">be</span> <span class="n">the</span> <span class="n">preferred</span> <span class="n">syntax</span> <span class="n">it</span> <span class="k">will</span> <span class="n">throw</span> <span class="n">a</span> <span class="n">compiler</span> <span class="n">error</span>,<span class="sr"></span>
+<span class="sr">  //</span> <span class="n">TS1206:</span> <span class="n">Decorators</span> <span class="n">are ...</span></pre></div>
+  </div>
+</article>
+<hr />
+<article>
+  <div class="article_title">
     <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/">Injecting into Methods with TypeScript Decorators</a></h2>
   </div>
   <div class="article_text">
@@ -152,15 +165,6 @@ license: (ISC ...</pre></div>
   <div class="article_text">
     <p>By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually <code>video/mp4</code>).</p>
 <p>The next problem that you’ll face is that the video ...</p>
-  </div>
-</article>
-<hr />
-<article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2012/stubbing-javascript-promises-with-sinonjs/">Stubbing JavaScript Promises with SinonJS</a></h2>
-  </div>
-  <div class="article_text">
-    <p>Asynchronous code lies at the heart of front end development; in order to make your application feel responsive you can’t afford to block execution until some external data has been read. <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises</a> are a well understood design pattern to help encapsulate the state of an asynchronous action. A Promise ...</p>
   </div>
 </article>
 
