@@ -87,4 +87,4 @@ class InjectionPoint {
 }
 ```
 
-As before, the code and unit tests can be found over at [github.com/jonnyreeves/ts-prop-injection](https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection) - I've also raised a pull request on the repo to highlight the changes: [github.com/jonnyreeves/ts-prop-injection/pull/1](github.com/jonnyreeves/ts-prop-injection/pull/1).
+As before, the code and unit tests can be found over at [github.com/jonnyreeves/ts-prop-injection](https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection) - I've also raised a pull request on the repo to highlight the changes: [github.com/jonnyreeves/ts-prop-injection/pull/1](https://github.com/jonnyreeves/ts-prop-injection/pull/1).
