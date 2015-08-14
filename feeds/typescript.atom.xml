@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-06T07:00:00+01:00</updated><entry><title>Injecting into Constructors with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/" rel="alternate"></link><updated>2015-08-06T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-06:2015/injecting-into-constructors-with-typescript-decorators/</id><summary type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-14T07:00:00+01:00</updated><entry><title>Using Chai with TypeScript and Mocha</title><link href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/" rel="alternate"></link><updated>2015-08-14T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-14:2015/using-chai-with-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a fan of extending &lt;code&gt;Object.prototype&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Installation is straight forward. First install &lt;code&gt;chai&lt;/code&gt; as a dev dependency:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;npm install chai --save-dev
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next grab the &lt;code&gt;d.ts&lt;/code&gt; file for chai via &lt;a href="http://definitelytyped.org/tsd/"&gt;&lt;code&gt;tsd&lt;/code&gt;&lt;/a&gt; to obtain the type definitions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;tsd install chai --save
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can now start refactoring your test cases; given the following simple mocha test-case:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;describe(&amp;#39;Calculator&amp;#39;, () =&amp;gt; {
+  it(&amp;#39;should add two numbers&amp;#39;, () =&amp;gt; {
+    const calc : Calculator = new Calculator();
+
+    // Manual assertion.
+    if (calc.add(5, 3) !== 8) {
+      throw new Error(&amp;#39;expected 5 + 3 to equal 8&amp;#39;);
+    }
+  });
+});
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can leverage chai's expect method to perform the assertion:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;expect&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;chai&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Calculator&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;should add two numbers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;const&lt;/span&gt; &lt;span class="n"&gt;calc&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+    &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Chai&lt;/span&gt; &lt;span class="n"&gt;assertion&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+    &lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;calc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;equal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;When running the tests, chai will provide a useful error message should the assertion fail:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;1 failing
+
+  1) Calculator should add two numbers:
+
+      AssertionError: expected 6 to equal 8
+      + expected - actual
+
+      -8
+      +6
+
+      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.js:26:45)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Check out &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3"&gt;this pull request&lt;/a&gt; which highlights how I integrated chai into the ts-prop-inject project.&lt;/p&gt;</summary></entry><entry><title>Injecting into Constructors with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/" rel="alternate"></link><updated>2015-08-06T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-06:2015/injecting-into-constructors-with-typescript-decorators/</id><summary type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;MyClass&lt;/span&gt; {
 
   // &lt;span class="n"&gt;Although&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt; &lt;span class="n"&gt;would&lt;/span&gt; &lt;span class="n"&gt;be&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;preferred&lt;/span&gt; &lt;span class="n"&gt;syntax&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt; &lt;span class="k"&gt;will&lt;/span&gt; &lt;span class="n"&gt;throw&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;compiler&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt;,&lt;span class="sr"&gt;&lt;/span&gt;

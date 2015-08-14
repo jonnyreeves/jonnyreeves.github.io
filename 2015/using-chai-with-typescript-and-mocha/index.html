@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet/less" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.less">
+  <script src="http://jonnyreeves.co.uk/theme/js/less-1.5.0.min.js" type="text/javascript"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.css"> -->
+
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Jonny Reeves">
+  <meta name="description" content="Posts and writings by Jonny Reeves">
+
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Full Atom Feed" />
+
+<meta name="keywords" content="">
+
+  <title>
+Using Chai with TypeScript and Mocha  </title>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-30309890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="logo">
+      </a>
+      <h2><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h2>
+      <p></p>
+      <ul>
+        <li><a href="http://github.com/jonnyreeves" target="_blank">Github</a></li>
+        <li><a href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank">Stack Overflow</a></li>
+        <li><a href="https://plus.google.com/+JohnReeves" target="_blank">+JonnyReeves</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+<p>Posted on Fri 14 August 2015</p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h2><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/">Using Chai with TypeScript and Mocha</a></h2>
+  </div>
+  <div class="article_text">
+    <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm not a fan of extending <code>Object.prototype</code>.</p>
+<p>Installation is straight forward. First install <code>chai</code> as a dev dependency:</p>
+<div class="highlight"><pre>npm install chai --save-dev
+</pre></div>
+
+
+<p>Next grab the <code>d.ts</code> file for chai via <a href="http://definitelytyped.org/tsd/"><code>tsd</code></a> to obtain the type definitions.</p>
+<div class="highlight"><pre>tsd install chai --save
+</pre></div>
+
+
+<p>You can now start refactoring your test cases; given the following simple mocha test-case:</p>
+<div class="highlight"><pre>describe(&#39;Calculator&#39;, () =&gt; {
+  it(&#39;should add two numbers&#39;, () =&gt; {
+    const calc : Calculator = new Calculator();
+
+    // Manual assertion.
+    if (calc.add(5, 3) !== 8) {
+      throw new Error(&#39;expected 5 + 3 to equal 8&#39;);
+    }
+  });
+});
+</pre></div>
+
+
+<p>We can leverage chai's expect method to perform the assertion:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="p">{</span> <span class="n">expect</span> <span class="p">}</span> <span class="kn">from</span> <span class="s">&#39;chai&#39;</span><span class="p">;</span>
+
+<span class="n">describe</span><span class="p">(</span><span class="s">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="n">it</span><span class="p">(</span><span class="s">&#39;should add two numbers&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="n">const</span> <span class="n">calc</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Calculator</span><span class="p">();</span>
+
+    <span class="o">//</span> <span class="n">Chai</span> <span class="n">assertion</span><span class="o">.</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>When running the tests, chai will provide a useful error message should the assertion fail:</p>
+<div class="highlight"><pre>1 failing
+
+  1) Calculator should add two numbers:
+
+      AssertionError: expected 6 to equal 8
+      + expected - actual
+
+      -8
+      +6
+
+      at Context.&lt;anonymous&gt; (test/Calculator.spec.js:26:45)
+</pre></div>
+
+
+<p>Check out <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3">this pull request</a> which highlights how I integrated chai into the ts-prop-inject project.</p>
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
+  </div>
+
+
+</article>
+
+    <footer>
+<p><a href="http://jonnyreeves.co.uk/" class="button_accent">&larr; Back to Index</a></p>
+<script language="javascript">
+    function toggleComments() {
+        var commentDiv = document.getElementById("article_comments");
+        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
+        return false;
+    }
+</script>
+    </footer>
+
+    <div id="ending_message">
+      <p>&copy; Jonny Reeves. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
+    </div>
+  </main>
+</body>
+</html>
