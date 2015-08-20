@@ -1,65 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <link rel="stylesheet/less" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.less">
-  <script src="http://jonnyreeves.co.uk/theme/js/less-1.5.0.min.js" type="text/javascript"></script>
-  <!-- <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.css"> -->
-
-  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.css">
-  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/font-awesome.min.css">
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Atom">
 
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Jonny Reeves">
-  <meta name="description" content="Posts and writings by Jonny Reeves">
-
-  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Full Atom Feed" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+<meta name="author" content="Jonny Reeves" />
+<meta name="description" content="Let's see what we can do with TypeScript then. First things first we need to create a local project to hack on: $ npm init name: (hello-ts-mocha) version: (1.0.0) description: Getting started with TypeScript and mocha entry point: (index.js) test command: mocha git repository: keywords: license: (ISC ..." />
 <meta name="keywords" content="">
-
-  <title>
-Hello Typescript and Mocha!  </title>
-
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30309890-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+<meta property="og:site_name" content="Jonny Reeves"/>
+<meta property="og:title" content="Hello Typescript and Mocha!"/>
+<meta property="og:description" content="Let's see what we can do with TypeScript then. First things first we need to create a local project to hack on: $ npm init name: (hello-ts-mocha) version: (1.0.0) description: Getting started with TypeScript and mocha entry point: (index.js) test command: mocha git repository: keywords: license: (ISC ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2015-07-27 20:00:00+01:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://jonnyreeves.co.uk/author/jonny-reeves.html">
+<meta property="article:section" content="TypeScript"/>
+<meta property="og:image" content="">  <title>Jonny Reeves &ndash; Hello Typescript and Mocha!</title>
 </head>
-
 <body>
   <aside>
-    <div id="user_meta">
+    <div>
       <a href="http://jonnyreeves.co.uk">
-        <img src="/images/avatar.jpg" alt="logo">
+        <img src="http://jonnyreeves.co.uk/theme/img/profile.png" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h2><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h2>
-      <p></p>
-      <ul>
-        <li><a href="http://github.com/jonnyreeves" target="_blank">Github</a></li>
-        <li><a href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank">Stack Overflow</a></li>
-        <li><a href="https://plus.google.com/+JohnReeves" target="_blank">+JonnyReeves</a></li>
+      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <p>code && coffee || music</p>
+      <nav>
+        <ul class="list">
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://br.linkedin.com/in/jonnyreeves/en" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-google" href="https://plus.google.com/+JohnReeves" target="_blank"><i class="fa fa-google"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jonnyreeves" target="_blank"><i class="fa fa-github"></i></a></li>
       </ul>
     </div>
   </aside>
-
   <main>
-    <header>
-<p>Posted on Mon 27 July 2015</p>
-    </header>
 
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/">Hello Typescript and Mocha!</a></h2>
-  </div>
-  <div class="article_text">
+  <header>
+    <h1 id="hello-typescript-and-mocha">Hello Typescript and Mocha!</h1>
+    <p>Posted on Mon 27 July 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
+  </header>
+  <div>
     <p>Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:</p>
 <div class="highlight"><pre>$ npm init
 name: (hello-ts-mocha)
@@ -196,27 +188,41 @@ license: (ISC)
 
 <p>Have fun fixing the test-case :)  Full source over over at <a href="https://github.com/jonnyreeves/hello-ts-mocha">github.com/jonnyreeves/hello-ts-mocha</a></p>
   </div>
-  <div class="article_meta">
-    <p>Category: <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
+  <div class="tag-cloud">
+    <p>
+    </p>
   </div>
-
-
 </article>
 
     <footer>
-<p><a href="http://jonnyreeves.co.uk/" class="button_accent">&larr; Back to Index</a></p>
-<script language="javascript">
-    function toggleComments() {
-        var commentDiv = document.getElementById("article_comments");
-        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
-        return false;
-    }
-</script>
-    </footer>
-
-    <div id="ending_message">
-      <p>&copy; Jonny Reeves. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
-    </div>
+      <p>&copy; Jonny Reeves </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
   </main>
-</body>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30309890-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Hello Typescript and Mocha!",
+  "headline": "Hello Typescript and Mocha!",
+  "datePublished": "2015-07-27 20:00:00+01:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonny Reeves",
+    "url": "http://jonnyreeves.co.uk/author/jonny-reeves.html"
+  },
+  "image": "{{ SITEURL }}/theme/img/profile.png",
+  "url": "http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/",
+  "description": "Let's see what we can do with TypeScript then. First things first we need to create a local project to hack on: $ npm init name: (hello-ts-mocha) version: (1.0.0) description: Getting started with TypeScript and mocha entry point: (index.js) test command: mocha git repository: keywords: license: (ISC ..."
+}
+</script></body>
 </html>

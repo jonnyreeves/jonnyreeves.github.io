@@ -1,134 +1,754 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <link rel="stylesheet/less" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.less">
-  <script src="http://jonnyreeves.co.uk/theme/js/less-1.5.0.min.js" type="text/javascript"></script>
-  <!-- <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.css"> -->
-
-  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.css">
-  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/font-awesome.min.css">
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Atom">
 
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Jonny Reeves">
-  <meta name="description" content="Posts and writings by Jonny Reeves">
-
-  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Full Atom Feed" />
-
-
-  <title>
-Jonny Reeves  </title>
-
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30309890-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+  <meta name="author" content="Jonny Reeves" />
+  <meta name="description" content="" />
+<meta property="og:site_name" content="Jonny Reeves"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="Jonny Reeves"/>
+<meta property="og:description" content=""/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jonnyreeves.co.uk"/>
+  <title>Jonny Reeves</title>
 </head>
-
 <body>
   <aside>
-    <div id="user_meta">
+    <div>
       <a href="http://jonnyreeves.co.uk">
-        <img src="/images/avatar.jpg" alt="logo">
+        <img src="http://jonnyreeves.co.uk/theme/img/profile.png" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h2><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h2>
-      <p></p>
-      <ul>
-        <li><a href="http://github.com/jonnyreeves" target="_blank">Github</a></li>
-        <li><a href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank">Stack Overflow</a></li>
-        <li><a href="https://plus.google.com/+JohnReeves" target="_blank">+JonnyReeves</a></li>
+      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <p>code && coffee || music</p>
+      <nav>
+        <ul class="list">
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://br.linkedin.com/in/jonnyreeves/en" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-google" href="https://plus.google.com/+JohnReeves" target="_blank"><i class="fa fa-google"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jonnyreeves" target="_blank"><i class="fa fa-github"></i></a></li>
       </ul>
     </div>
   </aside>
-
   <main>
-    <header>
-      <p>
-      <a href="http://jonnyreeves.co.uk">Index</a> &#124; <a href="http://jonnyreeves.co.uk/archives.html">Archives</a>
-      &#124; <a href="http://jonnyreeves.co.uk/feeds/all.atom.xml">Atom Feed</a>
-      </p>
-    </header>
 
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/">Listening for jQuery Mobile Slider Events</a></h2>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/#listening-for-jquery-mobile-slider-events">Listening for jQuery Mobile Slider Events</a></h2>
+    <p>
+      Posted on Tue 24 July 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. <a href="https://github.com/jquery/jquery-mobile/issues/1589">This issue (#1589)</a> has been raised on jQuery Mobile’s GitHub Issue Tracker but it looks like it won’t be addressed until jQuery Mobile 1.2</p>
+<p>The code below is a patch which you can drop into your application’s startup routine; it adds a couple of event listeners to the DOM which will trigger the start and stop events based on the user’s interaction with the slider’s thumb and track.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">({</span>
+    <span class="s2">&quot;mousedown touchstart&quot;</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">siblings</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;mouseup touchend&quot;</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">siblings</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">},</span> <span class="s2">&quot;.ui-slider&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>In a nutshell, it binds an event listener to the document object which listens for both <code>mousedown</code> and <code>touchstart</code> events triggered from <code>.ui-slider</code> elements. Once triggered the handler function will find the input element which sits alongside the <code>.ui-slider</code> control that was interacted with and trigger the corresponding event. You can consume these events like so:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#my-slider&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;User has started sliding my-slider!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#my-slider&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;User has finished sliding my slider, final value: &quot;</span> <span class="o">+</span> <span class="nx">value</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>As always, you can also subscribe to the slider’s change event if you want to listen for the actual slide.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#my-slider&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Slider is moving, it&#39;s value is now: &quot;</span> <span class="o">+</span> <span class="nx">value</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
   </div>
-  <div class="article_text">
-    <p>jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. <a href="https://github.com/jquery/jquery-mobile/issues/1589">This issue (#1589)</a> has been raised on jQuery Mobile’s GitHub Issue Tracker but ...</p>
-  </div>
+  <hr />
 </article>
-<hr />
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2012/streaming-video-from-azure-blob-storage/">Streaming Video from Azure Blob Storage</a></h2>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2012/streaming-video-from-azure-blob-storage/#streaming-video-from-azure-blob-storage">Streaming Video from Azure Blob Storage</a></h2>
+    <p>
+      Posted on Fri 20 July 2012 in <a href="http://jonnyreeves.co.uk/category/azure.html">Azure</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually <code>video/mp4</code>).</p>
+<p>The next problem that you’ll face is that the video will not seek correctly; trying to jump forward or backwards in the video won’t work.</p>
+<p>This is resolved by changing the <code>DefaultServiceVersion</code> to 2011-08-18 which can be achieved via the Azure’s REST API, or the Managed C# Library as laid out at the end of <a href="http://blogs.msdn.com/b/windowsazurestorage/archive/2011/09/15/windows-azure-blobs-improved-http-headers-for-resume-on-download-and-a-change-in-if-match-conditions.aspx">this MSDN blog post</a>.</p>
+<div class="highlight"><pre>var account = CloudStorageAccount.Parse(ConnectionString);
+var blobClient = account.CreateCloudBlobClient();
+blobClient.SetServiceSettings(new ServiceSettings()
+    {
+        DefaultServiceVersion = &quot;2011-08-18&quot;
+    });
+</pre></div>
   </div>
-  <div class="article_text">
-    <p>By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually <code>video/mp4</code>).</p>
-<p>The next problem that you’ll face is that the video ...</p>
-  </div>
+  <hr />
 </article>
-<hr />
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2012/stubbing-javascript-promises-with-sinonjs/">Stubbing JavaScript Promises with SinonJS</a></h2>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2012/stubbing-javascript-promises-with-sinonjs/#stubbing-javascript-promises-with-sinonjs">Stubbing JavaScript Promises with SinonJS</a></h2>
+    <p>
+      Posted on Sat 02 June 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>Asynchronous code lies at the heart of front end development; in order to make your application feel responsive you can’t afford to block execution until some external data has been read. <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises</a> are a well understood design pattern to help encapsulate the state of an asynchronous action. A Promise will only ever transfer from a pending state (ie: when the initial request has been made to the server) to a resolved state. The resolved state can be one of either a failure state (ie: the server sends back a 500 error) or a success state (ie: the JSON data you were expecting has come back). Once a promise has transferred to a resolved state it will not change (it becomes immutable). By employing this pattern you can write some very succinct code which is both easy to read and maintain:</p>
+<div class="highlight"><pre><span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;someData&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* process response */</span> <span class="p">});</span>
+    <span class="p">.</span><span class="nx">otherwise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* handle the error */</span> <span class="p">});</span>
+</pre></div>
+
+
+<p>The code above makes use of Brain Cavalier’s <a href="https://github.com/cujojs/when">when.js</a> Promises implementation. The rest of this post aims to highlight how you can combine when.js with a mocking framework to make unit testing Promises a piece of cake. If you would still like to learn more about using Promises, and how they make writing asynchronous code easier, then I’d suggest reading <a href="http://blog.briancavalier.com/async-programming-part-1-its-messy">his excellent articles on the subject</a>.</p>
+<h3>Why mock Promises?</h3>
+<p>One of the golden rules of unit testing is that the <a href="http://martinfowler.com/articles/nonDeterminism.html">code under test must be deterministic</a>. Another golden rule is that <a href="http://pragprog.com/magazines/2012-01/unit-tests-are-first">unit tests must be fast to execute</a>. Although Promises make writing asynchronous code easier, they don’t help with the two points above, take the following example:</p>
+<div class="highlight"><pre><span class="c1">// Example of a module that abstracts a RESTful web service.</span>
+<span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fetch</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Returns a when.js Promise which will resolve when the data</span>
+        <span class="c1">// has been fetched.</span>
+        <span class="k">return</span> <span class="nx">when</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;http://myservice.com/api?q=&quot;</span> <span class="o">+</span> <span class="nx">query</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// A client object which consumes the Service, this is what we are going to be </span>
+<span class="c1">// unit testing.</span>
+<span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="c1">// Returns a promise which will yield the number of pages returned</span>
+    <span class="c1">// the supplied query.</span>
+    <span class="nx">getNumPages</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// Create a fresh service instance.</span>
+        <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">createService</span><span class="p">();</span>
+
+        <span class="c1">// Return a promise which will resolve after the following</span>
+        <span class="c1">// `then` block has performed.</span>
+        <span class="k">return</span> <span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="nx">query</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span> 
+
+                <span class="c1">// Modifies the result of the Service&#39;s Promise,</span>
+                <span class="c1">// future success handlers will reicieve the</span>
+                <span class="c1">// number of pages instead of the response data.</span>
+                <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">pages</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+            <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Unit testing the above client is pretty easy; a simple test-case could look like this (This example will be based on QUnit):</p>
+<div class="highlight"><pre><span class="nx">asyncTest</span><span class="p">(</span><span class="s2">&quot;getNumPages fetches expected number of pages&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+
+    <span class="c1">// A special query which we know will return the expected number of pages.</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">getNumPages</span><span class="p">(</span><span class="s2">&quot;testcase-query&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">numPages</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="nx">equal</span><span class="p">(</span><span class="nx">numPages</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;5 pages returned&quot;</span><span class="p">);</span>
+            <span class="nx">start</span><span class="p">();</span>
+        <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Although the above test case is easy to read, it doesn’t make for a very good unit test for the following reasons:</p>
+<ul>
+<li>It’s non-deterministic – if the server over at myservice.com is down, or you try and execute these unit tests offline then the test will fail (infact, it will hang the test-runner as it waits for this asyncTest to complete.)</li>
+<li>It’s not going to be fast – a connection needs to be established to the server.</li>
+<li>It only tests the success state – we need to test what happens if the service is down, but there’s no obvious way to do that (other than to request an invalid query value from the API.</li>
+</ul>
+<p>This is where a mocking framework comes in – it will help us solve all three of the problems listed above.</p>
+<h3>Promises, Lies and stubbing the truth</h3>
+<p>A mocking framework allows you to alter the way functions behave during a unit test. Mocking frameworks are especially powerful in dynamic languages, like JavaScript, as they are able to make large changes to your codebase for a given unit test and then restore all those changes immediately after the test completes. This tutorial is going to be looking at <a href="http://sinonjs.org/">SinonJS</a></p>
+<p>As mentioned above, Sinon.js is able to completely rewrite a function during a test-case, let’s revisit our service module above:</p>
+<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Sinon.js stubbing example&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Use sinon.js to redefine the `service.fetch` function.</span>
+    <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">);</span>
+
+    <span class="c1">// Now when we call it, instead of invoking `jQuery.get`, it returns a String.</span>
+    <span class="nx">equal</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;testcase-data&quot;</span><span class="p">),</span> <span class="s2">&quot;Hello!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>The above example isn’t very useful; however, instead of returning a String, we can just as easily return a Promise instance, and that’s when things start getting useful:</p>
+<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Stubbing the service so it returns an expected response&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+
+    <span class="c1">// Stub the service so it returns a resolved promise.  Note that `when(value)`</span>
+    <span class="c1">// is a neat short-cut for creating a Deferred and resolving it.</span>
+    <span class="kd">var</span> <span class="nx">expectedResponse</span> <span class="o">=</span> <span class="s1">&#39;{ &quot;pages&quot;: [ &quot;page1&quot;, &quot;page2&quot;, &quot;page3&quot; ]}&#39;</span><span class="p">;</span>
+    <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">when</span><span class="p">(</span><span class="nx">expectedResponse</span><span class="p">));</span>
+
+    <span class="c1">// Call the client...</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">getNumPages</span><span class="p">(</span><span class="s1">&#39;testcase-query&#39;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">numPages</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="nx">strictEqual</span><span class="p">(</span><span class="nx">numPages</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;3 pages returned&quot;</span><span class="p">);</span>
+        <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Note that the above test-case didn’t need to make user of QUnits <code>asyncTest</code> block – that’s because the expectedPromise Promise object has already been resolved – no need to wait for anything to complete asynchronously. Our test is no longer reliant on the server (hence deterministic) and it no longer relies on a service call (and will therefore execute almost instantly). That leaves only one last point from our rules above – how to test the failure path…</p>
+<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Simulating a service failure&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+
+    <span class="c1">// Again, start by stubbing our service&#39;s fetch method.  This time we will</span>
+    <span class="c1">// return a rejected Promise with an error.</span>
+    <span class="kd">var</span> <span class="nx">expectedError</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Bad Query&quot;</span><span class="p">);</span>
+    <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">when</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">expectedError</span><span class="p">));</span>
+
+    <span class="c1">// Call the client and expect it to fail</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nx">getNumPages</span><span class="p">(</span><span class="s1">&#39;testcase-query&#39;</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">otherwise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="nx">strictEqual</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">expectedError</span><span class="p">,</span> <span class="s2">&quot;Error from API provided to handler&quot;</span><span class="p">);</span>
+        <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Hopefully this post has been useful in highlight just a couple of the ways in which Promises and a mocking framework can be combined to remove both non-determinism, and slow execution speed from your tests as well as making it easy to test all paths of your code, even if they depend on external data. I’ve created <a href="https://gist.github.com/2858452">a gist which shows a few other techniques</a> which can be employed for unit testing Promises including the use of Sinon’s yieldTo method which makes it easy to resolve, or reject a Promise resolver supplied as an argument.</p>
   </div>
-  <div class="article_text">
-    <p>Asynchronous code lies at the heart of front end development; in order to make your application feel responsive you can’t afford to block execution until some external data has been read. <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises</a> are a well understood design pattern to help encapsulate the state of an asynchronous action. A Promise ...</p>
-  </div>
+  <hr />
 </article>
-<hr />
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2012/jquery-a-single-click-handler-for-multiple-buttons/">jQuery - A single click handler for multiple buttons</a></h2>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2012/jquery-a-single-click-handler-for-multiple-buttons/#jquery-a-single-click-handler-for-multiple-buttons">jQuery - A single click handler for multiple buttons</a></h2>
+    <p>
+      Posted on Wed 23 May 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>Event bubbling is a wonderful thing; in ActionScript mouse events would readily <a href="http://www.rubenswieringa.com/blog/eventbubbles-eventcancelable-and-eventcurrenttarget">bubble up through the DisplayList</a> all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the <code>event.target</code> property to determine which child button the user had interacted with. The same is true in JavaScript; but instead of events bubbling up the DisplayList they bubble up through the DOM.</p>
+<p>Take the following example, here we have three buttons that we want to respond to when they’re clicked:</p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/three-buttons.png" /></p>
+<p>The HTML for this button group is nice and simple, making use of jQuery mobile:</p>
+<div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;screen-selector&quot;</span> <span class="na">data-role=</span><span class="s">&quot;navbar&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;ui-btn-active&quot;</span><span class="nt">&gt;</span>Applications<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span><span class="nt">&gt;</span>Properties<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span><span class="nt">&gt;</span>Events<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<p>We can easily bind a click event handler to the <code>#screen-selector</code> element which will capture the click events as they bubble up the DOM.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on: &quot;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This almost works as desired, but not quite. jQuery Mobile does some magic behind the scenes to transform our button markup into a more complex design, this results in the <code>event.target</code> of the click event being child elements of the <code>&lt;a&gt;</code> tag:</p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-event-target.png" /></p>
+<p>Instead, what we really want is to know which <a> element the user clicked so we can tie it back to the buttons in our original HTML. In ActionScript this could be solved quite easily by setting the <a href="http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/DisplayObjectContainer.html#mouseChildren"><code>mouseChildren</code> attribute</a> of the button DisplayObjects to false, ie:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="n">buttons</span> <span class="p">:</span> <span class="kt">Array</span> <span class="o">=</span> <span class="o">[</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnApplications&quot;</span><span class="o">),</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnProperties&quot;</span><span class="o">),</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnEvents&quot;</span><span class="o">)</span> <span class="o">];</span>
+<span class="k">for</span> <span class="k">each</span> <span class="o">(</span><span class="kd">var</span> <span class="n">button</span> <span class="p">:</span> <span class="kt">Sprite</span> <span class="k">in</span> <span class="n">buttons</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Disable mouse interaction with any children nested within the button&#39;s DisplayObject.</span>
+    <span class="n">button</span><span class="o">.</span><span class="na">mouseChildren</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>JavaScript lacks the ability to toggle the mouse interactivity of nested elements, but luckily jQuery comes to the rescue with the <a href="http://api.jquery.com/closest/">closest traversal method</a>. This method will walk up the DOM tree until if finds the first element that matches the supplied selector. In our case we just want to walk up from the click event’s target element until we find an <code>&lt;a&gt;</code> tag:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">closest</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">button</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This now logs the desired <code>&lt;a&gt;</code> tag for the clicked button!</p>
+<p>This code can be improved one step further by <a href="http://api.jquery.com/on/#example-7">passing a selector argument</a> to jQuery’s <code>on</code> method. jQuery will ensure that the event handler function is only called if the selector matches the event’s current target; in our case – we only want it to trigger when it hits an <code>&lt;a&gt;</code> tag, so we can write:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">button</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The last piece of the puzzle comes from creating a mapping between the button the user clicked on and the action we want to take. Again, Flash provided a really easy way to do this in the form of the DisplayObject.name property which your button handler could read.</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">onButtonClicked</span><span class="p">(</span><span class="nx">event</span> <span class="o">:</span> <span class="nx">MouseEvent</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span> 
+    <span class="kd">var</span> <span class="nx">button</span> <span class="o">:</span> <span class="nx">DisplayObject</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span> <span class="nx">as</span> <span class="nx">DisplayObject</span><span class="p">;</span>
+    <span class="nx">trace</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">button</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The buttons created by jQuery mobile don't offer any form of name identifier; one simple solution would be to simply add an id attribute to the <code>&lt;a&gt;</code> tag; however <a href="http://www.w3.org/TR/html401/struct/global.html#h-7.5.2">element id's must always be unique</a> which isn't really want we are after (we just want to identify this button group apart, rather than having to ensure these buttons have a unique id across the entire DOM). The option I've settled on is to add a <a href="http://ejohn.org/blog/html-5-data-attributes/">custom data attribute</a> to each <code>&lt;a&gt;</code> tag in the form of a data-name attribute:</p>
+<div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;screen-selector&quot;</span> <span class="na">data-role=</span><span class="s">&quot;navbar&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;ui-btn-active&quot;</span> <span class="na">data-name=</span><span class="s">&quot;applications&quot;</span><span class="nt">&gt;</span>Applications<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">data-name=</span><span class="s">&quot;properties&quot;</span><span class="nt">&gt;</span>Properties<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">data-name=</span><span class="s">&quot;events&quot;</span><span class="nt">&gt;</span>Events<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<p>We can now modify our click event handler to read the data-name attribute from the clicked <code>&lt;a&gt;</code> element:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Retrieve the &#39;name&#39; data attribute of the &lt;a/&gt; tag that the user clicked.</span>
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">closest</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Which gives us our desired effect! :)</p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-click-handler.png" /></p>
   </div>
-  <div class="article_text">
-    <p>Event bubbling is a wonderful thing; in ActionScript mouse events would readily <a href="http://www.rubenswieringa.com/blog/eventbubbles-eventcancelable-and-eventcurrenttarget">bubble up through the DisplayList</a> all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the <code>event.target</code> property to determine which child button the user ...</p>
-  </div>
+  <hr />
 </article>
-<hr />
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/">Using External Templates with Mustache.js and jQuery</a></h2>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/#using-external-templates-with-mustachejs-and-jquery">Using External Templates with Mustache.js and jQuery</a></h2>
+    <p>
+      Posted on Sun 12 February 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p><a href="http://mustache.github.com/">Mustache</a> is a language independent, logicless <a href="http://en.wikipedia.org/wiki/Template_engine_(web)">templating engine</a> which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the <a href="https://github.com/janl/mustache.js">JavaScript implementation</a>.</p>
+<h3>Why Bother With Templating At All?</h3>
+<p>Fair question; when it comes simple JavaScript powered sites it’s pretty easy to just build up your HTML inline:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;p&gt;Hello John, it is 11:19.&lt;/p&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>However, it starts getting a bit messy when we start replacing hard-coded values with variables, for example:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;Jonny&#39;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">timeNow</span> <span class="o">=</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">();</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;p&gt;Hello &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;, it is &#39;</span> <span class="o">+</span> <span class="nx">timeNow</span> <span class="o">+</span> <span class="s1">&#39;.&lt;/p&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Things get even more ugly when we want to start build up complex, nested HTML elements, for example:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;dl&gt;&lt;dt&gt;Name&lt;/dt&gt;&lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;&lt;dt&gt;Time&lt;/dt&gt;&lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">timeNow</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;&lt;/dl&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>As JavaScript doesn’t support <a href="http://en.wikipedia.org/wiki/Here_document">heredoc</a>, the only way to sort out this nasty one-liner is to escape the new line literal by using a backslash; however I’m not convinced that this really helps with readability.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;dl&gt;\</span>
+<span class="s1"> &lt;dt&gt;Name&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;\</span>
+<span class="s1"> &lt;dt&gt;Time&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">timeNow</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;\</span>
+<span class="s1">&lt;/dl&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<h2>Enter the Templating Engine</h2>
+<p>Templating engines help us solve half the problem by allowing us to move the logic out of the HTML string. The basic premise is fairly simple; instead of having to break out of the String, we can just drop in tokens which the templating engine will replace for us. So instead of having to concatenate lots of Strings together we can simply express our template like this:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+
+<span class="c1">// Contains all the values that we want to use in place of the tokens in</span>
+<span class="c1">// the template</span>
+<span class="kd">var</span> <span class="nx">templateData</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Jonny&quot;</span><span class="p">,</span>
+    <span class="nx">timeNow</span><span class="o">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">()</span>
+<span class="p">};</span>
+
+<span class="c1">// Define our HTML template, note the tokens match up to the properties</span>
+<span class="c1">// of the templateData object.</span>
+<span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="s1">&#39;&lt;p&gt;Hello {{name}}, it is {{timeNow}}.&lt;/p&gt;&#39;</span><span class="p">;</span>
+
+<span class="c1">// Use Mustache.js to render the template (replace the tokens with the values</span>
+<span class="c1">// in the templateData object).</span>
+<span class="kd">var</span> <span class="nx">renderedTemplate</span> <span class="o">=</span> <span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">);</span>
+
+<span class="c1">// And attach the rendered template HTML to the DOM.</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">renderedTemplate</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Nice, now we have a clear separation between our template HTML and our data Object which supplies the values; however, we are still stuck when it comes to rendering more complex templates…</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="s1">&#39;&lt;dl&gt;\</span>
+<span class="s1"> &lt;dt&gt;Name&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;{{name}}&lt;/dd&gt;\</span>
+<span class="s1"> &lt;dt&gt;Time&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;{{timeNow}}&lt;/dd&gt;\</span>
+<span class="s1">&lt;/dl&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<h3>Would you declare your JavaScript in HTML?</h3>
+<p>So we have managed to simplify our code by replacing String concatenation with token substiution (templating); but we are still having to declare our template’s HTML in JavaScript which is far from ideal. What we really want is to be able to write our template in raw HTML as opposed to a String literal – time for some external templates. John Resig is widely regarded as having coined the concept of <a href="https://web.archive.org/web/20120406204734/http://ejohn.org/blog/javascript-micro-templating/">declaring templates in script blocks</a>; ie:</p>
+<div class="highlight"><pre><span class="c">&lt;!-- Our Template is declared in a script block, but we</span>
+<span class="c">     can just use regular HTML markup --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;tpl-greeting&quot;</span> <span class="na">type=</span><span class="s">&quot;text/html&quot;</span><span class="nt">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">dl</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Name</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Time</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">timeNow</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+    <span class="o">&lt;</span><span class="err">/dl&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+    <span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+
+    <span class="kd">var</span> <span class="nx">templateData</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Jonny&quot;</span><span class="p">,</span>
+        <span class="nx">timeNow</span><span class="o">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">()</span>
+    <span class="p">};</span>
+
+    <span class="c1">// Use jQuery to reference our &#39;tpl-greeting&#39; script block</span>
+    <span class="c1">// and grab the HTML contents it contains.</span>
+    <span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tpl-greeting&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">();</span>
+
+    <span class="c1">// Render this template as before.</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">));</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+
+<p>Much nicer! Now we are able to write our template in HTML as opposed to simply mashing Strings together; however, this method still isn’t ideal; in order for it to work we have to define our template in the parent HTML Document; this is fine for a simple example, but in a real world web application you won’t be writing your JavaScript in a script block, you’ll be using external .js files instead – and you don’t really want to have to send all the HTML Templates down in the original page – let’s externalise those templates and load them in as we need them.</p>
+<h3>Loading External HTML Templates</h3>
+<p>jQuery makes it really easy to load external content via its <code>jQuery.get()</code> method. We can use this to load an external HTML file which contains our template:</p>
+<div class="highlight"><pre><span class="c">&lt;!-- You can define as many templates as you like in a single</span>
+<span class="c">    .htm file; just add additional &lt;script /&gt; blocks with</span>
+<span class="c">    unique ids. --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;tpl-greeting&quot;</span> <span class="na">type=</span><span class="s">&quot;text/html&quot;</span><span class="nt">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">dl</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Name</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Time</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">timeNow</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+    <span class="o">&lt;</span><span class="err">/dl&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;greetings.htm&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">templates</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Fetch the &lt;script /&gt; block from the loaded external</span>
+    <span class="c1">// template file which contains our greetings template.</span>
+    <span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">templates</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;#tpl-greeting&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Now we’re talking! Finally, we are able to define our templates in external HTML files which can easily be loaded and rendered in our application’s JavaScript code. However, the above is only a proof of concept and doesn’t really stand up in the real world; what if we want to render our greetings template more than once? If we are going to have to load the template file each time our code is going to be littered with callback functions – again, not pretty and not easy to maintain – what we need is some kind of plugin…</p>
+<h3>jQuery-Mustache Plugin</h3>
+<p>To make working with Mustache in jQuery nice and easy I knocked together my first jQuery Plugin, <a href="https://github.com/jonnyreeves/jquery-Mustache">jquery-mustache.js</a>. This makes it really easy to load all your external templates at the start and then render them as required.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">.</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">&#39;greetings.htm&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">mustache</span><span class="p">(</span><span class="s1">&#39;tpl-greeting&#39;</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Sweet!</p>
   </div>
-  <div class="article_text">
-    <p><a href="http://mustache.github.com/">Mustache</a> is a language independent, logicless <a href="http://en.wikipedia.org/wiki/Template_engine_(web)">templating engine</a> which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the <a href="https://github.com/janl/mustache.js">JavaScript ...</a></p>
-  </div>
+  <hr />
 </article>
-<hr />
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2011/getting-started-with-as3-vanilla/">Getting Started with AS3 Vanilla</a></h2>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2011/getting-started-with-as3-vanilla/#getting-started-with-as3-vanilla">Getting Started with AS3 Vanilla</a></h2>
+    <p>
+      Posted on Sun 14 August 2011 in <a href="http://jonnyreeves.co.uk/category/actionscript.html">ActionScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>A lot of people are excited about the news that Native JSON support is coming with <a href="https://web.archive.org/web/20120104112810/http://www.bytearray.org/?p=3066">Flash Player 11</a>; however, I’ve also seen a lot of people get a bit confused by what this actually means – if you were hoping that Flash would be able to magically convert your parsed JSON Strings into your own Model objects then you’re going to be left a touch disappointed – until now!</p>
+<h3>That’s Just Weak...</h3>
+<p>Let’s start by using the new native JSON methods to parse some JSON and see what we get back, for this example I will be making use of the Yahoo! Weather API to get the forcast for London.</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Main</span> <span class="kd">extends</span> <span class="nb">Sprite</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nx">loader</span> <span class="o">:</span> <span class="nb">URLLoader</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">URLLoader</span><span class="p">();</span>
+
+    <span class="kd">public</span> <span class="kd">function</span> <span class="nx">Main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">loader</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nb">Event</span><span class="p">.</span><span class="nx">COMPLETE</span><span class="o">,</span> <span class="nx">onLoaderComplete</span><span class="p">);</span>
+
+        <span class="c1">// Look up the weather in London (probably raining...)</span>
+        <span class="nx">loader</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="k">new</span> <span class="nb">URLRequest</span><span class="p">(</span><span class="s2">&quot;http://weather.yahooapis.com/forecastjson?w=44418&amp;u=c&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="kd">private</span> <span class="kd">function</span> <span class="nx">onLoaderComplete</span><span class="p">(</span><span class="nx">event</span> <span class="o">:</span> <span class="nb">Event</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">rawJson</span> <span class="o">:</span> <span class="nb">String</span> <span class="o">=</span> <span class="nx">loader</span><span class="p">.</span><span class="nx">data</span><span class="o">;</span>
+
+        <span class="c1">// Use a JSON decoder to convert the rawJson String into an Object.</span>
+        <span class="kd">const</span> <span class="nx">jsonObject</span> <span class="o">:</span> <span class="nb">Object</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">rawJson</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The above code given provides me with a <code>jsonObject</code> property, however, it’s completely dynmaic; this means I won’t gain any of the benefits of Strong Typing such as code hinting – if I want to access the properties, I have to know their names, eg:</p>
+<div class="highlight"><pre><span class="nf">trace</span><span class="p">(</span><span class="s2">&quot;The weather in &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">condition</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">day</span><span class="p">);</span>
+</pre></div>
+
+
+<h3>Getting Harder...</h3>
+<p>If you plan on passing the forecast data around in your application then you are going to start wishing you were making use of Strongly typed Model objects (for example, if you rely on using dyanmic objects then a simple typo in another class may cause you a headache) – ok, not a problem, the first step is to create a couple: (note I am not representing the entire Object Graph here to save space.</p>
+<div class="highlight"><pre><span class="c1">// Use a JSON decoder to convert the rawJson String into an Object.</span>
+<span class="kd">const</span> <span class="nx">jsonObject</span> <span class="o">:</span> <span class="nb">Object</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">rawJson</span><span class="p">);</span>
+
+<span class="c1">// Copy of the fields from the jsonObject into our strongly typed Model.</span>
+<span class="kd">const</span> <span class="nx">weatherResult</span> <span class="o">:</span> <span class="nx">WeatherResult</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WeatherResult</span><span class="p">();</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">];</span>
+
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Location</span><span class="p">();</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span><span class="o">;</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">locationId</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">location_id</span><span class="o">;</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">stateAbbreviation</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">state_abbreviation</span><span class="o">;</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">countryAbbreviation</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">state_abbreviation</span><span class="o">;</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">elevation</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">elevation</span><span class="o">;</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">latitude</span><span class="o">;</span>
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">longitude</span> <span class="o">=</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">longitude</span><span class="o">;</span>
+
+<span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vector</span><span class="p">.</span><span class="o">&lt;</span><span class="nx">Forecast</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="k">for</span> <span class="k">each</span> <span class="p">(</span><span class="k">var</span> <span class="nx">forecastJson</span> <span class="o">:</span> <span class="nb">Object</span> <span class="k">in</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">forecast</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">forecast</span> <span class="o">:</span> <span class="nx">Forecast</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Forecast</span><span class="p">();</span>
+    <span class="nx">forecast</span><span class="p">.</span><span class="nx">day</span> <span class="o">=</span> <span class="nx">forecastJson</span><span class="p">.</span><span class="nx">day</span><span class="o">;</span>
+    <span class="nx">forecast</span><span class="p">.</span><span class="nx">condition</span> <span class="o">=</span> <span class="nx">forecastJson</span><span class="p">.</span><span class="nx">condition</span><span class="o">;</span>
+    <span class="nx">forecast</span><span class="p">.</span><span class="nx">highTemperature</span> <span class="o">=</span> <span class="nx">forecastJson</span><span class="p">.</span><span class="nx">high_temperature</span><span class="o">;</span>
+    <span class="nx">forecast</span><span class="p">.</span><span class="nx">lowTemperature</span> <span class="o">=</span> <span class="nx">forecastJson</span><span class="p">.</span><span class="nx">low_temperature</span><span class="o">;</span>
+
+    <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">forecast</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nf">trace</span><span class="p">(</span><span class="s2">&quot;The weather in &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">condition</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">day</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Crikey, that’s an awful lot of a lot of code; well – at least now if we’ve made a typo anywhere, or if Yahoo decide to change their API at least we only have to make our changes in a single place – there must be an easier way of doing this?!</p>
+<h2>Adding some Vanilla Extract</h2>
+<p>Enter <a href="https://github.com/jonnyreeves/as3-vanilla">AS3 Vanilla</a>. Vanilla is an open source AS3 library whose sole purpose it to make converting untyped objects (such as the result of calling JSON.decode) into strongly typed Model objects a breeze, let’s see it in action:</p>
+<div class="highlight"><pre><span class="c1">// Use a JSON decoder to convert the rawJson String into an Object.</span>
+<span class="kd">const</span> <span class="nx">jsonObject</span> <span class="o">:</span> <span class="nb">Object</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">rawJson</span><span class="p">);</span>
+
+<span class="c1">// Use Vanilla to extract the properties into our model objects.</span>
+<span class="kd">const</span> <span class="nx">weatherResult</span> <span class="o">:</span> <span class="nx">WeatherResult</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vanilla</span><span class="p">().</span><span class="nx">extract</span><span class="p">(</span><span class="nx">jsonObject</span><span class="o">,</span> <span class="nx">WeatherResult</span><span class="p">);</span>
+
+<span class="nf">trace</span><span class="p">(</span><span class="s2">&quot;The weather in &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">condition</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">day</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Yep, that’s it; 20 lines of tedious, error prone code replaced with a single call to Vanilla’s <code>extract()</code> method; pretty neat eh? So, let’s have a look at how it works.</p>
+<p>The main design goal of Vanilla was to make the extraction process as simple as possible – infact, if your JSON object matches up perfectly to your Model object then you don’t need to do a thing, for example, here’s our WeatherResult model object’s class definition:</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nx">WeatherResult</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">url</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">location</span> <span class="o">:</span> <span class="nx">Location</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">forecast</span> <span class="o">:</span> <span class="nx">Vector</span><span class="p">.</span><span class="o">&lt;</span><span class="nx">Forecast</span><span class="o">&gt;;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Let’s compare that to a cross section of the JSON object we get back from the Yahoo weather api:</p>
+<div class="highlight"><pre><span class="p">{</span>
+   <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
+      <span class="s2">&quot;location_id&quot;</span><span class="o">:</span><span class="s2">&quot;UKXX0085&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;London&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;state_abbreviation&quot;</span><span class="o">:</span><span class="s2">&quot;ENG&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;country_abbreviation&quot;</span><span class="o">:</span><span class="s2">&quot;UK&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;elevation&quot;</span><span class="o">:</span><span class="mi">56</span><span class="p">,</span>
+      <span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="mf">51.51000000000000</span><span class="p">,</span>
+      <span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="s2">&quot;-.08&quot;</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="s2">&quot;http://weather.yahoo.com/forecast/UKXX0085.html&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;forecast&quot;</span><span class="o">:</span><span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;day&quot;</span><span class="o">:</span><span class="s2">&quot;Today&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;condition&quot;</span><span class="o">:</span><span class="s2">&quot;Partly Cloudy&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;high_temperature&quot;</span><span class="o">:</span><span class="s2">&quot;70&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;low_temperature&quot;</span><span class="o">:</span><span class="s2">&quot;52&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;day&quot;</span><span class="o">:</span><span class="s2">&quot;Tomorrow&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;condition&quot;</span><span class="o">:</span><span class="s2">&quot;Partly Cloudy&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;high_temperature&quot;</span><span class="o">:</span><span class="s2">&quot;72&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;low_temperature&quot;</span><span class="o">:</span><span class="s2">&quot;58&quot;</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>As you can see, the three fields in the WeatherResult model object, <em>location</em>, <em>url</em> and <em>forecast</em> all map exactly to those fields in the JSON object – Vanilla exploits this and guesses that you probably want to map to those fields; however, not everything is always so clear – what if your model object doesn’t map up exactly to the JSON result? Let’s have a look at our Location model:</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Location</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">locationId</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">city</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">stateAbbreviation</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">countryAbbreviation</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">elevation</span> <span class="o">:</span> <span class="nb">Number</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">latitude</span> <span class="o">:</span> <span class="nb">Number</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">longitude</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>If you look closely you will notice how some of the field names do not map to the JSON, for example, the field “country_abbreviation” in the JSON is not present in the Model (I’ve named the field countryAbbreviation, as per the AS3 camelCase convention), so how does Vanilla know what to do? Simple answer, it doesn’t – nothing will be mapped and Location.country Abbreviation will be null. </p>
+<h3>Using Metadata to define Marshalling Rules</h3>
+<p>In the above example the JSON field <code>country_abbreviation</code> was not being mapped to our model’s “countryAbbreviation” property because Vanilla didn’t know that these two were related – so how can we tell Vanilla about that relationship? Like this:</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Location</span> <span class="p">{</span>
+    <span class="p">[</span><span class="nx">Marshall</span> <span class="p">(</span><span class="nx">field</span><span class="o">=</span><span class="s2">&quot;location_id&quot;</span><span class="p">)]</span> <span class="kd">public</span> <span class="k">var</span> <span class="nx">locationId</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">city</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="p">[</span><span class="nx">Marshall</span> <span class="p">(</span><span class="nx">field</span><span class="o">=</span><span class="s2">&quot;state_abbreviation&quot;</span><span class="p">)]</span> <span class="kd">public</span> <span class="k">var</span> <span class="nx">stateAbbreviation</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="p">[</span><span class="nx">Marshall</span> <span class="p">(</span><span class="nx">field</span><span class="o">=</span><span class="s2">&quot;country_abbreviation&quot;</span><span class="p">)]</span> <span class="kd">public</span> <span class="k">var</span> <span class="nx">countryAbbreviation</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">elevation</span> <span class="o">:</span> <span class="nb">Number</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">latitude</span> <span class="o">:</span> <span class="nb">Number</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nx">longitude</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Here we have annotated the public fields of the Location model object with the [Marshall] Metadata tag – this tells Vanilla that if we see a field named ‘country_abbreviation’ on the source (JSON) object, then we should copy that value to the annotated filed.</p>
+<h3>Have It Your Way</h3>
+<p>Although Vanilla aims to be as easy to use as possible, it also tries to be flexible to adapt to different ways of working – lots of teams make use of explicit getter/setter methods instead of using fields; don’t worry – Vanilla can detect metadata on these methods too!</p>
   </div>
-  <div class="article_text">
-    <p>A lot of people are excited about the news that Native JSON support is coming with <a href="https://web.archive.org/web/20120104112810/http://www.bytearray.org/?p=3066">Flash Player 11</a>; however, I’ve also seen a lot of people get a bit confused by what this actually means – if you were hoping that Flash would be able to magically convert your ...</p>
-  </div>
+  <hr />
 </article>
-<hr />
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2011/maven-and-ant-managing-your-flash-projects-build-dependencies/">Maven and ANT – Managing Your Flash Project’s Build Dependencies</a></h2>
-  </div>
-  <div class="article_text">
-    <p>Project build dependency management and resolution is one of the more difficult problems you’ll face as your project grows in size; however even the smallest of projects (and teams) can benefit greatly from getting automatic dependency resolution in place.</p>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2011/maven-and-ant-managing-your-flash-projects-build-dependencies/#maven-and-ant-managing-your-flash-projects-build-dependencies">Maven and ANT – Managing Your Flash Project’s Build Dependencies</a></h2>
+    <p>
+      Posted on Sat 02 April 2011 in <a href="http://jonnyreeves.co.uk/category/actionscript.html">ActionScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>Project build dependency management and resolution is one of the more difficult problems you’ll face as your project grows in size; however even the smallest of projects (and teams) can benefit greatly from getting automatic dependency resolution in place.</p>
 <h3>What Are My Project’s Build Dependencies?</h3>
-<p>Most of us ...</p>
+<p>Most of us are aware of dependencies in object orientated programming – these are the objects that our class in question needs to operate and most of us know the design patterns which we can use to externalise these dependency. Project build dependencies aren’t radically different; instead of referring to objects and instances; we are talking about the source code files (.as) that your project needs when it compiles. Any source code that you haven’t directly written for your project is a build dependency.</p>
+<p>Imagine a simple project which makes use of TweenLite and where the source files (.as) for the TwenLite library have been copied into the source folder (src). Now if this were a real project it would result in the greensock code also being committed to our source repository. So, what’s the problem with this? Here’s a couple of potential issues:</p>
+<ul>
+<li>The project compilation time will be increased as MXMLC will be forced to recompile all the greensock code</li>
+<li>Developers need to checkout all the source code for TweenLite even tho they will never be editing it – furthermore, some developers may get over excited and decide to start making modifications to this code (at which point it stops being a 3rd party library!)</li>
+<li>If your project consists of multiple modules (ie: Other SWFs which are loaded at runtime) you will need to make sure they all have exactly the same copy of the TweenLite source code available on the source-path due to the way Flash manages loaded <a href="https://web.archive.org/web/20120406204734/http://www.senocular.com/flash/tutorials/contentdomains/?page=2#ChildDomainsDefinitionVersioning">Class Definitions in LoaderContexts</a>.</li>
+</ul>
+<h2>Using Linked Resource Folders To Share Dependencies Across Projects</h2>
+<p>Most IDEs allow you to create <a href="http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fconcepts-13.htm">Linked Resource Folders</a>; the concept is simple – projects can import other projects source folders to allow them to share code, similar to unix symlinks – sounds great – however in practice it can cause lots of headaches!</p>
+<p>Imagine a workspace that includes three folders/libraries which are linked:</p>
+<ul>
+<li>
+<p>3rdparty – This project doesn’t compile or create anything, it simply serves as a dumping ground for all application’s shared dependencies, in this case, TweenLite.</p>
+</li>
+<li>
+<p>main – This is our application’s Main project, this makes use of TweenLite and also loads in other module SWFs at runtime.</p>
+</li>
+<li>
+<p>module – This is a module which the Main application will load in at runtime – it also makes use of TweenLite (let’s face it, what Flash app doesn’t!)</p>
+</li>
+</ul>
+<p>Both the ‘main’ project and the ‘module’ project make use of a Linked Resource named ‘ThirdParty’ which in turn resolves to the location of the ’3rdparty’ project in our workspace. This allows them to include the TweenLite source code without having to copy/paste it into each project. This solves one of the major problems we’ve outlined above – all our application’s projects (including the modules) will now make use of the exact same version of their dependencies thanks to the ‘ThirdParty’ Linked Resource folder – also, when we want to update to a newer version of a library we just have to update the library in a single place and recompile everything – easy.</p>
+<p>However, apart from not solving the other two issues (slower compilation and the fact we are checking in raw source code that we don’t wish to maintain) we have also just created a new, much uglier problem with our project – it’s no longer easy to build!</p>
+<p>When creating a large project you should always strive to make the build as simple and easy as possible; I try and keep the following things in mind:</p>
+<ul>
+<li>
+<p>You should be able to check the entire application’s source out of version control with a single command; no more.</p>
+</li>
+<li>
+<p>You should be able to create a fresh build of the application (including all modules) with a single command (eg: by issuing ant package from a fresh checkout of the source code</p>
+</li>
+<li>
+<p>Developers should be able to work on the project using whichever IDE or tool they wish; don’t rely on a particular environment use, such as FlashBuilder or FDT</p>
+</li>
+</ul>
+<p>By using linked resources we have broken these rules – the whole Linked Resource concept is tightly coupled to a given IDE; even if you check in all your .project and .settings files it isn’t going to work if someone decides they want to give IntelliJ a spin.</p>
+<h3>SWCs To The Rescue!</h3>
+<p>When ActionScript 3 became available, Adobe provided Flash developers with a new tool, the SWC. SWCs are just zip files in disguise (if you don’t believe me, rename the extension from .swc to .swc.zip and then open it) which contain a SWF file and an XML catalouge which allows your IDE to parse all the class definitions the SWF contains. All the major Actionscript IDEs provide tools for working with SWC files.</p>
+<p>SWCs are preferable to just dumping the source code into your project for a number of reasons – infact they solve nearly all the points we listed above.</p>
+<ul>
+<li>
+<p>Compilation becomes faster as SWCs are already pre-compiled</p>
+</li>
+<li>
+<p>Instead of checking the entire source tree of the 3rd party library into SVN we are now only checking a single, compressed file – this makes checkout faster and also means that developers won’t be able to start modifying the library.</p>
+</li>
+</ul>
+<p>But one thing is not checked off – what about projects which make use of multiple modules – it would appear we still have the same problem that all of our modules must use the exact same version of the library – now you could just solve this by making use of a LinkedResource which points to a bunch of SWCs but that’s still not great; and when it really comes down to it – should these SWCs really be in version control at all – after all you are in not in control of their development and you don’t decide when they get updated.</p>
+<h2>Automatically Managing Your SWCs with Maven</h2>
+<p>So, it’s now becoming clear that you and your application have some serious dependency issues when it comes to 3rd Party SWCs; don’t worry, the first step is admission – let’s start by declaring them. This article is going to focus on using Maven to declare and resolve your project’s dependencies – other solutions are available :)</p>
+<p>Maven’s dependency management work on the simple premise that the dependencies your application relies upon (in our case, SWCs) exist out on the Internet on a special type of file server, known to Maven as a <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/guides/introduction/introduction-to-repositories.html">Maven Repository</a>. Maven Repositories can either be public facing (in the case of the <a href="https://web.archive.org/web/20120406204734/http://repo1.maven.org/maven2/">Central Maven Repo</a>.) or internal on a company’s own Intranet. Maven Repositories sole purpose is to house and catalogue build artefacts so that they can be fetched (resolved) during a project’s build. Instead of checking your applications dependencies into version control, you instead just list the dependencies in your project and then Maven will fetch them when required.</p>
+<p>So, let’s start with a very simple application which consists of a single project which has a single build dependency on <a href="https://web.archive.org/web/20120406204734/http://www.as3commons.org/as3-commons-logging/index.html">AS3Commons Logging</a>. (I would have used TweenLite as an example, but it’s not available on any public Maven repositories at the time of writing). The first thing we need to do is get a simple build script on the go – I’m going to use ANT to perform the build (Maven, which describes itself as a project management tool is more than capable of both compiling and managing your project’s dependencies, but this article is is just focuses on using Maven for managing dependencies). Maven and ANT get along just fine (although their user’s pdon't always see eye to eye](https://web.archive.org/web/20120406204734/http://java.dzone.com/news/maven-or-ant) on the Internet!); all we need to do is grab a copy of the <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/ant-tasks/index.html">Maven ANT Tasks JAR</a>, add it to our project and reference it in our ANT Script:</p>
+<p>A Skeleton ANT Build Script Which Makes Use Of the Maven ANT Tasks</p>
+<div class="highlight"><pre><span class="nt">&lt;project</span> <span class="na">name=</span><span class="s">&quot;maven-dependencies&quot;</span> <span class="na">xmlns:artifact=</span><span class="s">&quot;antlib:org.apache.maven.artifact.ant&quot;</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- Inclde the Maven ANT Tasks --&gt;</span>
+    <span class="nt">&lt;path</span> <span class="na">id=</span><span class="s">&quot;maven-ant-tasks.classpath&quot;</span> <span class="na">path=</span><span class="s">&quot;maven-ant-tasks-2.1.1.jar&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;typedef</span> <span class="na">resource=</span><span class="s">&quot;org/apache/maven/artifact/ant/antlib.xml&quot;</span>
+        <span class="na">uri=</span><span class="s">&quot;antlib:org.apache.maven.artifact.ant&quot;</span>
+        <span class="na">classpathref=</span><span class="s">&quot;maven-ant-tasks.classpath&quot;</span> <span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!-- Include the FlexSDK ANT Tasks --&gt;</span>
+    <span class="nt">&lt;taskdef</span> <span class="na">resource=</span><span class="s">&quot;flexTasks.tasks&quot;</span> <span class="na">classpath=</span><span class="s">&quot;${FLEX_HOME}/ant/lib/flexTasks.jar&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</pre></div>
+
+
+<p>In the example above I have copied the maven-ant-tasks.jar file into my project; however another approach is to copy the maven-ant-tasks.jar file into your ANT_HOME folder (if you’re on Windows this will be Users{username}.antlib). For more information on getting the Maven ANT Tasks setup on your machine, please refer to the <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/ant-tasks/installation.html">Maven ANT Tasks Installation Documentation</a>.</p>
+<p>Now that we have access to the Maven ANT Tasks in our application’s build, the next thing we want to do is list, and resolve our dependencies. This is accomplished by in the “resolve” target shown below:</p>
+<p>The Resolve ANT Target which Lists and Pulls Down Dependencies</p>
+<div class="highlight"><pre><span class="c">&lt;!-- =================================</span>
+<span class="c">      target: resolve</span>
+<span class="c">      Uses the Maven ANT Tasks to define and resolve all the dependencies require to build</span>
+<span class="c">      this application.</span>
+<span class="c">     ================================= --&gt;</span>
+<span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;resolve&quot;</span> <span class="na">description=</span><span class="s">&quot;Resolve the project&#39;s dependencies&quot;</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- The pathId value &#39;resolves.swcs.classpath&#39; will be an ANT FileSet which points to all the</span>
+<span class="c">        SWC files we are about to define --&gt;</span>
+    <span class="nt">&lt;artifact:dependencies</span> <span class="na">filesetId=</span><span class="s">&quot;resolved.swcs.classpath&quot;</span> <span class="na">versionsId=</span><span class="s">&quot;resolved.swcs.versions&quot;</span><span class="nt">&gt;</span>
+
+        <span class="c">&lt;!-- This is where we list our dependency on as3commons-logging version 2.0; by adding this</span>
+<span class="c">            line here, we are telling Maven that our application depends upon this SWC --&gt;</span>
+        <span class="nt">&lt;dependency</span> <span class="na">groupId=</span><span class="s">&quot;org.as3commons&quot;</span> <span class="na">artifactId=</span><span class="s">&quot;as3commons-logging&quot;</span> <span class="na">type=</span><span class="s">&quot;swc&quot;</span> <span class="na">version=</span><span class="s">&quot;1.2&quot;</span> <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- This is where we provide Maven with the URL of the remote repository where some, or all of</span>
+<span class="c">            our dependencies can be retrieved from - if you work with a team you will probably want to</span>
+<span class="c">            setup your own Maven Repository in house --&gt;</span>
+        <span class="nt">&lt;remoteRepository</span> <span class="na">id=</span><span class="s">&quot;adobe-opensource&quot;</span> <span class="na">url=</span><span class="s">&quot;http://opensource.adobe.com/svn/opensource/cairngorm3/maven-repository&quot;</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;/artifact:dependencies&gt;</span>
+
+    <span class="c">&lt;!-- Copies all the files resolved in the task above into the &quot;libs&quot; folder --&gt;</span>
+    <span class="nt">&lt;copy</span> <span class="na">todir=</span><span class="s">&quot;libs&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;fileset</span> <span class="na">refid=</span><span class="s">&quot;resolved.swcs.classpath&quot;</span> <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- This Mapper will remove all the folder heirarchy and version numbers from the resolved SWCs --&gt;</span>
+        <span class="nt">&lt;mapper</span> <span class="na">classpathref=</span><span class="s">&quot;maven-ant-tasks.classpath&quot;</span> <span class="na">classname=</span><span class="s">&quot;org.apache.maven.artifact.ant.VersionMapper&quot;</span>
+            <span class="na">from=</span><span class="s">&quot;${resolved.swcs.versions}&quot;</span> <span class="na">to=</span><span class="s">&quot;flatten&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/copy&gt;</span>
+<span class="nt">&lt;/target&gt;</span>
+</pre></div>
+
+
+<p>The above target breaks down into two major parts – the <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/ant-tasks/reference.html#dependencies"><code>artifact:dependencies</code> task</a> lists and resolves the project’s dependencies and the copy task then copies these dependencies into the “libs” folder in the project. The two interesting lines int he artifact:dependenciestask are the dependency line which lists as3commons-logging as a dependency (note how we specify the type as “swc” (Maven defaults the type to “jar”) and the version at 1.2). and the remoteRepository line which tells Maven which Maven Repository the dependency should be resolved from – in this project’s case we are using <a href="https://web.archive.org/web/20120406204734/http://opensource.adobe.com/svn/opensource/cairngorm3/maven-repository/">Adobe’s OpenSource Maven Repository</a>; however as mentioned in the comments, you will probably want to create and maintain your own Maven Repo to house your project’s artifacts in (I’m hoping to cover how to setup your own Repo in another post).</p>
+<h3>Next Steps</h3>
+<p>The above is really just the tip of the iceberg; if you want to really get to grips with dependency management through Maven then you are going to want to start listing your dependencies (and the Maven Repositories they can be resolved from) in a <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/pom.html#What_is_the_POM">POM file</a> (Project Object Model). POM files not only serve as a place to list dependencies and the URLs of Repositories, but they can define the entire build cycle of the project when using Maven (and in the case of Flash, <a href="https://web.archive.org/web/20120406204734/http://flexmojos.sonatype.org/">FlexMojos</a>) to compile. POM files include an <a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/pom.html#Inheritance">inheritance model</a> (so a Modules’ POM file can extend the main Project’s POM file) allowing you to keep all your dependency definitions in a central place.</p>
+<p>Also, this tutorial hasn’t touched on one of the most powerful feature of Maven, <a href="https://web.archive.org/web/20120406204734/http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-transitive.html">transitive dependency resolution</a>. A quick example would be if your project depends on the RobotLegs Framework; from the example above you can see how you could define a dependency on RobotLegs:</p>
+<p>Now, you would expect Maven to pull down RobotLegs.swc for you – but those of you familiar with RobotLegs will remember that RobotLegs itself has a dependency upon SwiftSuspenders.swc – Maven will automatically pull down both RobotLegs.swc AND the required version of the SwiftSuspenders.swc for you, even tho you only listed RobotLegs as a dependency! However, in order for this to work, RobotLegs needs to be uploaded to a Maven Repo along with a POM file which lists SwiftSuspenders as a dependency (and where it can be fetched from in turn) – The Java community is all over this and it works like magic – unfortunatley the Flash community is lagging quite far behind – it would be amazing if FlashDevs started pushing their SWCs up to the Central Maven Repo (it would certainly save people from having to setup and maintain their own local repos!)</p>
   </div>
+  <hr />
 </article>
-<hr />
 <article>
-  <div class="article_title">
-    <h2><a href="http://jonnyreeves.co.uk/2011/builder-pattern-in-actionscript-fluent-constructors/">Builder Pattern in ActionScript – Fluent Constructors</a></h2>
-  </div>
-  <div class="article_text">
-    <p>How many times have you come across a class which looks like this:</p>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2011/builder-pattern-in-actionscript-fluent-constructors/#builder-pattern-in-actionscript-fluent-constructors">Builder Pattern in ActionScript – Fluent Constructors</a></h2>
+    <p>
+      Posted on Fri 25 March 2011 in <a href="http://jonnyreeves.co.uk/category/actionscript.html">ActionScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>How many times have you come across a class which looks like this:</p>
 <div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
         <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>    <span class="c1">// (mL) required</span>
@@ -136,20 +756,189 @@ Jonny Reeves  </title>
         <span class="kd">private</span> <span class="k">var</span> <span class="nx">_calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// optional</span>
         <span class="kd">private</span> <span class="k">var</span> <span class="nx">_fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>        <span class="c1">// (g) optional</span>
         <span class="kd">private</span> <span class="k">var</span> <span class="nx">_salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (mg) optional</span>
-        <span class="kd">private ...</span></pre></div>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   <span class="c1">// (g)  optional</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">calories</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">fat</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">salt</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>  <span class="p">{</span>
+            <span class="nx">_servingSize</span> <span class="o">=</span> <span class="nx">servingSize</span><span class="o">;</span>
+            <span class="nx">_servings</span> <span class="o">=</span> <span class="nx">servings</span><span class="o">;</span>
+            <span class="nx">_calories</span> <span class="o">=</span> <span class="nx">calories</span><span class="o">;</span>
+            <span class="nx">_fat</span> <span class="o">=</span> <span class="nx">fat</span><span class="o">;</span>
+            <span class="nx">_salt</span> <span class="o">=</span> <span class="nx">salt</span><span class="o">;</span>
+            <span class="nx">_carbohydrate</span> <span class="o">=</span> <span class="nx">carbohydrate</span><span class="o">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>I’m not a great fan of this style of object construction, it ends up making massive single lines of code which are confusing to read for example, in the following example, what does the 4th argument actually set, why is it zero?</p>
+<div class="highlight"><pre><span class="kd">const</span> <span class="nx">colaFacts</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="mi">330</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">500</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">35</span><span class="o">,</span> <span class="mi">22</span><span class="p">)</span>
+</pre></div>
+
+
+<p>One soltution to this problem is to only demand the required fields in the constructor and use setters for the other fields, we end up with something similar to this:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>    <span class="c1">// (mL) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (per container) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>            <span class="c1">// (g) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>           <span class="c1">// (mg) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   <span class="c1">// (g)  optional</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">SetterNutritionFacts</span><span class="p">(</span><span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">_servingSize</span> <span class="o">=</span> <span class="nx">servingSize</span><span class="o">;</span>
+            <span class="nx">_servings</span> <span class="o">=</span> <span class="nx">servings</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">calories</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_calories</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">fat</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_fat</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">salt</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_salt</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">carbohydrate</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_carbohydrate</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>To create our ColaFacts object using the above we would code:</p>
+<div class="highlight"><pre><span class="kd">const</span> <span class="nx">colaFacts</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="mi">330</span><span class="o">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="nx">colaFacts</span><span class="p">.</span><span class="nx">calories</span> <span class="o">=</span> <span class="mi">500</span><span class="o">;</span>
+<span class="nx">colaFacts</span><span class="p">.</span><span class="nx">salt</span> <span class="o">=</span> <span class="mi">35</span><span class="o">;</span>
+<span class="nx">colaFacts</span><span class="p">.</span><span class="nx">carbohydrate</span> <span class="o">=</span> <span class="mi">22</span><span class="o">;</span>
+</pre></div>
+
+
+<p>In my opinion this approach is preferable, but now it has introduced a different problem, one of design. In the first example where all the arguments were passed in the constructor, the NutritionFacts object was immutable – its values could not be modified once the object had been instantiated. However, with the NutritionFacts object shown above the calories, fat, salt and carbohydrate values can all be modified elsewhere in the code. If we have our purist Object Orientated Developer hat on we would declare this as a violation of encapsulation.</p>
+<p>The Builder Pattern offers us a solution, it allows us to create an immutable object (ie: no setters) which doesn’t end up having a massive constructor for all the optional values it can contain. In Effective Java, 2nd Edition, Joshua Bloch covers this under the title of “<a href="http://books.google.co.uk/books?id=ka2VUBqHiWkC&amp;pg=PA11&amp;lpg=PA11&amp;dq=Consider+a+Builder+when+faced+with+many+constructor+parameters&amp;source=bl&amp;ots=yZChKfnZM2&amp;sig=8_wa7cmd_8-OcpGHRPmgezV79xw&amp;hl=en&amp;sa=X&amp;ei=1waUU7LXIMO_PNXGgLgI&amp;ved=0CDwQ6AEwAQ#v=onepage&amp;q=Consider%20a%20Builder%20when%20faced%20with%20many%20constructor%20parameters&amp;f=false">Consider a Builder when faced with many constructor parameters</a>”. In his book, Josh makes use of an inner class to create the Builder, although we have inner classes in ActionScript, they do not share the same behaviour as those in Java, especially when it comes to the visibility of member properties – this makes implementing Josh’s example in ActionScript difficult, however, by using the internal visibility modifier we can create a close approximation.</p>
+<p>First we have the NutritionFactsBuilder, this is based upon the Builder pattern and make use of a fluent interface:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">NutritionFactsBuilder</span><span class="p">(</span><span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">servingSize</span> <span class="o">=</span> <span class="nx">servingSize</span><span class="o">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">servings</span> <span class="o">=</span> <span class="nx">servings</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withCalories</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">calories</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withFat</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">fat</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withSalt</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">salt</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withCarbohydrate</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">carbohydrate</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">build</span><span class="p">()</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Next up we have the NutritionFacts class, note that now the only argument it expects in the constructor is a NutritionFactsBuilder instance:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>    <span class="c1">// (mL) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (per container) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>        <span class="c1">// (g) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (mg) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   <span class="c1">// (g)  optional</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="nx">builder</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">_servingSize</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">servingSize</span><span class="o">;</span>
+            <span class="nx">_servings</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">servings</span><span class="o">;</span>
+            <span class="nx">_calories</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">calories</span><span class="o">;</span>
+            <span class="nx">_fat</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">fat</span><span class="o">;</span>
+            <span class="nx">_salt</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">salt</span><span class="o">;</span>
+            <span class="nx">_carbohydrate</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">carbohydrate</span><span class="o">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>We can now employ the builder to create us our NutritionFacts object:</p>
+<div class="highlight"><pre><span class="kd">const</span> <span class="nx">colaFacts</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NutritionFactsBuilder</span><span class="p">(</span><span class="mi">330</span><span class="o">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">withCalories</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">withSalt</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">withCarbohydrate</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">build</span><span class="p">();</span>
+</pre></div>
+
+
+<p>Note that we are supplying the required servingSize and servings values in the NutritionFactsBuilder() constructor, but all the other optional values can now be supplied via method chaining. When build() is called the NutritionFactsBuilder will return a new instance of NutrionFacts for us; this constructed NutritionFacts object is now immutable and the reader can easily see which properties are going to be set on the instance. Because we have made the properties of the NutritionFactBuilder object internal, they are only visible to classes inside the “nutrition.model” package, as the consumers of models shouldn’t be in the models package they will not be visible (only the public with… methods will be). Another nice benefit is that we have split construction of our object (performed by the NutritionFactsBuilder) out from the actual object (NutrtionFacts) – if NutritionFacts was instead an interface, the Builder could return a different concrete instance to the user without them ever knowing.</p>
+<p>By using the Builder Pattern in this fashion we are creating something similar to named parameters as found in other languages – other ActionScript developers have already found their own solutions to this, the most recognisable being Greensock’s excellent TweenLite, where an untyped object is used to optional provide parameters ie:</p>
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">TweenLite</span><span class="p">(</span><span class="nx">target</span><span class="o">,</span> <span class="mf">0.8</span><span class="o">,</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="mi">50</span><span class="o">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mi">100</span> <span class="p">});</span>
+</pre></div>
+
+
+<p>I think this works well for TweenLite, however, I often find myself having to head on over to greensock.com whenever I need to do something a little bit more complicated (for example, is it onCompleteParams, or onCompleteArgs?), the above Builder Pattern approach could have possibly answered that for us:</p>
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">TweenBuilder</span><span class="p">(</span><span class="nx">target</span><span class="o">,</span> <span class="mf">0.8</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">x</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">y</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">onCompleteParams</span><span class="p">([</span> <span class="s2">&quot;foo&quot;</span> <span class="p">])</span>
+    <span class="p">.</span><span class="nx">tween</span><span class="p">();</span>
+</pre></div>
   </div>
 </article>
 
+  <div class="pagination">
+      <a class="btn float-right" href="http://jonnyreeves.co.uk/index.html">
+        Newer Posts <i class="fa fa-angle-right"></i>
+      </a>
+  </div>
+
     <footer>
-<div id="paginator">
-
-<a href="http://jonnyreeves.co.uk/index.html" class="button_accent">Newer Posts &rarr;</a>
-</div>
-    </footer>
-
-    <div id="ending_message">
-      <p>&copy; Jonny Reeves. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
-    </div>
+      <p>&copy; Jonny Reeves </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
   </main>
-</body>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30309890-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Jonny Reeves ",
+  "url" : "http://jonnyreeves.co.uk",
+  "image": "",
+  "description": ""
+}
+</script></body>
 </html>
