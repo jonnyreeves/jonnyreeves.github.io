@@ -5,8 +5,11 @@ from __future__ import unicode_literals
 AUTHOR = u'Jonny Reeves'
 SITENAME = u'Jonny Reeves'
 SITEURL = ''
+SITETITLE = 'Jonny Reeves'
+SITESUBTITLE = 'code && coffee || music'
 TIMEZONE = 'Europe/London'
 DEFAULT_LANG = u'en'
+MAIN_MENU = False
 
 ARTICLE_URL = '{date:%Y}/{slug}/'
 ARTICLE_SAVE_AS = '{date:%Y}/{slug}/index.html'
@@ -19,16 +22,14 @@ TRANSLATION_FEED_ATOM = None
 
 GOOGLE_ANALYTICS = 'UA-30309890-1'
 
+# Social widget
+SOCIAL = (('linkedin', 'https://br.linkedin.com/in/jonnyreeves/en'),
+	      ('google', 'https://plus.google.com/+JohnReeves'),
+          ('github', 'https://github.com/jonnyreeves'),)
+
 # Blogroll
 LINKS = (
-	('Github', 'http://github.com/jonnyreeves'),
-	('Stack Overflow', 'http://stackoverflow.com/users/227349/jonnyreeves'),
-	('+JonnyReeves', 'https://plus.google.com/+JohnReeves')
 )
-
-# Social widget
-#SOCIAL = (('You can add links in your config file', '#'),
-#          ('Another social link', '#'),)
 
 DEFAULT_PAGINATION = 10
 
@@ -38,6 +39,10 @@ DEFAULT_PAGINATION = 10
 STATIC_PATHS = ['images', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
-# SVBHack Theme Settings
-THEME="../pelican-themes/pelican-svbhack"
+# Flex Theme Settings
+THEME="../pelican-themes/Flex"
 USER_LOGO_URL=SITEURL + '/images/avatar.jpg'
+
+# SVBHack Theme Settings
+#THEME="../pelican-themes/Flex"
+#USER_LOGO_URL=SITEURL + '/images/avatar.jpg'
