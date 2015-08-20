@@ -41,7 +41,7 @@ EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 
 # Flex Theme Settings
 THEME="../pelican-themes/Flex"
-USER_LOGO_URL=SITEURL + '/images/avatar.jpg'
+SITELOGO=SITEURL + '/images/avatar.jpg'
 
 # SVBHack Theme Settings
 #THEME="../pelican-themes/Flex"
