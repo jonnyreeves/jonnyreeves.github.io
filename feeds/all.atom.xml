@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-14T07:00:00+01:00</updated><entry><title>Using Chai with TypeScript and Mocha</title><link href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/" rel="alternate"></link><updated>2015-08-14T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-14:2015/using-chai-with-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a fan of extending &lt;code&gt;Object.prototype&lt;/code&gt;.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-20T21:00:00+01:00</updated><entry><title>Getting Proper Stack Traces with Mocha and TypeScript</title><link href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/" rel="alternate"></link><updated>2015-08-20T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-20:2015/getting-proper-stack-traces-with-mocha-and-typescript/</id><summary type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;npm&lt;/span&gt;&lt;span class="x"&gt; test&lt;/span&gt;
+
+&lt;span class="x"&gt;  Calculator&lt;/span&gt;
+&lt;span class="x"&gt;    &lt;/span&gt;&lt;span class="cp"&gt;#&lt;/span&gt;&lt;span class="nf"&gt;add&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;span class="x"&gt;      1) should work&lt;/span&gt;
+
+
+&lt;span class="x"&gt;  0 passing (21ms)&lt;/span&gt;
+&lt;span class="x"&gt;  1 failing&lt;/span&gt;
+
+&lt;span class="x"&gt;  1) Calculator &lt;/span&gt;&lt;span class="cp"&gt;#&lt;/span&gt;&lt;span class="nf"&gt;add&lt;/span&gt;&lt;span class="x"&gt; should work:&lt;/span&gt;
+
+&lt;span class="x"&gt;      AssertionError: expected 6 to equal 7&lt;/span&gt;
+&lt;span class="x"&gt;      + expected - actual&lt;/span&gt;
+
+&lt;span class="x"&gt;      -6&lt;/span&gt;
+&lt;span class="x"&gt;      +7&lt;/span&gt;
+
+&lt;span class="x"&gt;      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.js:12:38)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The stacktrace at the end points us to the failing assertion; however the stacktrace is pointing &lt;code&gt;Calculator.spec.js&lt;/code&gt; - not our TypeScript test-case.  &lt;/p&gt;
+&lt;p&gt;The TypeScript compiler (&lt;code&gt;tsc&lt;/code&gt;) will generate &lt;a href="http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/"&gt;source maps&lt;/a&gt; to enable debugging the TypeScript source rather than the transpiled ES5 javascript which gets written out by the compiler.  We can enable this with the &lt;code&gt;--sourcemap&lt;/code&gt; flag.&lt;/p&gt;
+&lt;p&gt;Problem is that V8 (the engine that powers Node) doesn't use these sourcemaps when generating stacktraces; &lt;a href="https://github.com/evanw/node-source-map-support"&gt;source-map-support&lt;/a&gt; to the rescue!  We can enable it by passing &lt;code&gt;--require source-map-support/register&lt;/code&gt; to &lt;code&gt;mocha&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;{
+    &amp;quot;scripts&amp;quot;: {
+      &amp;quot;test&amp;quot;: &amp;quot;mocha --require source-map-support/register test/**/*.spec.js&amp;quot;
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now we get an accurate stacktrace on failure :)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;  1) Calculator #add should work:
+
+      AssertionError: expected 6 to equal 7
+      + expected - actual
+
+      -6
+      +7
+
+      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.ts:15:22)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Thanks to redditor &lt;a href="https://www.reddit.com/user/pieeta"&gt;pieeta&lt;/a&gt; who tipped me off :)  I've posted the sample project up on &lt;a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces"&gt;Github&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Using Chai with TypeScript and Mocha</title><link href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/" rel="alternate"></link><updated>2015-08-14T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-14:2015/using-chai-with-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a fan of extending &lt;code&gt;Object.prototype&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Installation is straight forward. First install &lt;code&gt;chai&lt;/code&gt; as a dev dependency:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;npm install chai --save-dev
 &lt;/pre&gt;&lt;/div&gt;
@@ -172,7 +219,7 @@ class MyClass {
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;As before I've pushed the code to &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection"&gt;Github&lt;/a&gt; and create a &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2"&gt;Pull Request&lt;/a&gt; to highlight changes from the previous post.&lt;/p&gt;</summary></entry><entry><title>Injecting into Methods with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/" rel="alternate"></link><updated>2015-08-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-03:2015/injecting-into-methods-with-typescript-decorators/</id><summary type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
+&lt;p&gt;As before I've pushed the code to &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection"&gt;Github&lt;/a&gt; and create a &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2"&gt;Pull Request&lt;/a&gt; to highlight changes from the previous post.&lt;/p&gt;</summary></entry><entry><title>Injecting into Methods with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/" rel="alternate"></link><updated>2015-08-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-03:2015/injecting-into-methods-with-typescript-decorators/</id><summary type="html">&lt;p&gt;Expanding upon my &lt;a href="http://localhost:8000/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;class Person {
   private _firstName : string;
   private _lastName : string;

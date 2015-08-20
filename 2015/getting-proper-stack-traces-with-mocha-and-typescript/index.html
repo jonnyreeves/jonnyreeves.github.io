@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet/less" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.less">
+  <script src="http://jonnyreeves.co.uk/theme/js/less-1.5.0.min.js" type="text/javascript"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.css"> -->
+
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Jonny Reeves">
+  <meta name="description" content="Posts and writings by Jonny Reeves">
+
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Full Atom Feed" />
+
+<meta name="keywords" content="">
+
+  <title>
+Getting Proper Stack Traces with Mocha and TypeScript  </title>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-30309890-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="logo">
+      </a>
+      <h2><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h2>
+      <p></p>
+      <ul>
+        <li><a href="http://github.com/jonnyreeves" target="_blank">Github</a></li>
+        <li><a href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank">Stack Overflow</a></li>
+        <li><a href="https://plus.google.com/+JohnReeves" target="_blank">+JonnyReeves</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+<p>Posted on Thu 20 August 2015</p>
+    </header>
+
+<article>
+  <div class="article_title">
+    <h2><a href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/">Getting Proper Stack Traces with Mocha and TypeScript</a></h2>
+  </div>
+  <div class="article_text">
+    <p>Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:</p>
+<div class="highlight"><pre><span class="p">$</span><span class="nv">npm</span><span class="x"> test</span>
+
+<span class="x">  Calculator</span>
+<span class="x">    </span><span class="cp">#</span><span class="nf">add</span><span class="x"></span>
+<span class="x">      1) should work</span>
+
+
+<span class="x">  0 passing (21ms)</span>
+<span class="x">  1 failing</span>
+
+<span class="x">  1) Calculator </span><span class="cp">#</span><span class="nf">add</span><span class="x"> should work:</span>
+
+<span class="x">      AssertionError: expected 6 to equal 7</span>
+<span class="x">      + expected - actual</span>
+
+<span class="x">      -6</span>
+<span class="x">      +7</span>
+
+<span class="x">      at Context.&lt;anonymous&gt; (test/Calculator.spec.js:12:38)</span>
+</pre></div>
+
+
+<p>The stacktrace at the end points us to the failing assertion; however the stacktrace is pointing <code>Calculator.spec.js</code> - not our TypeScript test-case.  </p>
+<p>The TypeScript compiler (<code>tsc</code>) will generate <a href="http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/">source maps</a> to enable debugging the TypeScript source rather than the transpiled ES5 javascript which gets written out by the compiler.  We can enable this with the <code>--sourcemap</code> flag.</p>
+<p>Problem is that V8 (the engine that powers Node) doesn't use these sourcemaps when generating stacktraces; <a href="https://github.com/evanw/node-source-map-support">source-map-support</a> to the rescue!  We can enable it by passing <code>--require source-map-support/register</code> to <code>mocha</code>:</p>
+<div class="highlight"><pre>{
+    &quot;scripts&quot;: {
+      &quot;test&quot;: &quot;mocha --require source-map-support/register test/**/*.spec.js&quot;
+    }
+}
+</pre></div>
+
+
+<p>Now we get an accurate stacktrace on failure :)</p>
+<div class="highlight"><pre>  1) Calculator #add should work:
+
+      AssertionError: expected 6 to equal 7
+      + expected - actual
+
+      -6
+      +7
+
+      at Context.&lt;anonymous&gt; (test/Calculator.spec.ts:15:22)
+</pre></div>
+
+
+<p>Thanks to redditor <a href="https://www.reddit.com/user/pieeta">pieeta</a> who tipped me off :)  I've posted the sample project up on <a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces">Github</a>.</p>
+  </div>
+  <div class="article_meta">
+    <p>Category: <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
+  </div>
+
+
+</article>
+
+    <footer>
+<p><a href="http://jonnyreeves.co.uk/" class="button_accent">&larr; Back to Index</a></p>
+<script language="javascript">
+    function toggleComments() {
+        var commentDiv = document.getElementById("article_comments");
+        (commentDiv.style.display == "none") ? commentDiv.style.display = "block" : commentDiv.style.display = "none";
+        return false;
+    }
+</script>
+    </footer>
+
+    <div id="ending_message">
+      <p>&copy; Jonny Reeves. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>. Theme by Giulio Fidente on <a href="https://github.com/giulivo/pelican-svbhack" target="_blank">github</a>. .</p>
+    </div>
+  </main>
+</body>
+</html>

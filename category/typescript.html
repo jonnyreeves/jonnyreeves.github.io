@@ -59,6 +59,34 @@ Category: TypeScript  </title>
 
 <article>
   <div class="article_title">
+    <h2><a href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/">Getting Proper Stack Traces with Mocha and TypeScript</a></h2>
+  </div>
+  <div class="article_text">
+    <p>Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:</p>
+<div class="highlight"><pre><span class="p">$</span><span class="nv">npm</span><span class="x"> test</span>
+
+<span class="x">  Calculator</span>
+<span class="x">    </span><span class="cp">#</span><span class="nf">add</span><span class="x"></span>
+<span class="x">      1) should work</span>
+
+
+<span class="x">  0 passing (21ms)</span>
+<span class="x">  1 failing</span>
+
+<span class="x">  1) Calculator </span><span class="cp">#</span><span class="nf">add</span><span class="x"> should work:</span>
+
+<span class="x">      AssertionError: expected 6 to equal 7</span>
+<span class="x">      + expected - actual</span>
+
+<span class="x">      -6</span>
+<span class="x">      +7</span>
+
+<span class="x">      at Context ...</span></pre></div>
+  </div>
+</article>
+<hr />
+<article>
+  <div class="article_title">
     <h2><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/">Using Chai with TypeScript and Mocha</a></h2>
   </div>
   <div class="article_text">
@@ -84,7 +112,7 @@ Category: TypeScript  </title>
     <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/">Injecting into Methods with TypeScript Decorators</a></h2>
   </div>
   <div class="article_text">
-    <p>Expanding upon my <a href="/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
+    <p>Expanding upon my <a href="http://localhost:8000/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
 <div class="highlight"><pre>class Person {
   private _firstName : string;
   private _lastName : string;
