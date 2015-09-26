@@ -44,6 +44,37 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2015/single-page-app-versioning/#single-page-app-versioning">Single Page App Versioning</a></h2>
+    <p>
+      Posted on Sat 26 September 2015 in <a href="http://jonnyreeves.co.uk/category/misc.html">misc</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>Versioning applications isn't quite as clear cut as <a href="http://semver.org/">versioning libraries</a>; individuals on teams will almost certainly fork the codebase to work on features (sometimes long-lived) but you will still want to provide an easy, and consistent way to refer to each build generated from your Continuous Integration system.</p>
+<p>My preferred approach combines the human managed semantic version number from a project's <code>package.json</code> file with the short commit hash; ie: <code>0.1.6-deff00</code>; you can configure your project's build system to replace the commit hash for local (non-ci) builds.  This also has the nice advantage of making each build traceable back to your project's Git repository should you forget to tag a build :)</p>
+<p>The following example is for <a href="https://webpack.github.io/">webpack</a>, but could easily be modified for any build system:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">webpack</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;webpack&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">gitrev</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;git-rev-sync&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">pkg</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./package.json&#39;</span><span class="p">)</span>
+
+<span class="kd">function</span> <span class="nx">version</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">pkg</span><span class="p">.</span><span class="nx">version</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PRODUCTION</span> <span class="o">?</span> <span class="nx">gitrev</span><span class="p">.</span><span class="kr">short</span><span class="p">()</span> <span class="o">:</span> <span class="s1">&#39;dev&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
+  <span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span>
+    <span class="k">new</span> <span class="nx">webpack</span><span class="p">.</span><span class="nx">DefinePlugin</span><span class="p">({</span>
+      <span class="nx">VERSION</span><span class="o">:</span> <span class="nx">version</span><span class="p">()</span>
+    <span class="p">})</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/#getting-proper-stack-traces-with-mocha-and-typescript">Getting Proper Stack Traces with Mocha and TypeScript</a></h2>
     <p>
       Posted on Thu 20 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a> &#8226;
@@ -855,110 +886,6 @@ license: (ISC)
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;HTTPS POST request complete!&quot;</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/#modular-javascript-unit-testing-with-qunit-and-requirejs">Modular Javascript Unit Testing with QUnit and RequireJS</a></h2>
-    <p>
-      Posted on Tue 14 August 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
-    </p>
-  </header>
-  <div>
-      <p>Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere to <a href="http://www.codinghorror.com/blog/2007/03/curlys-law-do-one-thing.html">Single Responsibility Principle</a>. This is all well and good for your application code, but what about the Unit Tests which support it – how can we decompose these tests into modules so they’re well organized and easy to find?</p>
-<h3>Test Case Structure</h3>
-<p>First things first, you need to get your Unit Tests broken up into separate test cases. QUnit provides the QUnit.module method which takes care of this, allowing your to group tests in the QUnit test runner. We can extend this metaphor further by ensuring that each QUnit module resides in its own file, or, in other words – each application module has it’s own QUnit module of tests.</p>
-<p>Here’s an example of a simple QUnit Test Case defined as a RequireJS module:</p>
-<div class="highlight"><pre><span class="nx">define</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">require</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="c1">// Import depdendencies (note you can use relative paths here)</span>
-    <span class="kd">var</span> <span class="nx">PegiRatings</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./PegiRatings&quot;</span><span class="p">);</span>
-
-    <span class="c1">// Define the QUnit module and lifecycle.</span>
-    <span class="nx">QUnit</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">&quot;example/model/PegiRatings&quot;</span><span class="p">);</span>
-
-    <span class="nx">QUnit</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;isSuitibleFor - younger age supplied, returns false&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
-        <span class="nx">QUnit</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">PegiRatings</span><span class="p">.</span><span class="nx">PEGI_18</span><span class="p">.</span><span class="nx">isSuitibleFor</span><span class="p">(</span><span class="mi">17</span><span class="p">),</span> <span class="kc">false</span><span class="p">);</span>
-    <span class="p">});</span>
-
-    <span class="nx">QUnit</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;isSuitibleFor - same age supplied, returns true&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
-        <span class="nx">QUnit</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">PegiRatings</span><span class="p">.</span><span class="nx">PEGI_18</span><span class="p">.</span><span class="nx">isSuitibleFor</span><span class="p">(</span><span class="mi">18</span><span class="p">),</span> <span class="kc">true</span><span class="p">);</span>
-    <span class="p">});</span>
-
-    <span class="nx">QUnit</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;isSuitibleFor - older age supplied, returns true&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
-        <span class="nx">QUnit</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">PegiRatings</span><span class="p">.</span><span class="nx">PEGI_18</span><span class="p">.</span><span class="nx">isSuitibleFor</span><span class="p">(</span><span class="mi">19</span><span class="p">),</span> <span class="kc">true</span><span class="p">);</span>
-    <span class="p">});</span>
-<span class="p">});</span>
-</pre></div>
-
-
-<p>As you can see above, we are able to use <code>require</code> to import other modules from the src folder into the test case (in the above example we are including the PegiRatings object, which just happens to be the module under test). Here’s another example where we pull in not only other modules from the source tree, but also a vendor library (the ever popular, underscore.js):</p>
-<div class="highlight"><pre><span class="nx">define</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">require</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="c1">// Import depdendencies.</span>
-    <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;vendor/underscore&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">Player</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./Player&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">Game</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./Game&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">PegiRatings</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./PegiRatings&quot;</span><span class="p">);</span>
-
-    <span class="c1">// ... rest of test case omitted for brevity</span>
-
-<span class="p">});</span>
-</pre></div>
-
-
-<h3>Configuring QUnit and RequireJS</h3>
-<p>Now that we have our unit tests split out into separate modules, we need to configure the QUnit Test Runner so that it will work with RequireJS to resolve the dependencies. The first step is to modify the stock QUnit Test Runner HTML document so RequireJS is loaded along with all our testcases.</p>
-<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-    <span class="nt">&lt;head&gt;</span>
-        <span class="nt">&lt;title&gt;</span>Example Test Runner<span class="nt">&lt;/title&gt;</span>
-        <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;vendor/qunit.css&quot;</span> <span class="nt">/&gt;</span>
-
-        <span class="c">&lt;!-- QUnit includes --&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;vendor/qunit.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-
-        <span class="c">&lt;!-- Load RequireJS &amp; the testsuite --&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;../src/require-config.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;../src/vendor/require.js&quot;</span> <span class="na">data-main=</span><span class="s">&quot;testsuite.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-    <span class="nt">&lt;/head&gt;</span>
-    <span class="nt">&lt;body&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;qunit&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-    <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
-</pre></div>
-
-
-<p>In a typical QUnit Test Runner setup you would include your <code>tests.js</code> file which included all your QUnit tests. Instead we load the project’s <a href="http://requirejs.org/docs/api.html#config">RequireJS configuration file</a> (which is also used by the main project, to avoid duplication of configuration settings between the tests and the build) and then RequireJS itself with a callback to the <code>testsuite.js</code> file.</p>
-<div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-
-    <span class="c1">// Defer Qunit so RequireJS can work its magic and resolve all modules.</span>
-    <span class="nx">QUnit</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">autostart</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-
-    <span class="c1">// Configure RequireJS so it resolves relative module paths from the `src`</span>
-    <span class="c1">// folder.</span>
-    <span class="nx">require</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
-        <span class="nx">baseUrl</span><span class="o">:</span> <span class="s2">&quot;../src&quot;</span><span class="p">,</span>
-    <span class="p">});</span>
-
-    <span class="c1">// A list of all QUnit test Modules.  Make sure you include the `.js` </span>
-    <span class="c1">// extension so RequireJS resolves them as relative paths rather than using</span>
-    <span class="c1">// the `baseUrl` value supplied above.</span>
-    <span class="kd">var</span> <span class="nx">testModules</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;example/model/PlayerTests.js&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;example/model/PegiRatingsTests.js&quot;</span>
-    <span class="p">];</span>
-
-    <span class="c1">// Resolve all testModules and then start the Test Runner.</span>
-    <span class="nx">require</span><span class="p">(</span><span class="nx">testModules</span><span class="p">,</span> <span class="nx">QUnit</span><span class="p">.</span><span class="nx">start</span><span class="p">);</span>
-<span class="p">}());</span>
-</pre></div>
-
-
-<p>This file configures RequireJS ready for our Unit Test run and also provides a list of all test cases that we wish to execute. Once RequireJS has finished loading all the test cases, it makes a call to <code>QUnit.start</code> which kicks off the Test Runner.</p>
-<h3>Example Project Download</h3>
-<p>I’ve pushed all the source for this example project to the <a href="https://github.com/jonnyreeves/qunit-require/">qunit-require GitHub Repo</a>. You can <a href="https://github.com/jonnyreeves/qunit-require/zipball/master">download the zipball</a> and run the tests to gain a better understanding of the project structure.</p>
   </div>
 </article>
 
