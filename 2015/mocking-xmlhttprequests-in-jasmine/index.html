@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/font-awesome.min.css">
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Atom">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+<meta name="author" content="Jonny Reeves" />
+<meta name="description" content="When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe ..." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Jonny Reeves"/>
+<meta property="og:title" content="Mocking XMLHttpRequests in Jasmine"/>
+<meta property="og:description" content="When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jonnyreeves.co.uk/2015/mocking-xmlhttprequests-in-jasmine/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2015-10-19 21:00:00+01:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://jonnyreeves.co.uk/author/jonny-reeves.html">
+<meta property="article:section" content="javascript"/>
+<meta property="og:image" content="/images/avatar.jpg">  <title>Jonny Reeves &ndash; Mocking XMLHttpRequests in Jasmine</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
+      </a>
+      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <p>code && coffee || music</p>
+      <nav>
+        <ul class="list">
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://br.linkedin.com/in/jonnyreeves/en" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-google" href="https://plus.google.com/+JohnReeves" target="_blank"><i class="fa fa-google"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jonnyreeves" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="mocking-xmlhttprequests-in-jasmine">Mocking XMLHttpRequests in Jasmine</h1>
+    <p>Posted on Mon 19 October 2015 in <a href="http://jonnyreeves.co.uk/category/javascript.html">javascript</a></p>
+  </header>
+  <div>
+    <p>When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly.  Jasmine provides <a href="https://github.com/jasmine/jasmine-ajax"><code>jasmine-ajax</code></a> which will replace the <code>XMLHttpRequest</code> constructor on the global (eg: <code>window</code>).</p>
+<p>Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward:</p>
+<div class="highlight"><pre><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">());</span>
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">());</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>As per the <a href="http://jasmine.github.io/2.0/ajax.html">docs</a>, you can then pre-program responses before your subject under test makes them:</p>
+<div class="highlight"><pre><span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">stubRequest</span><span class="p">(</span><span class="s1">&#39;http://example.org/api&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">andReturn</span><span class="p">({</span> <span class="nx">responseText</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">json</span><span class="o">:</span> <span class="s1">&#39;ok!&#39;</span> <span class="p">})</span> <span class="p">});</span>
+</pre></div>
+
+
+<p>jasmine-ajax executes all XHR callbacks on the same tick making them effectivly syncronous.  This results in your test-code much easier to write and reason about.</p>
+<h3>Pairing with <code>xhr</code></h3>
+<p><code>XMLHttpRequest</code> doesn't have the nicest API to work with; fortunatley the <a href="https://github.com/Raynos/xhr"><code>xhr</code></a> module on NPM provides a nice, lightweight abstraction (it even smooths out the cracks in IE8).  However, it's not all plain sailing as the xhr module caches the <code>XMLHttpRequest</code> object on the window when it is loaded (ie: <code>require()</code>'d).</p>
+<div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
+</pre></div>
+
+
+<p>This results in requests made using the <code>xhr</code> module ignorning the fake <code>XMLHttpRequest</code> constructor that <code>jasmine-ajax</code> has placed on the window.  Fortunatley there's an easy fix, just re-assign <code>xhr.XMLHttpRequest</code> after you've installed jasmine-ajax:</p>
+<div class="highlight"><pre><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">xhr</span> <span class="nx">from</span> <span class="s1">&#39;xhr&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">();</span>
+    <span class="nx">xhr</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">();</span>
+    <span class="nx">xhr</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<h3>Closing thoughts on Jasmine</h3>
+<p>I've recently switched to Jasmine after using Mocha and SinonJS succesfully for a few years.  My hope was that the Jasmine ecosystem, which has a lot of funtionality built-in, would be more productive and easier for new-comers to the project to pick up than Mocha.  I've been very impressed by how easy it was to get up and running on Jasmine; and the v2.3 API is pleasant to code against (it will be instantly familiar to <a href="http://chaijs.com/guide/installation/">chai</a> users), however I do wish that Jasmine made it easier to write custom matchers as I find myself missing the verbosity of SinonJS's <code>sinon.match(val =&gt; { ... })</code>.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+</article>
+
+    <footer>
+      <p>&copy; Jonny Reeves </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30309890-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Mocking XMLHttpRequests in Jasmine",
+  "headline": "Mocking XMLHttpRequests in Jasmine",
+  "datePublished": "2015-10-19 21:00:00+01:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonny Reeves",
+    "url": "http://jonnyreeves.co.uk/author/jonny-reeves.html"
+  },
+  "image": "/images/avatar.jpg",
+  "url": "http://jonnyreeves.co.uk/2015/mocking-xmlhttprequests-in-jasmine/",
+  "description": "When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe ..."
+}
+</script></body>
+</html>

@@ -44,6 +44,60 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2015/mocking-xmlhttprequests-in-jasmine/#mocking-xmlhttprequests-in-jasmine">Mocking XMLHttpRequests in Jasmine</a></h2>
+    <p>
+      Posted on Mon 19 October 2015 in <a href="http://jonnyreeves.co.uk/category/javascript.html">javascript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly.  Jasmine provides <a href="https://github.com/jasmine/jasmine-ajax"><code>jasmine-ajax</code></a> which will replace the <code>XMLHttpRequest</code> constructor on the global (eg: <code>window</code>).</p>
+<p>Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward:</p>
+<div class="highlight"><pre><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">());</span>
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">());</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>As per the <a href="http://jasmine.github.io/2.0/ajax.html">docs</a>, you can then pre-program responses before your subject under test makes them:</p>
+<div class="highlight"><pre><span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">stubRequest</span><span class="p">(</span><span class="s1">&#39;http://example.org/api&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">andReturn</span><span class="p">({</span> <span class="nx">responseText</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">json</span><span class="o">:</span> <span class="s1">&#39;ok!&#39;</span> <span class="p">})</span> <span class="p">});</span>
+</pre></div>
+
+
+<p>jasmine-ajax executes all XHR callbacks on the same tick making them effectivly syncronous.  This results in your test-code much easier to write and reason about.</p>
+<h3>Pairing with <code>xhr</code></h3>
+<p><code>XMLHttpRequest</code> doesn't have the nicest API to work with; fortunatley the <a href="https://github.com/Raynos/xhr"><code>xhr</code></a> module on NPM provides a nice, lightweight abstraction (it even smooths out the cracks in IE8).  However, it's not all plain sailing as the xhr module caches the <code>XMLHttpRequest</code> object on the window when it is loaded (ie: <code>require()</code>'d).</p>
+<div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
+</pre></div>
+
+
+<p>This results in requests made using the <code>xhr</code> module ignorning the fake <code>XMLHttpRequest</code> constructor that <code>jasmine-ajax</code> has placed on the window.  Fortunatley there's an easy fix, just re-assign <code>xhr.XMLHttpRequest</code> after you've installed jasmine-ajax:</p>
+<div class="highlight"><pre><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">xhr</span> <span class="nx">from</span> <span class="s1">&#39;xhr&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">();</span>
+    <span class="nx">xhr</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">();</span>
+    <span class="nx">xhr</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<h3>Closing thoughts on Jasmine</h3>
+<p>I've recently switched to Jasmine after using Mocha and SinonJS succesfully for a few years.  My hope was that the Jasmine ecosystem, which has a lot of funtionality built-in, would be more productive and easier for new-comers to the project to pick up than Mocha.  I've been very impressed by how easy it was to get up and running on Jasmine; and the v2.3 API is pleasant to code against (it will be instantly familiar to <a href="http://chaijs.com/guide/installation/">chai</a> users), however I do wish that Jasmine made it easier to write custom matchers as I find myself missing the verbosity of SinonJS's <code>sinon.match(val =&gt; { ... })</code>.</p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/single-page-app-versioning/#single-page-app-versioning">Single Page App Versioning</a></h2>
     <p>
       Posted on Sat 26 September 2015 in <a href="http://jonnyreeves.co.uk/category/misc.html">misc</a> &#8226;
@@ -848,42 +902,6 @@ license: (ISC)
 
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span> <span class="p">..</span> <span class="p">});</span>
-<span class="p">});</span>
-</pre></div>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2013/making-xhr-request-to-https-domains-with-winjs/#making-xhr-request-to-https-domains-with-winjs">Making XHR Request to HTTPS domains with WinJS</a></h2>
-    <p>
-      Posted on Fri 25 January 2013 in <a href="http://jonnyreeves.co.uk/category/winjs.html">WinJS</a> &#8226;
-    </p>
-  </header>
-  <div>
-      <p>I recently came across an interesting caveat when working with WinJS (the JavaScript layer for creating Windows 8 Store applications). If you attempt to make an HTTP POST request to a server over the HTTPS protocol you may run into the following error:</p>
-<div class="highlight"><pre><span class="n">XMLHttpRequest</span><span class="o">:</span> <span class="n">Network</span> <span class="n">Error</span> <span class="mh">0x2ef3</span><span class="o">,</span> <span class="n">Could</span> <span class="n">not</span> <span class="n">complete</span> <span class="n">the</span> <span class="n">operation</span> <span class="n">due</span> <span class="n">to</span> <span class="n">error</span> <span class="mi">00002</span><span class="n">ef3</span><span class="o">.</span>
-</pre></div>
-
-
-<p>This error appears to be caused by a security certificate issue; however the solution is pretty straight forward – you just need to make a GET request before attempting subsequent POST request, for example:</p>
-<div class="highlight"><pre><span class="c1">// Before making a POST request we first have to issue a GET against the target</span>
-<span class="c1">// server to work around Network Error 0x2ef3.  Note you only need to do this</span>
-<span class="c1">// ONCE in your app, not every time.</span>
-<span class="nx">WinJS</span><span class="p">.</span><span class="nx">xhr</span><span class="p">({</span>
-    <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://my.server/&quot;</span>
-<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-
-    <span class="c1">// After a single GET request we can now invoke POST requests.</span>
-    <span class="nx">WinJS</span><span class="p">.</span><span class="nx">xhr</span><span class="p">({</span>
-        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://my.server/endpoint&quot;</span><span class="p">,</span>
-        <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
-        <span class="nx">data</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">foo</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span>
-        <span class="p">}</span>
-    <span class="p">})</span>
-<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;HTTPS POST request complete!&quot;</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
   </div>
