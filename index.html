@@ -51,9 +51,9 @@
   </header>
   <div>
       <p>Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:</p>
-<h3>babelify</h3>
+<h2>babelify</h2>
 <p>Transpiling your NPM modules to ES5 will allow it to work in a wide variety of environments.  Add a <code>prepublish</code> script to your <code>package.json</code>'s scripts block to automate this when you run <code>npm publish</code>.  By convention <code>/lib</code> is a good place to output your ES5 artefacts to, and it's a good idea to produce a clean build each time (with the <a href="https://www.npmjs.com/package/rimraf">rimraf module</a> providing a cross platform implementation of <code>rm -rf</code>, windows users will thank you.)</p>
-<h3>main</h3>
+<h2>main</h2>
 <p>Traditionally your <code>index.js</code> file would reside in the root of your module (this is where NPM will look for it by default); however as we are going to transpile to ES5 you'll want to put your index file in <code>/src/index.js</code>.</p>
 <p>However, because we are transpiling to ES5, your <code>package.json</code>'s <code>main</code> block should point to the transpiled <code>index.js</code> file in the <code>/lib</code> folder.  If you're feeling adventurous you incude a <a href="https://github.com/caridy/es6-module-transpiler-npm-resolver"><code>jsnext:main</code></a> block and point to to your ES6 entry point.</p>
 <p><code>/package.json</code></p>
