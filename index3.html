@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/font-awesome.min.css">
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Atom">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+  <meta name="author" content="Jonny Reeves" />
+  <meta name="description" content="" />
+<meta property="og:site_name" content="Jonny Reeves"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="Jonny Reeves"/>
+<meta property="og:description" content=""/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jonnyreeves.co.uk"/>
+<meta property="og:image" content="/images/avatar.jpg">
+  <title>Jonny Reeves</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
+      </a>
+      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <p>code && coffee || music</p>
+      <nav>
+        <ul class="list">
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://br.linkedin.com/in/jonnyreeves/en" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-google" href="https://plus.google.com/+JohnReeves" target="_blank"><i class="fa fa-google"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jonnyreeves" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h2><a href="http://jonnyreeves.co.uk/2011/builder-pattern-in-actionscript-fluent-constructors/#builder-pattern-in-actionscript-fluent-constructors">Builder Pattern in ActionScript – Fluent Constructors</a></h2>
+    <p>
+      Posted on Fri 25 March 2011 in <a href="http://jonnyreeves.co.uk/category/actionscript.html">ActionScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>How many times have you come across a class which looks like this:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>    <span class="c1">// (mL) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (per container) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>        <span class="c1">// (g) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (mg) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   <span class="c1">// (g)  optional</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">calories</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">fat</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">salt</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>  <span class="p">{</span>
+            <span class="nx">_servingSize</span> <span class="o">=</span> <span class="nx">servingSize</span><span class="o">;</span>
+            <span class="nx">_servings</span> <span class="o">=</span> <span class="nx">servings</span><span class="o">;</span>
+            <span class="nx">_calories</span> <span class="o">=</span> <span class="nx">calories</span><span class="o">;</span>
+            <span class="nx">_fat</span> <span class="o">=</span> <span class="nx">fat</span><span class="o">;</span>
+            <span class="nx">_salt</span> <span class="o">=</span> <span class="nx">salt</span><span class="o">;</span>
+            <span class="nx">_carbohydrate</span> <span class="o">=</span> <span class="nx">carbohydrate</span><span class="o">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>I’m not a great fan of this style of object construction, it ends up making massive single lines of code which are confusing to read for example, in the following example, what does the 4th argument actually set, why is it zero?</p>
+<div class="highlight"><pre><span class="kd">const</span> <span class="nx">colaFacts</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="mi">330</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">500</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">35</span><span class="o">,</span> <span class="mi">22</span><span class="p">)</span>
+</pre></div>
+
+
+<p>One soltution to this problem is to only demand the required fields in the constructor and use setters for the other fields, we end up with something similar to this:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>    <span class="c1">// (mL) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (per container) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>            <span class="c1">// (g) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>           <span class="c1">// (mg) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   <span class="c1">// (g)  optional</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">SetterNutritionFacts</span><span class="p">(</span><span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">_servingSize</span> <span class="o">=</span> <span class="nx">servingSize</span><span class="o">;</span>
+            <span class="nx">_servings</span> <span class="o">=</span> <span class="nx">servings</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">calories</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_calories</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">fat</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_fat</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">salt</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_salt</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="kd">set</span> <span class="nx">carbohydrate</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+            <span class="nx">_carbohydrate</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>To create our ColaFacts object using the above we would code:</p>
+<div class="highlight"><pre><span class="kd">const</span> <span class="nx">colaFacts</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="mi">330</span><span class="o">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="nx">colaFacts</span><span class="p">.</span><span class="nx">calories</span> <span class="o">=</span> <span class="mi">500</span><span class="o">;</span>
+<span class="nx">colaFacts</span><span class="p">.</span><span class="nx">salt</span> <span class="o">=</span> <span class="mi">35</span><span class="o">;</span>
+<span class="nx">colaFacts</span><span class="p">.</span><span class="nx">carbohydrate</span> <span class="o">=</span> <span class="mi">22</span><span class="o">;</span>
+</pre></div>
+
+
+<p>In my opinion this approach is preferable, but now it has introduced a different problem, one of design. In the first example where all the arguments were passed in the constructor, the NutritionFacts object was immutable – its values could not be modified once the object had been instantiated. However, with the NutritionFacts object shown above the calories, fat, salt and carbohydrate values can all be modified elsewhere in the code. If we have our purist Object Orientated Developer hat on we would declare this as a violation of encapsulation.</p>
+<p>The Builder Pattern offers us a solution, it allows us to create an immutable object (ie: no setters) which doesn’t end up having a massive constructor for all the optional values it can contain. In Effective Java, 2nd Edition, Joshua Bloch covers this under the title of “<a href="http://books.google.co.uk/books?id=ka2VUBqHiWkC&amp;pg=PA11&amp;lpg=PA11&amp;dq=Consider+a+Builder+when+faced+with+many+constructor+parameters&amp;source=bl&amp;ots=yZChKfnZM2&amp;sig=8_wa7cmd_8-OcpGHRPmgezV79xw&amp;hl=en&amp;sa=X&amp;ei=1waUU7LXIMO_PNXGgLgI&amp;ved=0CDwQ6AEwAQ#v=onepage&amp;q=Consider%20a%20Builder%20when%20faced%20with%20many%20constructor%20parameters&amp;f=false">Consider a Builder when faced with many constructor parameters</a>”. In his book, Josh makes use of an inner class to create the Builder, although we have inner classes in ActionScript, they do not share the same behaviour as those in Java, especially when it comes to the visibility of member properties – this makes implementing Josh’s example in ActionScript difficult, however, by using the internal visibility modifier we can create a close approximation.</p>
+<p>First we have the NutritionFactsBuilder, this is based upon the Builder pattern and make use of a fluent interface:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>
+        <span class="kd">internal</span> <span class="k">var</span> <span class="nx">carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">NutritionFactsBuilder</span><span class="p">(</span><span class="nx">servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">,</span> <span class="nx">servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">servingSize</span> <span class="o">=</span> <span class="nx">servingSize</span><span class="o">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">servings</span> <span class="o">=</span> <span class="nx">servings</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withCalories</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">calories</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withFat</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">fat</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withSalt</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">salt</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">withCarbohydrate</span><span class="p">(</span><span class="nx">value</span> <span class="o">:</span> <span class="nb">uint</span><span class="p">)</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span> <span class="p">{</span>
+            <span class="nx">carbohydrate</span> <span class="o">=</span> <span class="nx">value</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">build</span><span class="p">()</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Next up we have the NutritionFacts class, note that now the only argument it expects in the constructor is a NutritionFactsBuilder instance:</p>
+<div class="highlight"><pre><span class="kd">package</span> <span class="nx">nutrition</span><span class="p">.</span><span class="nx">model</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nx">NutritionFacts</span> <span class="p">{</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servingSize</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>    <span class="c1">// (mL) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_servings</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (per container) required</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_calories</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_fat</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>        <span class="c1">// (g) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_salt</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>       <span class="c1">// (mg) optional</span>
+        <span class="kd">private</span> <span class="k">var</span> <span class="nx">_carbohydrate</span> <span class="o">:</span> <span class="nb">uint</span><span class="o">;</span>   <span class="c1">// (g)  optional</span>
+
+        <span class="kd">public</span> <span class="kd">function</span> <span class="nx">NutritionFacts</span><span class="p">(</span><span class="nx">builder</span> <span class="o">:</span> <span class="nx">NutritionFactsBuilder</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">_servingSize</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">servingSize</span><span class="o">;</span>
+            <span class="nx">_servings</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">servings</span><span class="o">;</span>
+            <span class="nx">_calories</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">calories</span><span class="o">;</span>
+            <span class="nx">_fat</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">fat</span><span class="o">;</span>
+            <span class="nx">_salt</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">salt</span><span class="o">;</span>
+            <span class="nx">_carbohydrate</span> <span class="o">=</span> <span class="nx">builder</span><span class="p">.</span><span class="nx">carbohydrate</span><span class="o">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>We can now employ the builder to create us our NutritionFacts object:</p>
+<div class="highlight"><pre><span class="kd">const</span> <span class="nx">colaFacts</span> <span class="o">:</span> <span class="nx">NutritionFacts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NutritionFactsBuilder</span><span class="p">(</span><span class="mi">330</span><span class="o">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">withCalories</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">withSalt</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">withCarbohydrate</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">build</span><span class="p">();</span>
+</pre></div>
+
+
+<p>Note that we are supplying the required servingSize and servings values in the NutritionFactsBuilder() constructor, but all the other optional values can now be supplied via method chaining. When build() is called the NutritionFactsBuilder will return a new instance of NutrionFacts for us; this constructed NutritionFacts object is now immutable and the reader can easily see which properties are going to be set on the instance. Because we have made the properties of the NutritionFactBuilder object internal, they are only visible to classes inside the “nutrition.model” package, as the consumers of models shouldn’t be in the models package they will not be visible (only the public with… methods will be). Another nice benefit is that we have split construction of our object (performed by the NutritionFactsBuilder) out from the actual object (NutrtionFacts) – if NutritionFacts was instead an interface, the Builder could return a different concrete instance to the user without them ever knowing.</p>
+<p>By using the Builder Pattern in this fashion we are creating something similar to named parameters as found in other languages – other ActionScript developers have already found their own solutions to this, the most recognisable being Greensock’s excellent TweenLite, where an untyped object is used to optional provide parameters ie:</p>
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">TweenLite</span><span class="p">(</span><span class="nx">target</span><span class="o">,</span> <span class="mf">0.8</span><span class="o">,</span> <span class="p">{</span> <span class="nx">x</span><span class="o">:</span> <span class="mi">50</span><span class="o">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mi">100</span> <span class="p">});</span>
+</pre></div>
+
+
+<p>I think this works well for TweenLite, however, I often find myself having to head on over to greensock.com whenever I need to do something a little bit more complicated (for example, is it onCompleteParams, or onCompleteArgs?), the above Builder Pattern approach could have possibly answered that for us:</p>
+<div class="highlight"><pre><span class="k">new</span> <span class="nx">TweenBuilder</span><span class="p">(</span><span class="nx">target</span><span class="o">,</span> <span class="mf">0.8</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">x</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">y</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">onCompleteParams</span><span class="p">([</span> <span class="s2">&quot;foo&quot;</span> <span class="p">])</span>
+    <span class="p">.</span><span class="nx">tween</span><span class="p">();</span>
+</pre></div>
+  </div>
+</article>
+
+  <div class="pagination">
+      <a class="btn float-right" href="http://jonnyreeves.co.uk/index2.html">
+        Newer Posts <i class="fa fa-angle-right"></i>
+      </a>
+  </div>
+
+    <footer>
+      <p>&copy; Jonny Reeves </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30309890-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Jonny Reeves ",
+  "url" : "http://jonnyreeves.co.uk",
+  "image": "/images/avatar.jpg",
+  "description": ""
+}
+</script></body>
+</html>
