@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-10-24T21:00:00+01:00</updated><entry><title>Babel ❤ NPM</title><link href="http://jonnyreeves.co.uk/2015/babel-npm/" rel="alternate"></link><updated>2015-10-24T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-24:2015/babel-npm/</id><summary type="html">&lt;p&gt;Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:&lt;/p&gt;
-&lt;h2&gt;babelify&lt;/h2&gt;
-&lt;p&gt;Transpiling your NPM modules to ES5 will allow it to work in a wide variety of environments.  Add a &lt;code&gt;prepublish&lt;/code&gt; script to your &lt;code&gt;package.json&lt;/code&gt;'s scripts block to automate this when you run &lt;code&gt;npm publish&lt;/code&gt;.  By convention &lt;code&gt;/lib&lt;/code&gt; is a good place to output your ES5 artefacts to, and it's a good idea to produce a clean build each time (with the &lt;a href="https://www.npmjs.com/package/rimraf"&gt;rimraf module&lt;/a&gt; providing a cross platform implementation of &lt;code&gt;rm -rf&lt;/code&gt;, windows users will thank you.)&lt;/p&gt;
-&lt;h2&gt;main&lt;/h2&gt;
-&lt;p&gt;Traditionally your &lt;code&gt;index.js&lt;/code&gt; file would reside in the root of your module (this is where NPM will look for it by default); however as we are going to transpile to ES5 you'll want to put your index file in &lt;code&gt;/src/index.js&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;However, because we are transpiling to ES5, your &lt;code&gt;package.json&lt;/code&gt;'s &lt;code&gt;main&lt;/code&gt; block should point to the transpiled &lt;code&gt;index.js&lt;/code&gt; file in the &lt;code&gt;/lib&lt;/code&gt; folder.  If you're feeling adventurous you incude a &lt;a href="https://github.com/caridy/es6-module-transpiler-npm-resolver"&gt;&lt;code&gt;jsnext:main&lt;/code&gt;&lt;/a&gt; block and point to to your ES6 entry point.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;babelify&lt;/h3&gt;
+&lt;p&gt;Transpiling your NPM modules to ES5 with &lt;a href="https://babeljs.io/"&gt;babel&lt;/a&gt; will allow them to work in a wide variety of environments.  Add a &lt;code&gt;prepublish&lt;/code&gt; script to your &lt;code&gt;package.json&lt;/code&gt;'s scripts block to automate this when you run &lt;code&gt;npm publish&lt;/code&gt;.  By convention &lt;code&gt;/lib&lt;/code&gt; is a good place to output your ES5 artefacts to, and it's a good idea to produce a clean build each time (with the &lt;a href="https://www.npmjs.com/package/rimraf"&gt;rimraf module&lt;/a&gt; providing a cross platform implementation of &lt;code&gt;rm -rf&lt;/code&gt;, windows users will thank you.)&lt;/p&gt;
+&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
-  &amp;quot;main&amp;quot;: &amp;quot;lib/index.js&amp;quot;,
-  &amp;quot;jsnext:main&amp;quot;: &amp;quot;src/index.js&amp;quot;,
   &amp;quot;scripts&amp;quot;: {
     &amp;quot;prepublish&amp;quot;: &amp;quot;rimraf lib &amp;amp;&amp;amp; babel --out-dir lib src&amp;quot;
   }
@@ -17,9 +12,21 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;h3&gt;main&lt;/h3&gt;
+&lt;p&gt;Traditionally your &lt;code&gt;index.js&lt;/code&gt; file would reside in the root of your module (this is where NPM will look for it by default); however as we are going to transpile to ES5 you'll want to put your index file, and all other ES6 sources under &lt;code&gt;/src&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Your &lt;code&gt;package.json&lt;/code&gt;'s &lt;code&gt;main&lt;/code&gt; block should point to the transpiled &lt;code&gt;index.js&lt;/code&gt; file in the &lt;code&gt;/lib&lt;/code&gt; folder.  If you're feeling adventurous you incude a &lt;a href="https://github.com/caridy/es6-module-transpiler-npm-resolver"&gt;&lt;code&gt;jsnext:main&lt;/code&gt;&lt;/a&gt; block and point to to your ES6 entry point.&lt;/p&gt;
+&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;{
+  &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
+  &amp;quot;main&amp;quot;: &amp;quot;lib/index.js&amp;quot;,
+  &amp;quot;jsnext:main&amp;quot;: &amp;quot;src/index.js&amp;quot;
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;h2&gt;Mocha&lt;/h2&gt;
-&lt;p&gt;Mocha does the job well and it's easy to configure for use with babel; just give it a &lt;code&gt;--compiler&lt;/code&gt; flag when you invoke it:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Mocha does the job well and it's easy to configure for use with babel; just give it a &lt;code&gt;--compilers&lt;/code&gt; flag when you invoke it:&lt;/p&gt;
+&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
   &amp;quot;scripts&amp;quot;: {
@@ -30,14 +37,14 @@
 
 
 &lt;h2&gt;.npmignore&lt;/h2&gt;
-&lt;p&gt;This one tripped me up; when I published my first NPM modules which made use of babel (&lt;a href="https://github.com/jonnyreeves/redux-action-side-effects"&gt;redux-action-side-effects&lt;/a&gt;) my &lt;code&gt;/lib&lt;/code&gt; folder wasn't included in the final archived vended by NPM.  Turns out that NPM will automatically exclude everything in your &lt;code&gt;.gitignore&lt;/code&gt; file (and as the &lt;code&gt;/lib&lt;/code&gt; folder contains build artefacts I excluded it from source control).  To override this add a &lt;code&gt;/.npmignore&lt;/code&gt; file:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;/.npmignore&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This one tripped me up; when I published my first NPM modules which made use of babel (&lt;a href="https://github.com/jonnyreeves/redux-action-side-effects"&gt;redux-action-side-effects&lt;/a&gt;) my &lt;code&gt;/lib&lt;/code&gt; folder wasn't included in the final archived vended by NPM.  Turns out that NPM will &lt;a href="https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package"&gt;automatically exclude everything in your &lt;code&gt;.gitignore&lt;/code&gt; file&lt;/a&gt; (and as the &lt;code&gt;/lib&lt;/code&gt; folder contains build artefacts I excluded it from source control).  To override this add a &lt;code&gt;/.npmignore&lt;/code&gt; file:&lt;/p&gt;
+&lt;h5&gt;&lt;code&gt;/.npmignore&lt;/code&gt;&lt;/h5&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# If this file is not present the contents of .gitignore are used
 /.gitignore
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Happy &lt;code&gt;npm publish&lt;/code&gt;'ing.&lt;/p&gt;</summary></entry><entry><title>Mocking XMLHttpRequests in Jasmine</title><link href="http://jonnyreeves.co.uk/2015/mocking-xmlhttprequests-in-jasmine/" rel="alternate"></link><updated>2015-10-19T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-19:2015/mocking-xmlhttprequests-in-jasmine/</id><summary type="html">&lt;p&gt;When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly.  Jasmine provides &lt;a href="https://github.com/jasmine/jasmine-ajax"&gt;&lt;code&gt;jasmine-ajax&lt;/code&gt;&lt;/a&gt; which will replace the &lt;code&gt;XMLHttpRequest&lt;/code&gt; constructor on the global (eg: &lt;code&gt;window&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Happy &lt;code&gt;npm publish&lt;/code&gt;ing!&lt;/p&gt;</summary></entry><entry><title>Mocking XMLHttpRequests in Jasmine</title><link href="http://jonnyreeves.co.uk/2015/mocking-xmlhttprequests-in-jasmine/" rel="alternate"></link><updated>2015-10-19T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-19:2015/mocking-xmlhttprequests-in-jasmine/</id><summary type="html">&lt;p&gt;When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly.  Jasmine provides &lt;a href="https://github.com/jasmine/jasmine-ajax"&gt;&lt;code&gt;jasmine-ajax&lt;/code&gt;&lt;/a&gt; which will replace the &lt;code&gt;XMLHttpRequest&lt;/code&gt; constructor on the global (eg: &lt;code&gt;window&lt;/code&gt;).&lt;/p&gt;
 &lt;p&gt;Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;jasmine-ajax&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
