@@ -44,6 +44,64 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2015/hot-loading-in-express/#hot-loading-in-express">Hot loading in Express</a></h2>
+    <p>
+      Posted on Sat 31 October 2015 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>Gaffa tape time.  Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going.  With this in mind, let's get hot-loading working with <a href="https://github.com/janl/mustache.js/">Mustache templates</a> on an <a href="https://www.npmjs.com/package/express">express</a>-based local development server.</p>
+<p>Let's start simple by serving some templates:</p>
+<div class="highlight"><pre><span class="kr">import</span> <span class="nx">express</span> <span class="nx">from</span> <span class="s1">&#39;express&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">mustache</span> <span class="nx">from</span> <span class="s1">&#39;mustache&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">fs</span> <span class="nx">from</span> <span class="s1">&#39;fs&#39;</span><span class="p">;</span>
+
+<span class="c1">// Create a new express server instance.</span>
+<span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="c1">// Handle GET requests to `/hello`.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/hello&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Read the template and JSON data from the local filesystem.</span>
+  <span class="kr">const</span> <span class="nx">tpl</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;./hello.mustache&#39;</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">);</span>
+  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;./hello.json&#39;</span><span class="p">));</span>
+
+  <span class="c1">// Serve back the rendered template.</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">tpl</span><span class="p">,</span> <span class="nx">data</span><span class="p">));</span>
+<span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">server</span> <span class="nx">started</span> <span class="nx">at</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:3000`);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+</pre></div>
+
+
+<p>So far so good, but let's make it hot-reload so we can do this:</p>
+<p><a href="https://gyazo.com/326ca72b98bce37af177d9e8d5143279"><img alt="https://gyazo.com/326ca72b98bce37af177d9e8d5143279" src="https://i.gyazo.com/326ca72b98bce37af177d9e8d5143279.gif" /></a></p>
+<p>First stop is to grab the <a href="https://www.npmjs.com/package/livereload">livereload module</a> from NPM; this creates its own server which serves a javascript file used for relaying changes back to the browser; it also sets up a file-system monitor to detect changes when you modify your source files.</p>
+<div class="highlight"><pre><span class="c1">// Create a livereload server</span>
+<span class="kr">const</span> <span class="nx">hotServer</span> <span class="o">=</span> <span class="nx">livereload</span><span class="p">.</span><span class="nx">createServer</span><span class="p">({</span>
+  <span class="c1">// Reload on changes to these file extensions.</span>
+  <span class="nx">exts</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;mustache&#39;</span> <span class="p">],</span>
+  <span class="c1">// Print debug info</span>
+  <span class="nx">debug</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">});</span>
+
+<span class="c1">// Specify the folder to watch for file-changes.</span>
+<span class="nx">hotServer</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">);</span>
+</pre></div>
+
+
+<p>The last piece is to inject the <code>livereload.js</code> into your HTML; the <a href="https://github.com/intesso/connect-livereload">connect-livereload module</a> takes care of this; just drop it into your app before your define your routes:</p>
+<div class="highlight"><pre><span class="c1">// Inject the livereload.js script tag into pages.</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">livereloadMiddleware</span><span class="p">());</span>
+</pre></div>
+
+
+<p>Et viola, hot reloading of mustache templates and their associated data.  Full source over on <a href="https://github.com/jonnyreeves/mustache-express-hotreload">github</a>.</p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/babel-npm/#babel-npm">Babel ❤ NPM</a></h2>
     <p>
       Posted on Sat 24 October 2015 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
@@ -824,69 +882,6 @@ license: (ISC)
 
 
 <p>Have fun fixing the test-case :)  Full source over over at <a href="https://github.com/jonnyreeves/hello-ts-mocha">github.com/jonnyreeves/hello-ts-mocha</a></p>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2014/simple-javascript-classes-in-commonjs/#simple-javascript-classes-in-commonjs">Simple JavaScript Classes in CommonJS</a></h2>
-    <p>
-      Posted on Sat 26 July 2014 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
-    </p>
-  </header>
-  <div>
-      <p>Having recently become an advocate of CommonJS modules and Browserify our team was looking for a simple way to define Plain old JavaScript Classes in our modules.  We've settled on the following style, making use of <a href="https://github.com/justmoon/node-extend">extend</a> and <a href="https://github.com/isaacs/inherits">inherits</a>; two tiny, focused CommonJS modules which will add a whopping 2kb to our project when unminified.</p>
-<div class="highlight"><pre><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-
-<span class="kd">var</span> <span class="nx">inherits</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;inherits&quot;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">extend</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">);</span>
-
-<span class="c1">// Declare the constructor and member properties.</span>
-<span class="kd">function</span> <span class="nx">MyClass</span><span class="p">(</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">bar</span><span class="p">)</span> <span class="p">{</span>
-
-  <span class="c1">// Make a call to the Parent Class&#39; constructor. The `_super` </span>
-  <span class="c1">// member is provided by the `inherits` call below and is</span>
-  <span class="c1">// preferred to calling the `MyParentClass` constructor function</span>
-  <span class="c1">// directly should we want to alter the inheritence.</span>
-  <span class="nx">MyClass</span><span class="p">.</span><span class="nx">super_</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">foo</span><span class="p">);</span>
-
-  <span class="c1">// Keep things straight forward and performant by simply hinting</span>
-  <span class="c1">// at privacy with a leading underscore.</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_bar</span> <span class="o">=</span> <span class="nx">bar</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// Establish an inheritance relationship with another Class.</span>
-<span class="nx">inherits</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,</span> <span class="nx">MyParentClass</span><span class="p">);</span>
-
-<span class="c1">// Define static members directly on the Constructor function.</span>
-<span class="nx">MyClass</span><span class="p">.</span><span class="nx">explode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;KABOOM!&quot;</span><span class="p">);</span>
-<span class="p">};</span>
-
-<span class="c1">// Declare instance methods.</span>
-<span class="nx">extend</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span>
-
-  <span class="c1">// Place all methods on the prototype so they&#39;re shared amongst</span>
-  <span class="c1">// all instances.  Using `extends` in this fashion ensures that</span>
-  <span class="c1">// the `constructor` property remains correctly pointed at the</span>
-  <span class="c1">// `MyClass` function so `instanceof` checks work as expected.</span>
-  <span class="nx">greet</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">someone</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="c1">// Make a call to the Parent Class&#39; `greet` method.</span>
-    <span class="kd">var</span> <span class="nx">greeting</span> <span class="o">=</span> <span class="nx">MyClass</span><span class="p">.</span><span class="nx">super_</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">greet</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">someone</span><span class="p">);</span>
-
-    <span class="k">return</span> <span class="nx">greeting</span> <span class="o">+</span> <span class="s2">&quot;, dude!&quot;</span><span class="p">;</span>
-  <span class="p">},</span>
-
-  <span class="c1">// Again, just hint at privacy with a leading underscore; doing</span>
-  <span class="c1">// so ensures you have easy access to `this` in each method.</span>
-  <span class="nx">_throbulate</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Implementation omitted for brevity.</span>
-  <span class="p">}</span>
-<span class="p">});</span>
-
-<span class="nx">module</span><span class="p">.</span><span class="kr">export</span> <span class="o">=</span> <span class="nx">MyClass</span><span class="p">;</span>
-</pre></div>
   </div>
 </article>
 
