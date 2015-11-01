@@ -11,19 +11,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="Gaffa tape time. Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going. With this in mind, let's get hot-loading working with Mustache templates on an express-based local development server. Let's start simple ..." />
+<meta name="description" content="Gaffa tape time. Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going. With this in mind, let's get live reloading working with Mustache templates on an express-based local development server. Let's start ..." />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
-<meta property="og:title" content="Hot loading in Express"/>
-<meta property="og:description" content="Gaffa tape time. Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going. With this in mind, let's get hot-loading working with Mustache templates on an express-based local development server. Let's start simple ..."/>
+<meta property="og:title" content="Live Reloading in Express"/>
+<meta property="og:description" content="Gaffa tape time. Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going. With this in mind, let's get live reloading working with Mustache templates on an express-based local development server. Let's start ..."/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="http://jonnyreeves.co.uk/2015/hot-loading-in-express/"/>
+<meta property="og:url" content="http://jonnyreeves.co.uk/2015/live-reloading-in-express/"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2015-10-31 21:00:00+00:00"/>
 <meta property="article:modified_time" content=""/>
 <meta property="article:author" content="http://jonnyreeves.co.uk/author/jonny-reeves.html">
 <meta property="article:section" content="JavaScript"/>
-<meta property="og:image" content="/images/avatar.jpg">  <title>Jonny Reeves &ndash; Hot loading in Express</title>
+<meta property="og:image" content="/images/avatar.jpg">  <title>Jonny Reeves &ndash; Live Reloading in Express</title>
 </head>
 <body>
   <aside>
@@ -48,11 +48,11 @@
 
 <article>
   <header>
-    <h1 id="hot-loading-in-express">Hot loading in Express</h1>
+    <h1 id="live-reloading-in-express">Live Reloading in Express</h1>
     <p>Posted on Sat 31 October 2015 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a></p>
   </header>
   <div>
-    <p>Gaffa tape time.  Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going.  With this in mind, let's get hot-loading working with <a href="https://github.com/janl/mustache.js/">Mustache templates</a> on an <a href="https://www.npmjs.com/package/express">express</a>-based local development server.</p>
+    <p>Gaffa tape time.  Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going.  With this in mind, let's get live reloading working with <a href="https://github.com/janl/mustache.js/">Mustache templates</a> on an <a href="https://www.npmjs.com/package/express">express</a>-based local development server.</p>
 <p>Let's start simple by serving some templates:</p>
 <div class="highlight"><pre><span class="kr">import</span> <span class="nx">express</span> <span class="nx">from</span> <span class="s1">&#39;express&#39;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="nx">mustache</span> <span class="nx">from</span> <span class="s1">&#39;mustache&#39;</span><span class="p">;</span>
@@ -76,11 +76,11 @@
 </pre></div>
 
 
-<p>So far so good, but let's make it hot-reload so we can do this:</p>
+<p>So far so good, but let's make it live-reload so we can do this:</p>
 <p><a href="https://gyazo.com/326ca72b98bce37af177d9e8d5143279"><img alt="https://gyazo.com/326ca72b98bce37af177d9e8d5143279" src="https://i.gyazo.com/326ca72b98bce37af177d9e8d5143279.gif" /></a></p>
 <p>First stop is to grab the <a href="https://www.npmjs.com/package/livereload">livereload module</a> from NPM; this creates its own server which serves a javascript file used for relaying changes back to the browser; it also sets up a file-system monitor to detect changes when you modify your source files.</p>
 <div class="highlight"><pre><span class="c1">// Create a livereload server</span>
-<span class="kr">const</span> <span class="nx">hotServer</span> <span class="o">=</span> <span class="nx">livereload</span><span class="p">.</span><span class="nx">createServer</span><span class="p">({</span>
+<span class="kr">const</span> <span class="nx">reloadServer</span> <span class="o">=</span> <span class="nx">livereload</span><span class="p">.</span><span class="nx">createServer</span><span class="p">({</span>
   <span class="c1">// Reload on changes to these file extensions.</span>
   <span class="nx">exts</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;mustache&#39;</span> <span class="p">],</span>
   <span class="c1">// Print debug info</span>
@@ -88,7 +88,7 @@
 <span class="p">});</span>
 
 <span class="c1">// Specify the folder to watch for file-changes.</span>
-<span class="nx">hotServer</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">);</span>
+<span class="nx">reloadServer</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">);</span>
 </pre></div>
 
 
@@ -98,7 +98,7 @@
 </pre></div>
 
 
-<p>Et viola, hot reloading of mustache templates and their associated data.  Full source over on <a href="https://github.com/jonnyreeves/mustache-express-hotreload">github</a>.</p>
+<p>Et viola, live reloading of mustache templates and their associated data.  Full source over on <a href="https://github.com/jonnyreeves/mustache-express-hotreload">github</a>.</p>
   </div>
   <div class="tag-cloud">
     <p>
@@ -123,8 +123,8 @@
 {
   "@context": "http://schema.org",
   "@type": "BlogPosting",
-  "name": "Hot loading in Express",
-  "headline": "Hot loading in Express",
+  "name": "Live Reloading in Express",
+  "headline": "Live Reloading in Express",
   "datePublished": "2015-10-31 21:00:00+00:00",
   "dateModified": "",
   "author": {
@@ -133,8 +133,8 @@
     "url": "http://jonnyreeves.co.uk/author/jonny-reeves.html"
   },
   "image": "/images/avatar.jpg",
-  "url": "http://jonnyreeves.co.uk/2015/hot-loading-in-express/",
-  "description": "Gaffa tape time. Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going. With this in mind, let's get hot-loading working with Mustache templates on an express-based local development server. Let's start simple ..."
+  "url": "http://jonnyreeves.co.uk/2015/live-reloading-in-express/",
+  "description": "Gaffa tape time. Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going. With this in mind, let's get live reloading working with Mustache templates on an express-based local development server. Let's start ..."
 }
 </script></body>
 </html>

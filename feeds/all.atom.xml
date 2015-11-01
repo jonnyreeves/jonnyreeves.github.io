@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-10-31T21:00:00+00:00</updated><entry><title>Hot loading in Express</title><link href="http://jonnyreeves.co.uk/2015/hot-loading-in-express/" rel="alternate"></link><updated>2015-10-31T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-31:2015/hot-loading-in-express/</id><summary type="html">&lt;p&gt;Gaffa tape time.  Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going.  With this in mind, let's get hot-loading working with &lt;a href="https://github.com/janl/mustache.js/"&gt;Mustache templates&lt;/a&gt; on an &lt;a href="https://www.npmjs.com/package/express"&gt;express&lt;/a&gt;-based local development server.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-10-31T21:00:00+00:00</updated><entry><title>Live Reloading in Express</title><link href="http://jonnyreeves.co.uk/2015/live-reloading-in-express/" rel="alternate"></link><updated>2015-10-31T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-31:2015/live-reloading-in-express/</id><summary type="html">&lt;p&gt;Gaffa tape time.  Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going.  With this in mind, let's get live reloading working with &lt;a href="https://github.com/janl/mustache.js/"&gt;Mustache templates&lt;/a&gt; on an &lt;a href="https://www.npmjs.com/package/express"&gt;express&lt;/a&gt;-based local development server.&lt;/p&gt;
 &lt;p&gt;Let's start simple by serving some templates:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="nx"&gt;express&lt;/span&gt; &lt;span class="nx"&gt;from&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;express&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="nx"&gt;mustache&lt;/span&gt; &lt;span class="nx"&gt;from&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;mustache&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -23,11 +23,11 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;So far so good, but let's make it hot-reload so we can do this:&lt;/p&gt;
+&lt;p&gt;So far so good, but let's make it live-reload so we can do this:&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://gyazo.com/326ca72b98bce37af177d9e8d5143279"&gt;&lt;img alt="https://gyazo.com/326ca72b98bce37af177d9e8d5143279" src="https://i.gyazo.com/326ca72b98bce37af177d9e8d5143279.gif" /&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;First stop is to grab the &lt;a href="https://www.npmjs.com/package/livereload"&gt;livereload module&lt;/a&gt; from NPM; this creates its own server which serves a javascript file used for relaying changes back to the browser; it also sets up a file-system monitor to detect changes when you modify your source files.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// Create a livereload server&lt;/span&gt;
-&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;hotServer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;livereload&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;createServer&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;reloadServer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;livereload&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;createServer&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
   &lt;span class="c1"&gt;// Reload on changes to these file extensions.&lt;/span&gt;
   &lt;span class="nx"&gt;exts&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;mustache&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;],&lt;/span&gt;
   &lt;span class="c1"&gt;// Print debug info&lt;/span&gt;
@@ -35,7 +35,7 @@
 &lt;span class="p"&gt;});&lt;/span&gt;
 
 &lt;span class="c1"&gt;// Specify the folder to watch for file-changes.&lt;/span&gt;
-&lt;span class="nx"&gt;hotServer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;__dirname&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nx"&gt;reloadServer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;watch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;__dirname&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -45,7 +45,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Et viola, hot reloading of mustache templates and their associated data.  Full source over on &lt;a href="https://github.com/jonnyreeves/mustache-express-hotreload"&gt;github&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Babel ❤ NPM</title><link href="http://jonnyreeves.co.uk/2015/babel-npm/" rel="alternate"></link><updated>2015-10-24T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-24:2015/babel-npm/</id><summary type="html">&lt;p&gt;Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:&lt;/p&gt;
+&lt;p&gt;Et viola, live reloading of mustache templates and their associated data.  Full source over on &lt;a href="https://github.com/jonnyreeves/mustache-express-hotreload"&gt;github&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Babel ❤ NPM</title><link href="http://jonnyreeves.co.uk/2015/babel-npm/" rel="alternate"></link><updated>2015-10-24T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-24:2015/babel-npm/</id><summary type="html">&lt;p&gt;Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:&lt;/p&gt;
 &lt;h3&gt;babelify&lt;/h3&gt;
 &lt;p&gt;Transpiling your NPM modules to ES5 with &lt;a href="https://babeljs.io/"&gt;babel&lt;/a&gt; will allow them to work in a wide variety of environments.  Add a &lt;code&gt;prepublish&lt;/code&gt; script to your &lt;code&gt;package.json&lt;/code&gt;'s scripts block to automate this when you run &lt;code&gt;npm publish&lt;/code&gt;.  By convention &lt;code&gt;/lib&lt;/code&gt; is a good place to output your ES5 artefacts to, and it's a good idea to produce a clean build each time (with the &lt;a href="https://www.npmjs.com/package/rimraf"&gt;rimraf module&lt;/a&gt; providing a cross platform implementation of &lt;code&gt;rm -rf&lt;/code&gt;, windows users will thank you.)&lt;/p&gt;
 &lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
