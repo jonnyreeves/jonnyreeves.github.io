@@ -57,6 +57,7 @@
       <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;Unexpected state value: %s&quot;</span><span class="p">,</span> <span class="nx">fwdState</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -66,6 +67,7 @@
     <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Query</span><span class="p">().</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">,</span> <span class="s">&quot;expected&quot;</span><span class="p">)</span>
     <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
     <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -75,6 +77,7 @@
     <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span> <span class="p">=</span> <span class="s">&quot;state=expected&quot;</span>
     <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
     <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
   </div>
   <hr />

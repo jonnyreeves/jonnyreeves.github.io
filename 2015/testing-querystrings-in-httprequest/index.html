@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this: func ValidateState(req *http.Request) error { fwdState := req.URL.Query().Get("state") if fwdState !== "expected" { return fmt.Errorf("Unexpected state value: %s", fwdState) } return nil In order to ..." />
+<meta name="description" content="This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this: func ValidateState(req *http.Request) error { fwdState := req.URL.Query().Get("state") if fwdState !== "expected" { return fmt.Errorf("Unexpected state value: %s", fwdState) } return nil } In order to ..." />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="Testing QueryStrings in http.Request"/>
-<meta property="og:description" content="This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this: func ValidateState(req *http.Request) error { fwdState := req.URL.Query().Get("state") if fwdState !== "expected" { return fmt.Errorf("Unexpected state value: %s", fwdState) } return nil In order to ..."/>
+<meta property="og:description" content="This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this: func ValidateState(req *http.Request) error { fwdState := req.URL.Query().Get("state") if fwdState !== "expected" { return fmt.Errorf("Unexpected state value: %s", fwdState) } return nil } In order to ..."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/"/>
 <meta property="og:type" content="article"/>
@@ -59,6 +59,7 @@
       <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;Unexpected state value: %s&quot;</span><span class="p">,</span> <span class="nx">fwdState</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -68,6 +69,7 @@
     <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Query</span><span class="p">().</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">,</span> <span class="s">&quot;expected&quot;</span><span class="p">)</span>
     <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
     <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -77,6 +79,7 @@
     <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span> <span class="p">=</span> <span class="s">&quot;state=expected&quot;</span>
     <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
     <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
   </div>
   <div class="tag-cloud">
@@ -113,7 +116,7 @@
   },
   "image": "/images/avatar.jpg",
   "url": "http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/",
-  "description": "This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this: func ValidateState(req *http.Request) error { fwdState := req.URL.Query().Get("state") if fwdState !== "expected" { return fmt.Errorf("Unexpected state value: %s", fwdState) } return nil In order to ..."
+  "description": "This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this: func ValidateState(req *http.Request) error { fwdState := req.URL.Query().Get("state") if fwdState !== "expected" { return fmt.Errorf("Unexpected state value: %s", fwdState) } return nil } In order to ..."
 }
 </script></body>
 </html>
