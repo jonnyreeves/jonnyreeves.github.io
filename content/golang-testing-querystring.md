@@ -11,6 +11,7 @@ func ValidateState(req *http.Request) error {
 	  return fmt.Errorf("Unexpected state value: %s", fwdState)
 	}
 	return nil
+}
 ```
 
 In order to test this method, you'll want to create an `http.Request` instead and pre-populate the QueryString.  My first attempt was the reverse how we read the Query value:
@@ -21,6 +22,7 @@ func Test_ValidateState(t *testing.T) {
     req.URL.Query().Set("state", "expected")
     err := ValidateState(req)
     require.NoError(t, err)
+}
 ```
 
 However, this fails with the `ValidateState` function returning an `"Unexepcted state value: "` error.  Instead, we need to set the `Request.URL.RawQuery` value directly:
@@ -31,5 +33,6 @@ func Test_ValidateState(t *testing.T) {
     req.URL.RawQuery = "state=expected"
     err := ValidateState(req)
     require.NoError(t, err)
+}
 ```
 
