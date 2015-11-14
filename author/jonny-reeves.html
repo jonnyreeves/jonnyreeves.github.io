@@ -44,6 +44,29 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Testing QueryStrings in http.Request</a></h2>
+    <p>
+      Posted on Sat 14 November 2015 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a> &#8226;
+    </p>
+  </header>
+  <div>
+      <p>This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this:</p>
+<div class="highlight"><pre><span class="kd">func</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">fwdState</span> <span class="o">:=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Query</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">fwdState</span> <span class="o">!=</span><span class="p">=</span> <span class="s">&quot;expected&quot;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;Unexpected state value: %s&quot;</span><span class="p">,</span> <span class="nx">fwdState</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+</pre></div>
+
+
+<p>In order to ...</p>
+      <a class="btn" href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Continue reading</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/live-reloading-in-express/#live-reloading-in-express">Live Reloading in Express</a></h2>
     <p>
       Posted on Sat 31 October 2015 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a> &#8226;
@@ -193,28 +216,6 @@
   <div>
       <p>Typescript 1.5 <a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators">introduced decorators</a> to the language which lets us experiment with <a href="https://en.wikipedia.org/wiki/Metaprogramming">meta-programming</a>. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property ...</p>
       <a class="btn" href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#basic-typescript-dependency-injection-with-decorators">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Hello Typescript and Mocha!</a></h2>
-    <p>
-      Posted on Mon 27 July 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a> &#8226;
-    </p>
-  </header>
-  <div>
-      <p>Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:</p>
-<div class="highlight"><pre>$ npm init
-name: (hello-ts-mocha)
-version: (1.0.0)
-description: Getting started with TypeScript and mocha
-entry point: (index.js)
-test command: mocha
-git repository:
-keywords:
-license: (ISC ...</pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Continue reading</a>
   </div>
 </article>
 

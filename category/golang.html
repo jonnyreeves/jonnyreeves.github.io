@@ -19,7 +19,7 @@
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk"/>
 <meta property="og:image" content="/images/avatar.jpg">
-  <title>Jonny Reeves &ndash; Authors</title>
+  <title>Jonny Reeves &ndash; Category: Golang</title>
 </head>
 <body>
   <aside>
@@ -44,14 +44,29 @@
 
 <article>
   <header>
-    <h1>Authors</h1>
+    <h2><a href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Testing QueryStrings in http.Request</a></h2>
+    <p>
+      Posted on Sat 14 November 2015 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a> &#8226;
+    </p>
   </header>
   <div>
-    <ul class="list">
-      <li><a href="http://jonnyreeves.co.uk/author/jonny-reeves.html">Jonny Reeves</a> (23)</li>
-    </ul>
+      <p>This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this:</p>
+<div class="highlight"><pre><span class="kd">func</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">fwdState</span> <span class="o">:=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Query</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">fwdState</span> <span class="o">!=</span><span class="p">=</span> <span class="s">&quot;expected&quot;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;Unexpected state value: %s&quot;</span><span class="p">,</span> <span class="nx">fwdState</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+</pre></div>
+
+
+<p>In order to ...</p>
+      <a class="btn" href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Continue reading</a>
   </div>
 </article>
+
+  <div class="pagination">
+  </div>
 
     <footer>
       <p>&copy; Jonny Reeves </p>
@@ -66,5 +81,14 @@
   ga('create', 'UA-30309890-1', 'auto');
   ga('send', 'pageview');
 </script>
-</body>
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Jonny Reeves ",
+  "url" : "http://jonnyreeves.co.uk",
+  "image": "/images/avatar.jpg",
+  "description": ""
+}
+</script></body>
 </html>
