@@ -20,11 +20,14 @@ FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 
+DISQUS_SITENAME = 'jonnyreeves'
+
 GOOGLE_ANALYTICS = 'UA-30309890-1'
 
 # Social widget
 SOCIAL = (('linkedin', 'https://br.linkedin.com/in/jonnyreeves/en'),
 	      ('google', 'https://plus.google.com/+JohnReeves'),
+		  ('stack-overflow', 'http://stackoverflow.com/users/227349/jonnyreeves'),
           ('github', 'https://github.com/jonnyreeves'),)
 
 # Blogroll
