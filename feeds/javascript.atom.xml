@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/javascript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-10-31T21:00:00+00:00</updated><entry><title>Live Reloading in Express</title><link href="http://jonnyreeves.co.uk/2015/live-reloading-in-express/" rel="alternate"></link><updated>2015-10-31T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-31:2015/live-reloading-in-express/</id><summary type="html">&lt;p&gt;Gaffa tape time.  Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going.  With this in mind, let's get live reloading working with &lt;a href="https://github.com/janl/mustache.js/"&gt;Mustache templates&lt;/a&gt; on an &lt;a href="https://www.npmjs.com/package/express"&gt;express&lt;/a&gt;-based local development server.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/javascript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-11-26T21:00:00+00:00</updated><entry><title>Don't (always) npm install -g</title><link href="http://jonnyreeves.co.uk/2015/dont-always-npm-install-g/" rel="alternate"></link><updated>2015-11-26T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-11-26:2015/dont-always-npm-install-g/</id><summary type="html">&lt;p&gt;Had a chat with a respected hacker friend of mine who did not know about this trick (although to be fair, I'm not sure I knew about it until all that long ago).&lt;/p&gt;
+&lt;p&gt;There's almost never any need to use &lt;code&gt;npm install -g&lt;/code&gt;, you could argue it's an anti-pattern as it makes your software harder to install for other users and can easily cause conflcits between projects.  The most common candidates for a bit of global installing are test and build utils like mocha, typescript and grunt-cli; instead of reaching for &lt;code&gt;-g&lt;/code&gt; you can install them locally in your project and execute them from the symlink created in &lt;code&gt;node_modules/.bin&lt;/code&gt;, eg:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;npm install --save-dev mocha
+./node_modules/.bin/mocha --help
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can also make use of the &lt;code&gt;npm bin&lt;/code&gt; command which will resolve the nearest &lt;code&gt;node_modules/.bin&lt;/code&gt; path to the cwd:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;`npm bin`/mocha --help
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As an added bonus, NPM scripts don't need to add the &lt;code&gt;node_modules/.bin&lt;/code&gt; prefix - it's added automatically:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;my-awesome-pkg&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;quot;scripts&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;mocha&amp;quot;&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary></entry><entry><title>Live Reloading in Express</title><link href="http://jonnyreeves.co.uk/2015/live-reloading-in-express/" rel="alternate"></link><updated>2015-10-31T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-31:2015/live-reloading-in-express/</id><summary type="html">&lt;p&gt;Gaffa tape time.  Getting iteration times down is important when building software, if nothing else it makes it more fun and help you keep the flow going.  With this in mind, let's get live reloading working with &lt;a href="https://github.com/janl/mustache.js/"&gt;Mustache templates&lt;/a&gt; on an &lt;a href="https://www.npmjs.com/package/express"&gt;express&lt;/a&gt;-based local development server.&lt;/p&gt;
 &lt;p&gt;Let's start simple by serving some templates:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="nx"&gt;express&lt;/span&gt; &lt;span class="nx"&gt;from&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;express&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="nx"&gt;mustache&lt;/span&gt; &lt;span class="nx"&gt;from&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;mustache&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;

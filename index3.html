@@ -45,6 +45,151 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/#using-external-templates-with-mustachejs-and-jquery">Using External Templates with Mustache.js and jQuery</a></h2>
+    <p>
+      Posted on Sun 12 February 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p><a href="http://mustache.github.com/">Mustache</a> is a language independent, logicless <a href="http://en.wikipedia.org/wiki/Template_engine_(web)">templating engine</a> which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the <a href="https://github.com/janl/mustache.js">JavaScript implementation</a>.</p>
+<h3>Why Bother With Templating At All?</h3>
+<p>Fair question; when it comes simple JavaScript powered sites it’s pretty easy to just build up your HTML inline:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;p&gt;Hello John, it is 11:19.&lt;/p&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>However, it starts getting a bit messy when we start replacing hard-coded values with variables, for example:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;Jonny&#39;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">timeNow</span> <span class="o">=</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">();</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;p&gt;Hello &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;, it is &#39;</span> <span class="o">+</span> <span class="nx">timeNow</span> <span class="o">+</span> <span class="s1">&#39;.&lt;/p&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Things get even more ugly when we want to start build up complex, nested HTML elements, for example:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;dl&gt;&lt;dt&gt;Name&lt;/dt&gt;&lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;&lt;dt&gt;Time&lt;/dt&gt;&lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">timeNow</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;&lt;/dl&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>As JavaScript doesn’t support <a href="http://en.wikipedia.org/wiki/Here_document">heredoc</a>, the only way to sort out this nasty one-liner is to escape the new line literal by using a backslash; however I’m not convinced that this really helps with readability.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;dl&gt;\</span>
+<span class="s1"> &lt;dt&gt;Name&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;\</span>
+<span class="s1"> &lt;dt&gt;Time&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;&#39;</span> <span class="o">+</span> <span class="nx">timeNow</span> <span class="o">+</span> <span class="s1">&#39;&lt;/dd&gt;\</span>
+<span class="s1">&lt;/dl&gt;&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<h2>Enter the Templating Engine</h2>
+<p>Templating engines help us solve half the problem by allowing us to move the logic out of the HTML string. The basic premise is fairly simple; instead of having to break out of the String, we can just drop in tokens which the templating engine will replace for us. So instead of having to concatenate lots of Strings together we can simply express our template like this:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+
+<span class="c1">// Contains all the values that we want to use in place of the tokens in</span>
+<span class="c1">// the template</span>
+<span class="kd">var</span> <span class="nx">templateData</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Jonny&quot;</span><span class="p">,</span>
+    <span class="nx">timeNow</span><span class="o">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">()</span>
+<span class="p">};</span>
+
+<span class="c1">// Define our HTML template, note the tokens match up to the properties</span>
+<span class="c1">// of the templateData object.</span>
+<span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="s1">&#39;&lt;p&gt;Hello {{name}}, it is {{timeNow}}.&lt;/p&gt;&#39;</span><span class="p">;</span>
+
+<span class="c1">// Use Mustache.js to render the template (replace the tokens with the values</span>
+<span class="c1">// in the templateData object).</span>
+<span class="kd">var</span> <span class="nx">renderedTemplate</span> <span class="o">=</span> <span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">);</span>
+
+<span class="c1">// And attach the rendered template HTML to the DOM.</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">renderedTemplate</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Nice, now we have a clear separation between our template HTML and our data Object which supplies the values; however, we are still stuck when it comes to rendering more complex templates…</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="s1">&#39;&lt;dl&gt;\</span>
+<span class="s1"> &lt;dt&gt;Name&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;{{name}}&lt;/dd&gt;\</span>
+<span class="s1"> &lt;dt&gt;Time&lt;/dt&gt;\</span>
+<span class="s1"> &lt;dd&gt;{{timeNow}}&lt;/dd&gt;\</span>
+<span class="s1">&lt;/dl&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<h3>Would you declare your JavaScript in HTML?</h3>
+<p>So we have managed to simplify our code by replacing String concatenation with token substiution (templating); but we are still having to declare our template’s HTML in JavaScript which is far from ideal. What we really want is to be able to write our template in raw HTML as opposed to a String literal – time for some external templates. John Resig is widely regarded as having coined the concept of <a href="https://web.archive.org/web/20120406204734/http://ejohn.org/blog/javascript-micro-templating/">declaring templates in script blocks</a>; ie:</p>
+<div class="highlight"><pre><span class="c">&lt;!-- Our Template is declared in a script block, but we</span>
+<span class="c">     can just use regular HTML markup --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;tpl-greeting&quot;</span> <span class="na">type=</span><span class="s">&quot;text/html&quot;</span><span class="nt">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">dl</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Name</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Time</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">timeNow</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+    <span class="o">&lt;</span><span class="err">/dl&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+    <span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+
+    <span class="kd">var</span> <span class="nx">templateData</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Jonny&quot;</span><span class="p">,</span>
+        <span class="nx">timeNow</span><span class="o">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">()</span>
+    <span class="p">};</span>
+
+    <span class="c1">// Use jQuery to reference our &#39;tpl-greeting&#39; script block</span>
+    <span class="c1">// and grab the HTML contents it contains.</span>
+    <span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tpl-greeting&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">();</span>
+
+    <span class="c1">// Render this template as before.</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">));</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+
+<p>Much nicer! Now we are able to write our template in HTML as opposed to simply mashing Strings together; however, this method still isn’t ideal; in order for it to work we have to define our template in the parent HTML Document; this is fine for a simple example, but in a real world web application you won’t be writing your JavaScript in a script block, you’ll be using external .js files instead – and you don’t really want to have to send all the HTML Templates down in the original page – let’s externalise those templates and load them in as we need them.</p>
+<h3>Loading External HTML Templates</h3>
+<p>jQuery makes it really easy to load external content via its <code>jQuery.get()</code> method. We can use this to load an external HTML file which contains our template:</p>
+<div class="highlight"><pre><span class="c">&lt;!-- You can define as many templates as you like in a single</span>
+<span class="c">    .htm file; just add additional &lt;script /&gt; blocks with</span>
+<span class="c">    unique ids. --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">id=</span><span class="s">&quot;tpl-greeting&quot;</span> <span class="na">type=</span><span class="s">&quot;text/html&quot;</span><span class="nt">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">dl</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Name</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">name</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dt</span><span class="o">&gt;</span><span class="nx">Time</span><span class="o">&lt;</span><span class="err">/dt&gt;</span>
+        <span class="o">&lt;</span><span class="nx">dd</span><span class="o">&gt;</span><span class="p">{{</span><span class="nx">timeNow</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/dd&gt;</span>
+    <span class="o">&lt;</span><span class="err">/dl&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;greetings.htm&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">templates</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Fetch the &lt;script /&gt; block from the loaded external</span>
+    <span class="c1">// template file which contains our greetings template.</span>
+    <span class="kd">var</span> <span class="nx">template</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">templates</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;#tpl-greeting&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Now we’re talking! Finally, we are able to define our templates in external HTML files which can easily be loaded and rendered in our application’s JavaScript code. However, the above is only a proof of concept and doesn’t really stand up in the real world; what if we want to render our greetings template more than once? If we are going to have to load the template file each time our code is going to be littered with callback functions – again, not pretty and not easy to maintain – what we need is some kind of plugin…</p>
+<h3>jQuery-Mustache Plugin</h3>
+<p>To make working with Mustache in jQuery nice and easy I knocked together my first jQuery Plugin, <a href="https://github.com/jonnyreeves/jquery-Mustache">jquery-mustache.js</a>. This makes it really easy to load all your external templates at the start and then render them as required.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">.</span><span class="nx">Mustache</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">&#39;greetings.htm&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">mustache</span><span class="p">(</span><span class="s1">&#39;tpl-greeting&#39;</span><span class="p">,</span> <span class="nx">templateData</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Sweet!</p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2011/getting-started-with-as3-vanilla/#getting-started-with-as3-vanilla">Getting Started with AS3 Vanilla</a></h2>
     <p>
       Posted on Sun 14 August 2011 in <a href="http://jonnyreeves.co.uk/category/actionscript.html">ActionScript</a>
