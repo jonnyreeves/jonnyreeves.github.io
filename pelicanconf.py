@@ -13,7 +13,7 @@ MAIN_MENU = False
 
 ARTICLE_URL = '{date:%Y}/{slug}/'
 ARTICLE_SAVE_AS = '{date:%Y}/{slug}/index.html'
-
+ARTICLE_EXCLUDES = ['extra']
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
