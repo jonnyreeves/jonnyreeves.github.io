@@ -45,6 +45,78 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2015/mysql-getting-killed-on-low-end-vps/#mysql-getting-killed-on-low-end-vps">MySQL Getting Killed on Low-end VPS</a></h2>
+    <p>
+      Posted on Fri 11 December 2015 in <a href="http://jonnyreeves.co.uk/category/devops.html">DevOps</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2015/mysql-getting-killed-on-low-end-vps/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p>My wife's blog is powered by Wordpress running on a <a href="https://www.bhost.net/">bHost Tiny VPS</a> instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm.  Thanks to <a href="https://en-gb.wordpress.org/plugins/wp-super-cache/">WP Super Cache</a>; the site is pretty responsive.</p>
+<p>Things had been going pretty well for the last couple of months until she told me that the site was broken; turns out the the MariaDB instance (mysqld) had stopped... odd.</p>
+<p>First port of call was the logs, tailing <code>/var/log/mariadb/mariadb.log</code> showed that the process was being periodically killed and restarted - however there was no mention of why it died, the last log entry was:</p>
+<div class="highlight"><pre><span class="nv">$ </span>tail -n <span class="m">1</span> /var/log/mariadb/mariadb.log
+<span class="m">151211</span> 19:01:18 mysqld_safe mysqld from pid file /var/run/mariadb/mariadb.pid e<span class="err">$</span>
+</pre></div>
+
+
+<p>Upon restarting it (via <code>service mariadb start</code>), the logs were appended with the following:</p>
+<div class="highlight"><pre><span class="nv">$ </span>tail /var/log/mariadb/mariadb.log
+<span class="m">151211</span> 20:33:33 mysqld_safe Starting mysqld daemon with databases from /var/lib<span class="err">$</span>
+<span class="m">151211</span> 20:33:33 <span class="o">[</span>Note<span class="o">]</span> /usr/libexec/mysqld <span class="o">(</span>mysqld 5.5.44-MariaDB<span class="o">)</span> starting as <span class="err">$</span>
+InnoDB: Log scan progressed past the checkpoint lsn 55316603
+<span class="m">151211</span> 20:33:34  InnoDB: Database was not shut down normally!
+InnoDB: Starting crash recovery.
+</pre></div>
+
+
+<p>It's clear that whatever is killing the database is not doing so cleanly.  <code>dmesg</code> can be used to search all logs and try to shed some light:</p>
+<div class="highlight"><pre><span class="nv">$ </span>dmesg <span class="p">|</span> egrep -i <span class="s1">&#39;killed process&#39;</span>
+<span class="o">[</span>4038014.625029<span class="o">]</span> Out of memory in UB XXXX: OOM killed process <span class="m">601</span> <span class="o">(</span>mysqld<span class="o">)</span> score <span class="m">0</span> vm:1212112kB, rss:84964kB, swap:748kB
+</pre></div>
+
+
+<p>Ah, that's not good.  The <a href="http://linux-mm.org/OOM_Killer">OOM Killer</a> is choosing to sacrifice mysqld; although not the best choice it's clear that there's something bigger going on that needs to be addressed.</p>
+<p>Now I know the problem is related to low memory, let's see how much free memory we currently have available:</p>
+<div class="highlight"><pre><span class="nv">$ </span>free -m
+            total        used        free      shared  buff/cache   available
+Mem:         <span class="m">1024</span>         <span class="m">764</span>           <span class="m">7</span>          <span class="m">10</span>         <span class="m">251</span>         11
+Swap:           <span class="m">0</span>           <span class="m">0</span>           0
+</pre></div>
+
+
+<p>7MB free... oh dear.  So what's using up all the memory? We can find out using <code>ps</code></p>
+<div class="highlight"><pre><span class="nv">$ </span>ps aux --sort<span class="o">=</span>-%mem <span class="p">|</span> awk <span class="s1">&#39;NR&lt;=10{print $0}&#39;</span>
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root       <span class="m">980</span>  1.5  1.8 <span class="m">781612</span> <span class="m">19128</span> ?        Ssl  Dec10  21:22 /usr/sbin/rsyslogd -n
+root     <span class="m">17069</span>  0.0  1.1 <span class="m">307316</span> <span class="m">11804</span> ?        Ss   19:37   0:00 php-fpm: master process <span class="o">(</span>/etc/php-fpm.conf<span class="o">)</span>
+root        <span class="m">72</span>  0.0  1.0 <span class="m">237836</span> <span class="m">10496</span> ?        Ss   Dec10   0:26 /usr/lib/systemd/systemd-journald
+nginx    <span class="m">22205</span>  1.0  4.7 <span class="m">307448</span>  <span class="m">7264</span> ?        S    20:19   0:00 php-fpm: pool www
+nginx    <span class="m">22551</span>  1.0  4.4 <span class="m">307448</span>  <span class="m">7661</span> ?        S    20:29   0:00 php-fpm: pool www
+nginx    <span class="m">22445</span>  1.0  4.7 <span class="m">307448</span>  <span class="m">5671</span> ?        S    20:20   0:00 php-fpm: pool www
+nginx    <span class="m">22041</span>  1.0  4.3 <span class="m">307448</span>  <span class="m">7511</span> ?        S    20:12   0:00 php-fpm: pool www
+nginx    <span class="m">17190</span>  0.0  0.3 <span class="m">109980</span>  <span class="m">3524</span> ?        S    20:38   0:00 nginx: worker process
+</pre></div>
+
+
+<p>And the culprit is <code>php-fpm</code>! A quick google found another Wordpress customer <a href="https://wordpress.org/support/topic/php-fpm-for-wordpress-gobbling-up-memory">suffering from similar symptoms</a>; the advice was to tweak the php-fpm pool configuration (<code>/etc/php-fpm.d/www.conf</code>) and tweak the <code>pm</code> configuration.  The main change was to move from <code>pm = dynamic</code> to <code>pm = ondemand</code> with a <code>pm.max_children</code> value of <code>5</code> (based on observing ~5% memory usage per worker).  After changing the configuration I restarted all services and checked the memory usage.</p>
+<div class="highlight"><pre><span class="nv">$ </span>service php-fpm restart
+<span class="nv">$ </span>service nginx restart
+<span class="nv">$ </span>service mariadb restart
+</pre></div>
+
+
+<p>After restarting the memory usage was dramatically lower:</p>
+<div class="highlight"><pre><span class="nv">$ </span>free -m
+              total        used        free      shared  buff/cache   available
+Mem:           <span class="m">1024</span>          <span class="m">96</span>         <span class="m">677</span>           <span class="m">7</span>         <span class="m">250</span>         830
+Swap:             <span class="m">0</span>           <span class="m">0</span>           0
+</pre></div>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/dont-always-npm-install-g/#dont-always-npm-install-g">Don't (always) npm install -g</a></h2>
     <p>
       Posted on Thu 26 November 2015 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
@@ -576,98 +648,6 @@ class MyClass {
 
 
 <p>As before I've pushed the code to <a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection">Github</a> and create a <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2">Pull Request</a> to highlight changes from the previous post.</p>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Injecting into Methods with TypeScript Decorators</a></h2>
-    <p>
-      Posted on Mon 03 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Expanding upon my <a href="http://localhost:8000/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
-<div class="highlight"><pre>class Person {
-  private _firstName : string;
-  private _lastName : string;
-
-  @inject(&#39;firstName&#39;, &#39;lastName&#39;)
-  setName(first : string, last : string) {
-    this._firstName = first;
-    this._last = last;
-  }
-
-  getFullName() : string {
-    return `<span class="cp">${</span><span class="n">firstName</span><span class="cp">}</span> <span class="cp">${</span><span class="n">lastName</span><span class="cp">}</span>`
-  }
-}
-</pre></div>
-
-
-<p>Here we are decorating the <code>Person#setName()</code> method with the <code>@inject</code> decorator and requesting the values mapped against the 'firstName' and 'lastName' injection keys from the Dependency Container - our test case would look something like this:</p>
-<div class="highlight"><pre>// Setup the container
-injector.map(&#39;firstName&#39;, &#39;Jonny&#39;);
-injector.map(&#39;lastName&#39;, &#39;Reeves&#39;);
-
-// Instantiate a Person, the container will apply the injections.
-const jonny = injector.instantiate(Person);
-
-// Test it worked.
-if (jonny.getFullName() !== &#39;Jonny Reeves&#39;) {
-    throw new Error(&#39;expected jonny.getFullName() to be Jonny Reeves but was &#39; + jonny.getFullName());
-}
-</pre></div>
-
-
-<p>First of all we need to modify our <code>@inject</code> decorator, originally it only expected a single argument (the <code>injectionKey</code>), as methods can take more than one argument we need to make use of <a href="">rest parameters</a> to accept any number of strings:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
-</pre></div>
-
-
-<p>We face a slightly tricker challenge in the fact that injecting values into methods requires us to inoke a method rather than just assinging a property on the target object, in the previous implementation the <code>__inject__</code> Object was a simple hash of property name to injectionKey, but in order to inovoke the target method with the injection values in the correct scope we will need access to the target object as well.  To group this data together I've created an <code>InjectionPoint</code> object and assign this as the new value in the <code>__inject__</code> map:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span> 
-  <span class="k">return</span> <span class="kd">function</span> <span class="nx">recordInjection</span><span class="p">(</span><span class="nx">target</span> <span class="o">:</span> <span class="nb">Object</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span> <span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
-    <span class="cm">/* ... */</span>
-
-    <span class="nx">targetType</span><span class="p">.</span><span class="nx">__inject__</span><span class="cp">[</span><span class="nx">decoratedPropertyName</span><span class="cp">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InjectionPoint</span><span class="p">(</span>
-                                        <span class="nx">target</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span><span class="p">,</span> <span class="nx">injectionKeys</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>Now we're storing the <code>InjectionPoint</code> data we need to modify <code>Injector#instantiate()</code> to make use of it when invoked.  The first change is driven by the fact the target Class' <code>__inject__</code> property is a hash of propertyNames to <code>InjectionPoint</code>'s and that an <code>InjectionPoint</code> provides one or more injectionKeys (before it was a hash of propertyNames to a single injectionKey), <code>Injector#getInjectionValues()</code> makes light work of this returning a collection of values to be injected:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">Injector</span> {
-  /* ... */
-
-  <span class="n">private</span> <span class="n">getInjectionValues</span>(<span class="n">injectionPoint</span> : <span class="n">InjectionPoint</span>) : <span class="nb">Array</span><span class="s">&lt;any&gt;</span> {
-    <span class="k">return</span> <span class="n">injectionPoint</span>.<span class="n">injectionKeys</span>
-      .<span class="nb">map</span>(<span class="nb">key</span> =&gt; <span class="n">this</span>.<span class="n">valuesByInjectionKey</span>[<span class="nb">key</span>]);
-  }
-}
-</pre></div>
-
-
-<p>Now we need to determine how these values should be injected (either via a property of the target object, or by invoking a method of the target object).  Seeing as the <code>InjectionPoint</code> has all the knowledge it needs to perform the correct injection I employed the <a href="http://c2.com/cgi/wiki?HollywoodPrinciple">Hollywood Principle</a> and added an <code>InjectionPoint#inject()</code> method which the <code>Injector</code> invokes:</p>
-<div class="highlight"><pre><span class="kr">class</span> <span class="nx">InjectionPoint</span> <span class="p">{</span>
-  <span class="cm">/* ... */</span>
-
-  <span class="nx">inject</span><span class="p">(</span><span class="nx">values</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="cp">[</span><span class="nx">this._decoratedPropertyName</span><span class="cp">]</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="cp">[</span><span class="nx">this._decoratedPropertyName</span><span class="cp">]</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="p">,</span> <span class="nx">values</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="p">{</span>
-      <span class="c1">// Property injection can only use the first value.</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="cp">[</span><span class="nx">this._decoratedPropertyName</span><span class="cp">]</span> <span class="o">=</span> <span class="nx">values</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>As before, the code and unit tests can be found over at <a href="https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection">github.com/jonnyreeves/ts-prop-injection</a> - I've also raised a pull request on the repo to highlight the changes: <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/1">github.com/jonnyreeves/ts-prop-injection/pull/1</a>.</p>
   </div>
 </article>
 

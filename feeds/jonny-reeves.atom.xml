@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-11-26T21:00:00+00:00</updated><entry><title>Don't (always) npm install -g</title><link href="http://jonnyreeves.co.uk/2015/dont-always-npm-install-g/" rel="alternate"></link><updated>2015-11-26T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-11-26:2015/dont-always-npm-install-g/</id><summary type="html">&lt;p&gt;Had a chat with a respected hacker friend of mine who did not know about this trick (although to be fair, I'm not sure I knew about it until all that long ago).&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-12-11T21:00:00+00:00</updated><entry><title>MySQL Getting Killed on Low-end VPS</title><link href="http://jonnyreeves.co.uk/2015/mysql-getting-killed-on-low-end-vps/" rel="alternate"></link><updated>2015-12-11T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-12-11:2015/mysql-getting-killed-on-low-end-vps/</id><summary type="html">&lt;p&gt;My wife's blog is powered by Wordpress running on a &lt;a href="https://www.bhost.net/"&gt;bHost Tiny VPS&lt;/a&gt; instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm.  Thanks to &lt;a href="https://en-gb.wordpress.org/plugins/wp-super-cache/"&gt;WP Super Cache&lt;/a&gt;; the site is pretty responsive.&lt;/p&gt;
+&lt;p&gt;Things had been going pretty well for the last couple of months until she told me that the site was broken; turns out the the MariaDB instance (mysqld) had stopped... odd.&lt;/p&gt;
+&lt;p&gt;First port of call was the logs, tailing &lt;code&gt;/var/log/mariadb/mariadb.log&lt;/code&gt; showed that the process was being periodically killed and restarted - however there was no mention of why it died, the last log entry was:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;tail -n &lt;span class="m"&gt;1&lt;/span&gt; /var/log/mariadb/mariadb.log
+&lt;span class="m"&gt;151211&lt;/span&gt; 19:01:18 mysqld_safe mysqld from pid file /var/run/mariadb/mariadb.pid e&lt;span class="err"&gt;$&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Upon restarting it (via &lt;code&gt;service mariadb start&lt;/code&gt;), the logs were appended with the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;tail /var/log/mariadb/mariadb.log
+&lt;span class="m"&gt;151211&lt;/span&gt; 20:33:33 mysqld_safe Starting mysqld daemon with databases from /var/lib&lt;span class="err"&gt;$&lt;/span&gt;
+&lt;span class="m"&gt;151211&lt;/span&gt; 20:33:33 &lt;span class="o"&gt;[&lt;/span&gt;Note&lt;span class="o"&gt;]&lt;/span&gt; /usr/libexec/mysqld &lt;span class="o"&gt;(&lt;/span&gt;mysqld 5.5.44-MariaDB&lt;span class="o"&gt;)&lt;/span&gt; starting as &lt;span class="err"&gt;$&lt;/span&gt;
+InnoDB: Log scan progressed past the checkpoint lsn 55316603
+&lt;span class="m"&gt;151211&lt;/span&gt; 20:33:34  InnoDB: Database was not shut down normally!
+InnoDB: Starting crash recovery.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It's clear that whatever is killing the database is not doing so cleanly.  &lt;code&gt;dmesg&lt;/code&gt; can be used to search all logs and try to shed some light:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;dmesg &lt;span class="p"&gt;|&lt;/span&gt; egrep -i &lt;span class="s1"&gt;&amp;#39;killed process&amp;#39;&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;4038014.625029&lt;span class="o"&gt;]&lt;/span&gt; Out of memory in UB XXXX: OOM killed process &lt;span class="m"&gt;601&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;mysqld&lt;span class="o"&gt;)&lt;/span&gt; score &lt;span class="m"&gt;0&lt;/span&gt; vm:1212112kB, rss:84964kB, swap:748kB
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Ah, that's not good.  The &lt;a href="http://linux-mm.org/OOM_Killer"&gt;OOM Killer&lt;/a&gt; is choosing to sacrifice mysqld; although not the best choice it's clear that there's something bigger going on that needs to be addressed.&lt;/p&gt;
+&lt;p&gt;Now I know the problem is related to low memory, let's see how much free memory we currently have available:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;free -m
+            total        used        free      shared  buff/cache   available
+Mem:         &lt;span class="m"&gt;1024&lt;/span&gt;         &lt;span class="m"&gt;764&lt;/span&gt;           &lt;span class="m"&gt;7&lt;/span&gt;          &lt;span class="m"&gt;10&lt;/span&gt;         &lt;span class="m"&gt;251&lt;/span&gt;         11
+Swap:           &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class="m"&gt;0&lt;/span&gt;           0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;7MB free... oh dear.  So what's using up all the memory? We can find out using &lt;code&gt;ps&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ps aux --sort&lt;span class="o"&gt;=&lt;/span&gt;-%mem &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;&amp;#39;NR&amp;lt;=10{print $0}&amp;#39;&lt;/span&gt;
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root       &lt;span class="m"&gt;980&lt;/span&gt;  1.5  1.8 &lt;span class="m"&gt;781612&lt;/span&gt; &lt;span class="m"&gt;19128&lt;/span&gt; ?        Ssl  Dec10  21:22 /usr/sbin/rsyslogd -n
+root     &lt;span class="m"&gt;17069&lt;/span&gt;  0.0  1.1 &lt;span class="m"&gt;307316&lt;/span&gt; &lt;span class="m"&gt;11804&lt;/span&gt; ?        Ss   19:37   0:00 php-fpm: master process &lt;span class="o"&gt;(&lt;/span&gt;/etc/php-fpm.conf&lt;span class="o"&gt;)&lt;/span&gt;
+root        &lt;span class="m"&gt;72&lt;/span&gt;  0.0  1.0 &lt;span class="m"&gt;237836&lt;/span&gt; &lt;span class="m"&gt;10496&lt;/span&gt; ?        Ss   Dec10   0:26 /usr/lib/systemd/systemd-journald
+nginx    &lt;span class="m"&gt;22205&lt;/span&gt;  1.0  4.7 &lt;span class="m"&gt;307448&lt;/span&gt;  &lt;span class="m"&gt;7264&lt;/span&gt; ?        S    20:19   0:00 php-fpm: pool www
+nginx    &lt;span class="m"&gt;22551&lt;/span&gt;  1.0  4.4 &lt;span class="m"&gt;307448&lt;/span&gt;  &lt;span class="m"&gt;7661&lt;/span&gt; ?        S    20:29   0:00 php-fpm: pool www
+nginx    &lt;span class="m"&gt;22445&lt;/span&gt;  1.0  4.7 &lt;span class="m"&gt;307448&lt;/span&gt;  &lt;span class="m"&gt;5671&lt;/span&gt; ?        S    20:20   0:00 php-fpm: pool www
+nginx    &lt;span class="m"&gt;22041&lt;/span&gt;  1.0  4.3 &lt;span class="m"&gt;307448&lt;/span&gt;  &lt;span class="m"&gt;7511&lt;/span&gt; ?        S    20:12   0:00 php-fpm: pool www
+nginx    &lt;span class="m"&gt;17190&lt;/span&gt;  0.0  0.3 &lt;span class="m"&gt;109980&lt;/span&gt;  &lt;span class="m"&gt;3524&lt;/span&gt; ?        S    20:38   0:00 nginx: worker process
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And the culprit is &lt;code&gt;php-fpm&lt;/code&gt;! A quick google found another Wordpress customer &lt;a href="https://wordpress.org/support/topic/php-fpm-for-wordpress-gobbling-up-memory"&gt;suffering from similar symptoms&lt;/a&gt;; the advice was to tweak the php-fpm pool configuration (&lt;code&gt;/etc/php-fpm.d/www.conf&lt;/code&gt;) and tweak the &lt;code&gt;pm&lt;/code&gt; configuration.  The main change was to move from &lt;code&gt;pm = dynamic&lt;/code&gt; to &lt;code&gt;pm = ondemand&lt;/code&gt; with a &lt;code&gt;pm.max_children&lt;/code&gt; value of &lt;code&gt;5&lt;/code&gt; (based on observing ~5% memory usage per worker).  After changing the configuration I restarted all services and checked the memory usage.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;service php-fpm restart
+&lt;span class="nv"&gt;$ &lt;/span&gt;service nginx restart
+&lt;span class="nv"&gt;$ &lt;/span&gt;service mariadb restart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;After restarting the memory usage was dramatically lower:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;free -m
+              total        used        free      shared  buff/cache   available
+Mem:           &lt;span class="m"&gt;1024&lt;/span&gt;          &lt;span class="m"&gt;96&lt;/span&gt;         &lt;span class="m"&gt;677&lt;/span&gt;           &lt;span class="m"&gt;7&lt;/span&gt;         &lt;span class="m"&gt;250&lt;/span&gt;         830
+Swap:             &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class="m"&gt;0&lt;/span&gt;           0
+&lt;/pre&gt;&lt;/div&gt;</summary></entry><entry><title>Don't (always) npm install -g</title><link href="http://jonnyreeves.co.uk/2015/dont-always-npm-install-g/" rel="alternate"></link><updated>2015-11-26T21:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-11-26:2015/dont-always-npm-install-g/</id><summary type="html">&lt;p&gt;Had a chat with a respected hacker friend of mine who did not know about this trick (although to be fair, I'm not sure I knew about it until all that long ago).&lt;/p&gt;
 &lt;p&gt;There's almost never any need to use &lt;code&gt;npm install -g&lt;/code&gt;, you could argue it's an anti-pattern as it makes your software harder to install for other users and can easily cause conflcits between projects.  The most common candidates for a bit of global installing are test and build utils like mocha, typescript and grunt-cli; instead of reaching for &lt;code&gt;-g&lt;/code&gt; you can install them locally in your project and execute them from the symlink created in &lt;code&gt;node_modules/.bin&lt;/code&gt;, eg:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;npm install --save-dev mocha
 ./node_modules/.bin/mocha --help

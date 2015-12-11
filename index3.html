@@ -45,6 +45,97 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2012/jquery-a-single-click-handler-for-multiple-buttons/#jquery-a-single-click-handler-for-multiple-buttons">jQuery - A single click handler for multiple buttons</a></h2>
+    <p>
+      Posted on Wed 23 May 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2012/jquery-a-single-click-handler-for-multiple-buttons/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p>Event bubbling is a wonderful thing; in ActionScript mouse events would readily <a href="http://www.rubenswieringa.com/blog/eventbubbles-eventcancelable-and-eventcurrenttarget">bubble up through the DisplayList</a> all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the <code>event.target</code> property to determine which child button the user had interacted with. The same is true in JavaScript; but instead of events bubbling up the DisplayList they bubble up through the DOM.</p>
+<p>Take the following example, here we have three buttons that we want to respond to when they’re clicked:</p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/three-buttons.png" /></p>
+<p>The HTML for this button group is nice and simple, making use of jQuery mobile:</p>
+<div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;screen-selector&quot;</span> <span class="na">data-role=</span><span class="s">&quot;navbar&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;ui-btn-active&quot;</span><span class="nt">&gt;</span>Applications<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span><span class="nt">&gt;</span>Properties<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span><span class="nt">&gt;</span>Events<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<p>We can easily bind a click event handler to the <code>#screen-selector</code> element which will capture the click events as they bubble up the DOM.</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on: &quot;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This almost works as desired, but not quite. jQuery Mobile does some magic behind the scenes to transform our button markup into a more complex design, this results in the <code>event.target</code> of the click event being child elements of the <code>&lt;a&gt;</code> tag:</p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-event-target.png" /></p>
+<p>Instead, what we really want is to know which <a> element the user clicked so we can tie it back to the buttons in our original HTML. In ActionScript this could be solved quite easily by setting the <a href="http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/DisplayObjectContainer.html#mouseChildren"><code>mouseChildren</code> attribute</a> of the button DisplayObjects to false, ie:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="n">buttons</span> <span class="p">:</span> <span class="kt">Array</span> <span class="o">=</span> <span class="o">[</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnApplications&quot;</span><span class="o">),</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnProperties&quot;</span><span class="o">),</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnEvents&quot;</span><span class="o">)</span> <span class="o">];</span>
+<span class="k">for</span> <span class="k">each</span> <span class="o">(</span><span class="kd">var</span> <span class="n">button</span> <span class="p">:</span> <span class="kt">Sprite</span> <span class="k">in</span> <span class="n">buttons</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Disable mouse interaction with any children nested within the button&#39;s DisplayObject.</span>
+    <span class="n">button</span><span class="o">.</span><span class="na">mouseChildren</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>JavaScript lacks the ability to toggle the mouse interactivity of nested elements, but luckily jQuery comes to the rescue with the <a href="http://api.jquery.com/closest/">closest traversal method</a>. This method will walk up the DOM tree until if finds the first element that matches the supplied selector. In our case we just want to walk up from the click event’s target element until we find an <code>&lt;a&gt;</code> tag:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">closest</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">button</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This now logs the desired <code>&lt;a&gt;</code> tag for the clicked button!</p>
+<p>This code can be improved one step further by <a href="http://api.jquery.com/on/#example-7">passing a selector argument</a> to jQuery’s <code>on</code> method. jQuery will ensure that the event handler function is only called if the selector matches the event’s current target; in our case – we only want it to trigger when it hits an <code>&lt;a&gt;</code> tag, so we can write:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">button</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The last piece of the puzzle comes from creating a mapping between the button the user clicked on and the action we want to take. Again, Flash provided a really easy way to do this in the form of the DisplayObject.name property which your button handler could read.</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">onButtonClicked</span><span class="p">(</span><span class="nx">event</span> <span class="o">:</span> <span class="nx">MouseEvent</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span> 
+    <span class="kd">var</span> <span class="nx">button</span> <span class="o">:</span> <span class="nx">DisplayObject</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span> <span class="nx">as</span> <span class="nx">DisplayObject</span><span class="p">;</span>
+    <span class="nx">trace</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">button</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The buttons created by jQuery mobile don't offer any form of name identifier; one simple solution would be to simply add an id attribute to the <code>&lt;a&gt;</code> tag; however <a href="http://www.w3.org/TR/html401/struct/global.html#h-7.5.2">element id's must always be unique</a> which isn't really want we are after (we just want to identify this button group apart, rather than having to ensure these buttons have a unique id across the entire DOM). The option I've settled on is to add a <a href="http://ejohn.org/blog/html-5-data-attributes/">custom data attribute</a> to each <code>&lt;a&gt;</code> tag in the form of a data-name attribute:</p>
+<div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;screen-selector&quot;</span> <span class="na">data-role=</span><span class="s">&quot;navbar&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;ui-btn-active&quot;</span> <span class="na">data-name=</span><span class="s">&quot;applications&quot;</span><span class="nt">&gt;</span>Applications<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">data-name=</span><span class="s">&quot;properties&quot;</span><span class="nt">&gt;</span>Properties<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">data-name=</span><span class="s">&quot;events&quot;</span><span class="nt">&gt;</span>Events<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<p>We can now modify our click event handler to read the data-name attribute from the clicked <code>&lt;a&gt;</code> element:</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#screen-selector&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Retrieve the &#39;name&#39; data attribute of the &lt;a/&gt; tag that the user clicked.</span>
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">closest</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;You clicked on:&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Which gives us our desired effect! :)</p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-click-handler.png" /></p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/#using-external-templates-with-mustachejs-and-jquery">Using External Templates with Mustache.js and jQuery</a></h2>
     <p>
       Posted on Sun 12 February 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
