@@ -39,8 +39,10 @@ DEFAULT_PAGINATION = 10
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
 
-STATIC_PATHS = ['images', 'extra/CNAME']
-EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
+STATIC_PATHS = ['images', 'extra/CNAME', 'extra/google184ba0b4352bb6cd.html']
+EXTRA_PATH_METADATA = { 'extra/CNAME': {'path': 'CNAME'},
+                        'extra/google184ba0b4352bb6cd.html': {'path': 'google184ba0b4352bb6cd.html'},
+}
 
 # Flex Theme Settings
 THEME="../pelican-themes/Flex"
