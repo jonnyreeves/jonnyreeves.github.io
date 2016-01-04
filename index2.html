@@ -45,6 +45,138 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Injecting into Constructors with TypeScript Decorators</a></h2>
+    <p>
+      Posted on Thu 06 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p>In the <a href="/2015/injecting-into-methods-with-typescript-decorators/">previous post</a> I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with <a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/">AS3 Metadata</a>, you can't annotate the <code>#constructor()</code> method directly:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">MyClass</span> {
+
+  // <span class="n">Although</span> <span class="n">this</span> <span class="n">would</span> <span class="n">be</span> <span class="n">the</span> <span class="n">preferred</span> <span class="n">syntax</span> <span class="n">it</span> <span class="k">will</span> <span class="n">throw</span> <span class="n">a</span> <span class="n">compiler</span> <span class="n">error</span>,<span class="sr"></span>
+<span class="sr">  //</span> <span class="n">TS1206:</span> <span class="n">Decorators</span> <span class="n">are</span> <span class="nb">not</span> <span class="n">valid</span> <span class="n">here</span>.
+  <span class="nv">@inject</span>(<span class="s">&#39;firstName&#39;</span>)
+  <span class="n">constructor</span>(<span class="nb">name</span> : <span class="n">string</span>) { ... }
+}
+</pre></div>
+
+
+<p>Instead, we need to add the decorator to the Class, ie:</p>
+<div class="highlight"><pre>@inject(&#39;firstName&#39;)
+class MyClass {
+  constructor(name : string) { ... }
+}
+</pre></div>
+
+
+<p>This is slightly awkward as it moves our decorator away from the constructor declaration which contains our injection arguments - that's somewhat compounded by the fact constructor injection is the most desirable form of the three (constructor, method and property) as it promotes immutability by ensuring an object has all of its dependencies when constructed - still, at least it works :)</p>
+<p>The first change is to the <code>@inject</code> decorator, previously we expected the first argument to the decoratorFactory (<code>target</code>) to be the instance of the Class being decorated; however because we are decorating the class itself, the decoratorFactory can't be invoked with the instance, instead it receives a reference to the Class' constructor function, likewise it does not receive a <code>decoratedPropertyName</code> argument.:</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="nx">decoratorFactory</span><span class="p">(</span><span class="nx">target</span> <span class="o">:</span> <span class="nb">Object</span><span class="o">|</span><span class="nb">Function</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span><span class="o">?</span> <span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">targetType</span> <span class="o">:</span> <span class="nb">Function</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">target</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">decoratedPropertyName</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">targetType</span> <span class="o">=</span> <span class="nx">target</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">targetType</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* ... */</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Next we need to record the <code>injectionKeys</code> that the user wants to be used to fulfill the constructor's dependencies - our <code>InjectionPoint</code> object is currently used to record dependencies, however it doesn't really fit for recording a constructor's dependencies:</p>
+<ul>
+<li><code>InjectionPoint#constructor()</code> takes three arguments, the target instance, decorated property name and a list of injectionKeys, but there is no target instance for a decorated constructor (we just get a reference to the Constructor function), and the decoratorFactory also does not receive a decoratedPropertyName argument.</li>
+<li><code>InjectionPoint#inject()</code> is expected to perform the injection against the target instance, but we need to Construct a new instance (and return it)</li>
+</ul>
+<p>To deal with these special cases I ended up creating the <code>ConstructorInjectionPoint</code> class which specialises <code>InjectionPoint</code> to deal with the issues outlined above:</p>
+<div class="highlight"><pre>export class ConstructorInjectionPoint extends InjectionPoint{
+    constructor(injectionKeys : Array&lt;string&gt;) {
+        super(null, &#39;constructor&#39;, injectionKeys);
+    }
+
+    inject(values : Array&lt;any&gt;) : void {
+        throw new Error(&#39;Unsupported operation #inject()&#39;);
+    }
+}
+</pre></div>
+
+
+<p>This style of specialisation is not ideal; the worst offender is that <code>ConstructorInjectionPoint#inject()</code> throws an unsupported operation error - this design leads to a violation of the Liskov Substitution Principle (all sub-types should be interchangeable with their parent type) so it's something I plan to come back and revisit at a later date. </p>
+<p>The decorator can now create the appropriate <code>InjectionPoint</code> type based on the arguments it receives</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="nx">decoratorFactory</span><span class="p">(</span><span class="nx">target</span> <span class="o">:</span> <span class="nb">Object</span><span class="o">|</span><span class="nb">Function</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span><span class="o">?</span> <span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">targetType</span> <span class="o">:</span> <span class="nb">Function</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">injectionPoint</span> <span class="o">:</span> <span class="nx">InjectionPoint</span><span class="p">;</span>
+
+    <span class="c1">// Decorator applied to Class (for Constructor injection).</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">target</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">decoratedPropertyName</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">targetType</span> <span class="o">=</span> <span class="nx">target</span><span class="p">;</span>
+      <span class="nx">injectionPoint</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ConstructorInjectionPoint</span><span class="p">(</span><span class="nx">injectionKeys</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Decorator applied to member (method or property).</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">target</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">decoratedPropertyName</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">targetType</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nx">constructor</span><span class="p">;</span>
+      <span class="nx">injectionPoint</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InjectionPoint</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span><span class="p">,</span> <span class="nx">injectionKeys</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">targetType</span><span class="p">.</span><span class="nx">__inject__</span><span class="cp">[</span><span class="nx">injectionPoint.propertyName</span><span class="cp">]</span> <span class="o">=</span> <span class="nx">injectionPoint</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Now that the <code>ConstructorInjectionPoint</code> is being recorded, we need to modify <code>Injector#instantiate()</code> to make use of it when creating the resulting instance:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">Injector</span> {
+  <span class="n">instantiate</span><span class="s">&lt;T&gt;(Class : Constructable&lt;T&gt;</span>) : <span class="n">T</span> {
+    // <span class="n">Create</span> <span class="n">an</span> <span class="n">instance</span> <span class="k">of</span> <span class="n">the</span> <span class="n">target</span> <span class="nb">Class</span> <span class="n">applying</span> <span class="n">the</span> <span class="n">Constructor</span> <span class="n">InjectionPoint</span> <span class="k">if</span> <span class="n">it</span> <span class="k">has</span> <span class="nb">one</span>.
+    <span class="n">const</span> <span class="n">instance</span> : <span class="n">T</span> = <span class="n">this</span>.<span class="n">createInjecteeInstance</span>(<span class="nb">Class</span>);
+    /* ... <span class="n">apply</span> <span class="n">property</span> <span class="o">and</span> <span class="k">method</span> <span class="n">injection</span> <span class="n">points</span> ... */
+    <span class="k">return</span> <span class="n">instance</span>;
+  }
+
+  <span class="n">private</span> <span class="n">createInjecteeInstance</span><span class="s">&lt;T&gt;(Class : { new(...args : Array&lt;any&gt;</span>) : <span class="n">T</span> }) : <span class="n">T</span> {
+    <span class="k">let</span> <span class="n">result</span> : <span class="n">T</span>;
+
+    <span class="k">if</span> (<span class="nb">Class</span>.<span class="n">hasOwnProperty</span>(<span class="s">&#39;__inject__&#39;</span>)) {
+      <span class="n">const</span> <span class="n">injectionPoint</span> : <span class="n">InjectionPoint</span> = (<span class="s">&lt;InjectionTarget&gt;</span> <span class="nb">Class</span>).<span class="n">__inject__</span>.<span class="n">constructor</span>];
+
+      <span class="k">if</span> (<span class="n">injectionPoint</span>) {
+        <span class="n">result</span> = <span class="n">invokeConstructor</span>(<span class="nb">Class</span>, <span class="n">this</span>.<span class="n">getInjectionValues</span>(<span class="n">injectionPoint</span>));
+      }
+    }
+
+    // <span class="n">If</span> <span class="n">no</span> <span class="n">Constructor</span> <span class="n">InjectionPoint</span> <span class="k">is</span> <span class="n">found</span> <span class="k">return</span> <span class="n">a</span> <span class="nb">new</span> <span class="n">instance</span> <span class="n">with</span> <span class="n">no</span> <span class="n">arguments</span>.
+    <span class="k">return</span> <span class="n">result</span> || <span class="nb">new</span> <span class="nb">Class</span>();
+  }
+}
+</pre></div>
+
+
+<p>The <code>invokeConstructor()</code> is a necessary evil that crops up in a lot of languages where you wish to call a constructor function with the <code>new</code> keyword.  Note that you can't make use of <code>Function.apply</code> here as there is no valid scope to pass (the scope is the new instance!), as a result we end up with this familiar pattern, the pyramid of doom:</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">invokeConstructor</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">Class</span> <span class="o">:</span> <span class="p">{</span> <span class="k">new</span><span class="p">(...</span><span class="nx">args</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">T</span> <span class="p">},</span> <span class="nx">args</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">T</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">Class</span><span class="p">();</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">Class</span><span class="p">(</span><span class="nx">args</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="p">);</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">Class</span><span class="p">(</span><span class="nx">args</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="p">,</span> <span class="nx">args</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="p">);</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">Class</span><span class="p">(</span><span class="nx">args</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="p">,</span> <span class="nx">args</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="p">,</span> <span class="nx">args</span><span class="cp">[</span><span class="mi">2</span><span class="cp">]</span><span class="p">);</span>
+        <span class="k">default</span><span class="o">:</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;I got bored...&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>As before I've pushed the code to <a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection">Github</a> and create a <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2">Pull Request</a> to highlight changes from the previous post.</p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Injecting into Methods with TypeScript Decorators</a></h2>
     <p>
       Posted on Mon 03 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
@@ -776,131 +908,6 @@ blobClient.SetServiceSettings(new ServiceSettings()
         DefaultServiceVersion = &quot;2011-08-18&quot;
     });
 </pre></div>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2012/stubbing-javascript-promises-with-sinonjs/#stubbing-javascript-promises-with-sinonjs">Stubbing JavaScript Promises with SinonJS</a></h2>
-    <p>
-      Posted on Sat 02 June 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2012/stubbing-javascript-promises-with-sinonjs/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Asynchronous code lies at the heart of front end development; in order to make your application feel responsive you can’t afford to block execution until some external data has been read. <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises</a> are a well understood design pattern to help encapsulate the state of an asynchronous action. A Promise will only ever transfer from a pending state (ie: when the initial request has been made to the server) to a resolved state. The resolved state can be one of either a failure state (ie: the server sends back a 500 error) or a success state (ie: the JSON data you were expecting has come back). Once a promise has transferred to a resolved state it will not change (it becomes immutable). By employing this pattern you can write some very succinct code which is both easy to read and maintain:</p>
-<div class="highlight"><pre><span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;someData&quot;</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* process response */</span> <span class="p">});</span>
-    <span class="p">.</span><span class="nx">otherwise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* handle the error */</span> <span class="p">});</span>
-</pre></div>
-
-
-<p>The code above makes use of Brain Cavalier’s <a href="https://github.com/cujojs/when">when.js</a> Promises implementation. The rest of this post aims to highlight how you can combine when.js with a mocking framework to make unit testing Promises a piece of cake. If you would still like to learn more about using Promises, and how they make writing asynchronous code easier, then I’d suggest reading <a href="http://blog.briancavalier.com/async-programming-part-1-its-messy">his excellent articles on the subject</a>.</p>
-<h3>Why mock Promises?</h3>
-<p>One of the golden rules of unit testing is that the <a href="http://martinfowler.com/articles/nonDeterminism.html">code under test must be deterministic</a>. Another golden rule is that <a href="http://pragprog.com/magazines/2012-01/unit-tests-are-first">unit tests must be fast to execute</a>. Although Promises make writing asynchronous code easier, they don’t help with the two points above, take the following example:</p>
-<div class="highlight"><pre><span class="c1">// Example of a module that abstracts a RESTful web service.</span>
-<span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">fetch</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Returns a when.js Promise which will resolve when the data</span>
-        <span class="c1">// has been fetched.</span>
-        <span class="k">return</span> <span class="nx">when</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;http://myservice.com/api?q=&quot;</span> <span class="o">+</span> <span class="nx">query</span><span class="p">));</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="c1">// A client object which consumes the Service, this is what we are going to be </span>
-<span class="c1">// unit testing.</span>
-<span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="p">{</span>
-
-    <span class="c1">// Returns a promise which will yield the number of pages returned</span>
-    <span class="c1">// the supplied query.</span>
-    <span class="nx">getNumPages</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
-
-        <span class="c1">// Create a fresh service instance.</span>
-        <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">createService</span><span class="p">();</span>
-
-        <span class="c1">// Return a promise which will resolve after the following</span>
-        <span class="c1">// `then` block has performed.</span>
-        <span class="k">return</span> <span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="nx">query</span><span class="p">)</span>
-            <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span> 
-
-                <span class="c1">// Modifies the result of the Service&#39;s Promise,</span>
-                <span class="c1">// future success handlers will reicieve the</span>
-                <span class="c1">// number of pages instead of the response data.</span>
-                <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">pages</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-            <span class="p">});</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
-
-<p>Unit testing the above client is pretty easy; a simple test-case could look like this (This example will be based on QUnit):</p>
-<div class="highlight"><pre><span class="nx">asyncTest</span><span class="p">(</span><span class="s2">&quot;getNumPages fetches expected number of pages&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
-
-    <span class="c1">// A special query which we know will return the expected number of pages.</span>
-    <span class="nx">client</span><span class="p">.</span><span class="nx">getNumPages</span><span class="p">(</span><span class="s2">&quot;testcase-query&quot;</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">numPages</span><span class="p">)</span> <span class="p">{</span> 
-            <span class="nx">equal</span><span class="p">(</span><span class="nx">numPages</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;5 pages returned&quot;</span><span class="p">);</span>
-            <span class="nx">start</span><span class="p">();</span>
-        <span class="p">});</span>
-<span class="p">});</span>
-</pre></div>
-
-
-<p>Although the above test case is easy to read, it doesn’t make for a very good unit test for the following reasons:</p>
-<ul>
-<li>It’s non-deterministic – if the server over at myservice.com is down, or you try and execute these unit tests offline then the test will fail (infact, it will hang the test-runner as it waits for this asyncTest to complete.)</li>
-<li>It’s not going to be fast – a connection needs to be established to the server.</li>
-<li>It only tests the success state – we need to test what happens if the service is down, but there’s no obvious way to do that (other than to request an invalid query value from the API.</li>
-</ul>
-<p>This is where a mocking framework comes in – it will help us solve all three of the problems listed above.</p>
-<h3>Promises, Lies and stubbing the truth</h3>
-<p>A mocking framework allows you to alter the way functions behave during a unit test. Mocking frameworks are especially powerful in dynamic languages, like JavaScript, as they are able to make large changes to your codebase for a given unit test and then restore all those changes immediately after the test completes. This tutorial is going to be looking at <a href="http://sinonjs.org/">SinonJS</a></p>
-<p>As mentioned above, Sinon.js is able to completely rewrite a function during a test-case, let’s revisit our service module above:</p>
-<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Sinon.js stubbing example&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Use sinon.js to redefine the `service.fetch` function.</span>
-    <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">);</span>
-
-    <span class="c1">// Now when we call it, instead of invoking `jQuery.get`, it returns a String.</span>
-    <span class="nx">equal</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;testcase-data&quot;</span><span class="p">),</span> <span class="s2">&quot;Hello!&quot;</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
-
-
-<p>The above example isn’t very useful; however, instead of returning a String, we can just as easily return a Promise instance, and that’s when things start getting useful:</p>
-<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Stubbing the service so it returns an expected response&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
-
-    <span class="c1">// Stub the service so it returns a resolved promise.  Note that `when(value)`</span>
-    <span class="c1">// is a neat short-cut for creating a Deferred and resolving it.</span>
-    <span class="kd">var</span> <span class="nx">expectedResponse</span> <span class="o">=</span> <span class="s1">&#39;{ &quot;pages&quot;: [ &quot;page1&quot;, &quot;page2&quot;, &quot;page3&quot; ]}&#39;</span><span class="p">;</span>
-    <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">when</span><span class="p">(</span><span class="nx">expectedResponse</span><span class="p">));</span>
-
-    <span class="c1">// Call the client...</span>
-    <span class="nx">client</span><span class="p">.</span><span class="nx">getNumPages</span><span class="p">(</span><span class="s1">&#39;testcase-query&#39;</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">numPages</span><span class="p">)</span> <span class="p">{</span> 
-            <span class="nx">strictEqual</span><span class="p">(</span><span class="nx">numPages</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;3 pages returned&quot;</span><span class="p">);</span>
-        <span class="p">});</span>
-<span class="p">});</span>
-</pre></div>
-
-
-<p>Note that the above test-case didn’t need to make user of QUnits <code>asyncTest</code> block – that’s because the expectedPromise Promise object has already been resolved – no need to wait for anything to complete asynchronously. Our test is no longer reliant on the server (hence deterministic) and it no longer relies on a service call (and will therefore execute almost instantly). That leaves only one last point from our rules above – how to test the failure path…</p>
-<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Simulating a service failure&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
-
-    <span class="c1">// Again, start by stubbing our service&#39;s fetch method.  This time we will</span>
-    <span class="c1">// return a rejected Promise with an error.</span>
-    <span class="kd">var</span> <span class="nx">expectedError</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Bad Query&quot;</span><span class="p">);</span>
-    <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">when</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">expectedError</span><span class="p">));</span>
-
-    <span class="c1">// Call the client and expect it to fail</span>
-    <span class="nx">client</span><span class="p">.</span><span class="nx">getNumPages</span><span class="p">(</span><span class="s1">&#39;testcase-query&#39;</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">otherwise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> 
-            <span class="nx">strictEqual</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">expectedError</span><span class="p">,</span> <span class="s2">&quot;Error from API provided to handler&quot;</span><span class="p">);</span>
-        <span class="p">});</span>
-<span class="p">});</span>
-</pre></div>
-
-
-<p>Hopefully this post has been useful in highlight just a couple of the ways in which Promises and a mocking framework can be combined to remove both non-determinism, and slow execution speed from your tests as well as making it easy to test all paths of your code, even if they depend on external data. I’ve created <a href="https://gist.github.com/2858452">a gist which shows a few other techniques</a> which can be employed for unit testing Promises including the use of Sinon’s yieldTo method which makes it easy to resolve, or reject a Promise resolver supplied as an argument.</p>
   </div>
 </article>
 
