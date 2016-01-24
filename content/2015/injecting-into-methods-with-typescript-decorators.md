@@ -2,7 +2,7 @@ Title: Injecting into Methods with TypeScript Decorators
 Date: 2015-08-03 21:00
 Category: TypeScript
 
-Expanding upon my [last post on Property based Dependency Injection](http://localhost:8000/2015/basic-typescript-dependency-injection-with-decorators/), let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:
+Expanding upon my [last post on Property based Dependency Injection](/2015/basic-typescript-dependency-injection-with-decorators/), let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:
 
 ```typescript
 class Person {
@@ -46,7 +46,7 @@ function inject(...injectionKeys : Array<string>) { ... }
 We face a slightly tricker challenge in the fact that injecting values into methods requires us to inoke a method rather than just assinging a property on the target object, in the previous implementation the `__inject__` Object was a simple hash of property name to injectionKey, but in order to inovoke the target method with the injection values in the correct scope we will need access to the target object as well.  To group this data together I've created an `InjectionPoint` object and assign this as the new value in the `__inject__` map:
 
 ```typescript
-function inject(...injectionKeys : Array<string>) { 
+function inject(...injectionKeys : Array<string>) {
   return function recordInjection(target : Object, decoratedPropertyName : string) : void {
     /* ... */
 
