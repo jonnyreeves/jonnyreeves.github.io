@@ -53,7 +53,7 @@
     <p>Posted on Mon 03 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
   </header>
   <div>
-    <p>Expanding upon my <a href="http://localhost:8000/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
+    <p>Expanding upon my <a href="/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
 <div class="highlight"><pre>class Person {
   private _firstName : string;
   private _lastName : string;
@@ -92,7 +92,7 @@ if (jonny.getFullName() !== &#39;Jonny Reeves&#39;) {
 
 
 <p>We face a slightly tricker challenge in the fact that injecting values into methods requires us to inoke a method rather than just assinging a property on the target object, in the previous implementation the <code>__inject__</code> Object was a simple hash of property name to injectionKey, but in order to inovoke the target method with the injection values in the correct scope we will need access to the target object as well.  To group this data together I've created an <code>InjectionPoint</code> object and assign this as the new value in the <code>__inject__</code> map:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span> 
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="kd">function</span> <span class="nx">recordInjection</span><span class="p">(</span><span class="nx">target</span> <span class="o">:</span> <span class="nb">Object</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span> <span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
     <span class="cm">/* ... */</span>
 
