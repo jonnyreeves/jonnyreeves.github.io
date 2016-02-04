@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/style.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="http://jonnyreeves.co.uk/theme/css/font-awesome.min.css">
+  <link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Atom">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+<meta name="author" content="Jonny Reeves" />
+<meta name="description" content="I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter and had trouble figuring out how to test it: type Preferences struct { Colour string } func SetPreferencesCookie(w http.ResponseWriter, prefs *Preferences) error { data, err := json.Marshal(prefs) if err != nil { return err } http.SetCookie(w, &http.Cookie ..." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Jonny Reeves"/>
+<meta property="og:title" content="Testing Setting HTTP Cookies in Go"/>
+<meta property="og:description" content="I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter and had trouble figuring out how to test it: type Preferences struct { Colour string } func SetPreferencesCookie(w http.ResponseWriter, prefs *Preferences) error { data, err := json.Marshal(prefs) if err != nil { return err } http.SetCookie(w, &http.Cookie ..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2016-02-04 20:00:00+00:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://jonnyreeves.co.uk/author/jonny-reeves.html">
+<meta property="article:section" content="Golang"/>
+<meta property="og:image" content="/images/avatar.jpg">  <title>Jonny Reeves &ndash; Testing Setting HTTP Cookies in Go</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://jonnyreeves.co.uk">
+        <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
+      </a>
+      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <p>code && coffee || music</p>
+      <nav>
+        <ul class="list">
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://br.linkedin.com/in/jonnyreeves/en" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-google" href="https://plus.google.com/+JohnReeves" target="_blank"><i class="fa fa-google"></i></a></li>
+        <li><a class="sc-stack-overflow" href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank"><i class="fa fa-stack-overflow"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jonnyreeves" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="testing-setting-http-cookies-in-go">Testing Setting HTTP Cookies in Go</h1>
+    <p>Posted on Thu 04 February 2016 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a></p>
+  </header>
+  <div>
+    <p>I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
+and had trouble figuring out how to test it:</p>
+<div class="highlight"><pre><span class="kd">type</span> <span class="nx">Preferences</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Colour</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">SetPreferencesCookie</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">prefs</span> <span class="o">*</span><span class="nx">Preferences</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">SetCookie</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Cookie</span><span class="p">{</span>
+        <span class="nx">Name</span><span class="p">:</span>  <span class="s">&quot;test&quot;</span><span class="p">,</span>
+        <span class="nx">Value</span><span class="p">:</span> <span class="nx">base64</span><span class="p">.</span><span class="nx">StdEncoding</span><span class="p">.</span><span class="nx">EncodeToString</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The answer comes in the form of copying the Headers from an <code>http.Recorder</code>
+into an <code>http.Response</code> object.</p>
+<div class="highlight"><pre><span class="kd">func</span> <span class="nx">TestSetPreferencesCookie</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Create a new HTTP Recorder (implements http.ResponseWriter)</span>
+  <span class="nx">recorder</span> <span class="o">:=</span> <span class="nx">httptest</span><span class="p">.</span><span class="nx">NewRecorder</span><span class="p">()</span>
+
+  <span class="c1">// Drop a cookie on the recorder.</span>
+  <span class="nx">SetPreferencesCookie</span><span class="p">(</span><span class="nx">recorder</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">Preferences</span><span class="p">{</span> <span class="nx">Colour</span><span class="p">:</span> <span class="s">&quot;Blue&quot;</span> <span class="p">})</span>
+
+  <span class="c1">// Copy the Cookie over to a new Request</span>
+  <span class="nx">request</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">{</span><span class="nx">Header</span><span class="p">:</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Header</span><span class="p">{</span><span class="s">&quot;Cookie&quot;</span><span class="p">:</span> <span class="nx">recorder</span><span class="p">.</span><span class="nx">HeaderMap</span><span class="p">[</span><span class="s">&quot;Set-Cookie&quot;</span><span class="p">]}}</span>
+
+  <span class="c1">// Extract the dropped cookie from the request.</span>
+  <span class="nx">cookie</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">Cookie</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="s">&quot;Failed to read &#39;test&#39; Cookie&quot;</span><span class="p">:</span> <span class="o">%</span><span class="nx">v</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+  <span class="c1">// Decode the cookie</span>
+  <span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">base64</span><span class="p">.</span><span class="nx">StdEncoding</span><span class="p">.</span><span class="nx">DecodeString</span><span class="p">(</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">Value</span><span class="p">)</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="s">&quot;Failed to Base64 decode &#39;test&#39; Cookie: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+  <span class="c1">// Unmarshal contents back into a Preferences struct</span>
+  <span class="kd">var</span> <span class="nx">prefs</span> <span class="o">*</span><span class="nx">Preferences</span>
+  <span class="nx">err</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">prefs</span><span class="p">)</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="s">&quot;Failed to parse &#39;test&#39; Cookie JSON: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+  <span class="c1">// Check the contents.</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;Blue&quot;</span><span class="p">,</span> <span class="nx">prefs</span><span class="p">.</span><span class="nx">Colour</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Have a play with this code on the Go Playground: https://play.golang.org/p/r7aGdX9YEn.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'jonnyreeves';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</article>
+
+    <footer>
+      <p>&copy; Jonny Reeves </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30309890-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Testing Setting HTTP Cookies in Go",
+  "headline": "Testing Setting HTTP Cookies in Go",
+  "datePublished": "2016-02-04 20:00:00+00:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonny Reeves",
+    "url": "http://jonnyreeves.co.uk/author/jonny-reeves.html"
+  },
+  "image": "/images/avatar.jpg",
+  "url": "http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/",
+  "description": "I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter and had trouble figuring out how to test it: type Preferences struct { Colour string } func SetPreferencesCookie(w http.ResponseWriter, prefs *Preferences) error { data, err := json.Marshal(prefs) if err != nil { return err } http.SetCookie(w, &http.Cookie ..."
+}
+</script></body>
+</html>

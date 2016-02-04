@@ -45,6 +45,73 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</a></h2>
+    <p>
+      Posted on Fri 14 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm not a fan of extending <code>Object.prototype</code>.</p>
+<p>Installation is straight forward. First install <code>chai</code> as a dev dependency:</p>
+<div class="highlight"><pre>npm install chai --save-dev
+</pre></div>
+
+
+<p>Next grab the <code>d.ts</code> file for chai via <a href="http://definitelytyped.org/tsd/"><code>tsd</code></a> to obtain the type definitions.</p>
+<div class="highlight"><pre>tsd install chai --save
+</pre></div>
+
+
+<p>You can now start refactoring your test cases; given the following simple mocha test-case:</p>
+<div class="highlight"><pre>describe(&#39;Calculator&#39;, () =&gt; {
+  it(&#39;should add two numbers&#39;, () =&gt; {
+    const calc : Calculator = new Calculator();
+
+    // Manual assertion.
+    if (calc.add(5, 3) !== 8) {
+      throw new Error(&#39;expected 5 + 3 to equal 8&#39;);
+    }
+  });
+});
+</pre></div>
+
+
+<p>We can leverage chai's expect method to perform the assertion:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="p">{</span> <span class="n">expect</span> <span class="p">}</span> <span class="kn">from</span> <span class="s">&#39;chai&#39;</span><span class="p">;</span>
+
+<span class="n">describe</span><span class="p">(</span><span class="s">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="n">it</span><span class="p">(</span><span class="s">&#39;should add two numbers&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="n">const</span> <span class="n">calc</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Calculator</span><span class="p">();</span>
+
+    <span class="o">//</span> <span class="n">Chai</span> <span class="n">assertion</span><span class="o">.</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>When running the tests, chai will provide a useful error message should the assertion fail:</p>
+<div class="highlight"><pre>1 failing
+
+  1) Calculator should add two numbers:
+
+      AssertionError: expected 6 to equal 8
+      + expected - actual
+
+      -8
+      +6
+
+      at Context.&lt;anonymous&gt; (test/Calculator.spec.js:26:45)
+</pre></div>
+
+
+<p>Check out <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3">this pull request</a> which highlights how I integrated chai into the ts-prop-inject project.</p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Injecting into Constructors with TypeScript Decorators</a></h2>
     <p>
       Posted on Thu 06 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
@@ -885,28 +952,6 @@ license: (ISC)
     <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Slider is moving, it&#39;s value is now: &quot;</span> <span class="o">+</span> <span class="nx">value</span><span class="p">);</span>
 <span class="p">});</span>
-</pre></div>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2012/streaming-video-from-azure-blob-storage/#streaming-video-from-azure-blob-storage">Streaming Video from Azure Blob Storage</a></h2>
-    <p>
-      Posted on Fri 20 July 2012 in <a href="http://jonnyreeves.co.uk/category/azure.html">Azure</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2012/streaming-video-from-azure-blob-storage/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually <code>video/mp4</code>).</p>
-<p>The next problem that you’ll face is that the video will not seek correctly; trying to jump forward or backwards in the video won’t work.</p>
-<p>This is resolved by changing the <code>DefaultServiceVersion</code> to 2011-08-18 which can be achieved via the Azure’s REST API, or the Managed C# Library as laid out at the end of <a href="http://blogs.msdn.com/b/windowsazurestorage/archive/2011/09/15/windows-azure-blobs-improved-http-headers-for-resume-on-download-and-a-change-in-if-match-conditions.aspx">this MSDN blog post</a>.</p>
-<div class="highlight"><pre>var account = CloudStorageAccount.Parse(ConnectionString);
-var blobClient = account.CreateCloudBlobClient();
-blobClient.SetServiceSettings(new ServiceSettings()
-    {
-        DefaultServiceVersion = &quot;2011-08-18&quot;
-    });
 </pre></div>
   </div>
 </article>

@@ -45,6 +45,31 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Testing Setting HTTP Cookies in Go</a></h2>
+    <p>
+      Posted on Thu 04 February 2016 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p>I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
+and had trouble figuring out how to test it:</p>
+<div class="highlight"><pre><span class="kd">type</span> <span class="nx">Preferences</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Colour</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">SetPreferencesCookie</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">prefs</span> <span class="o">*</span><span class="nx">Preferences</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">SetCookie</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Cookie ...</span></pre></div>
+      <a class="btn" href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Continue reading</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2016/shrinkwrap-your-npm-dependencies/#shrinkwrap-your-npm-dependencies">Shrinkwrap your NPM Dependencies</a></h2>
     <p>
       Posted on Mon 04 January 2016 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
@@ -165,7 +190,7 @@
   <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/single-page-app-versioning/#single-page-app-versioning">Single Page App Versioning</a></h2>
     <p>
-      Posted on Sat 26 September 2015 in <a href="http://jonnyreeves.co.uk/category/misc.html">misc</a>
+      Posted on Sat 26 September 2015 in <a href="http://jonnyreeves.co.uk/category/2015.html">2015</a>
       &#8226; <a href="http://jonnyreeves.co.uk/2015/single-page-app-versioning/#disqus_thread">Leave a comment</a>
     </p>
   </header>
@@ -206,20 +231,6 @@
 
 <span class="x">      at Context ...</span></pre></div>
       <a class="btn" href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/#getting-proper-stack-traces-with-mocha-and-typescript">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</a></h2>
-    <p>
-      Posted on Fri 14 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Continue reading</a>
   </div>
 </article>
 

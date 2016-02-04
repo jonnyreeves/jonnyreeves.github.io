@@ -45,6 +45,31 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Testing Setting HTTP Cookies in Go</a></h2>
+    <p>
+      Posted on Thu 04 February 2016 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p>I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
+and had trouble figuring out how to test it:</p>
+<div class="highlight"><pre><span class="kd">type</span> <span class="nx">Preferences</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Colour</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">SetPreferencesCookie</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">prefs</span> <span class="o">*</span><span class="nx">Preferences</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">SetCookie</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Cookie ...</span></pre></div>
+      <a class="btn" href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Continue reading</a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Testing QueryStrings in http.Request</a></h2>
     <p>
       Posted on Sat 14 November 2015 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a>

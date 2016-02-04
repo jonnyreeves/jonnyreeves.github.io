@@ -45,6 +45,70 @@
 
 <article>
   <header>
+    <h2><a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Testing Setting HTTP Cookies in Go</a></h2>
+    <p>
+      Posted on Thu 04 February 2016 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a>
+      &#8226; <a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#disqus_thread">Leave a comment</a>
+    </p>
+  </header>
+  <div>
+      <p>I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
+and had trouble figuring out how to test it:</p>
+<div class="highlight"><pre><span class="kd">type</span> <span class="nx">Preferences</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Colour</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">SetPreferencesCookie</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">prefs</span> <span class="o">*</span><span class="nx">Preferences</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">SetCookie</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Cookie</span><span class="p">{</span>
+        <span class="nx">Name</span><span class="p">:</span>  <span class="s">&quot;test&quot;</span><span class="p">,</span>
+        <span class="nx">Value</span><span class="p">:</span> <span class="nx">base64</span><span class="p">.</span><span class="nx">StdEncoding</span><span class="p">.</span><span class="nx">EncodeToString</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The answer comes in the form of copying the Headers from an <code>http.Recorder</code>
+into an <code>http.Response</code> object.</p>
+<div class="highlight"><pre><span class="kd">func</span> <span class="nx">TestSetPreferencesCookie</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Create a new HTTP Recorder (implements http.ResponseWriter)</span>
+  <span class="nx">recorder</span> <span class="o">:=</span> <span class="nx">httptest</span><span class="p">.</span><span class="nx">NewRecorder</span><span class="p">()</span>
+
+  <span class="c1">// Drop a cookie on the recorder.</span>
+  <span class="nx">SetPreferencesCookie</span><span class="p">(</span><span class="nx">recorder</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">Preferences</span><span class="p">{</span> <span class="nx">Colour</span><span class="p">:</span> <span class="s">&quot;Blue&quot;</span> <span class="p">})</span>
+
+  <span class="c1">// Copy the Cookie over to a new Request</span>
+  <span class="nx">request</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">{</span><span class="nx">Header</span><span class="p">:</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Header</span><span class="p">{</span><span class="s">&quot;Cookie&quot;</span><span class="p">:</span> <span class="nx">recorder</span><span class="p">.</span><span class="nx">HeaderMap</span><span class="p">[</span><span class="s">&quot;Set-Cookie&quot;</span><span class="p">]}}</span>
+
+  <span class="c1">// Extract the dropped cookie from the request.</span>
+  <span class="nx">cookie</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">Cookie</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="s">&quot;Failed to read &#39;test&#39; Cookie&quot;</span><span class="p">:</span> <span class="o">%</span><span class="nx">v</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+  <span class="c1">// Decode the cookie</span>
+  <span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">base64</span><span class="p">.</span><span class="nx">StdEncoding</span><span class="p">.</span><span class="nx">DecodeString</span><span class="p">(</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">Value</span><span class="p">)</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="s">&quot;Failed to Base64 decode &#39;test&#39; Cookie: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+  <span class="c1">// Unmarshal contents back into a Preferences struct</span>
+  <span class="kd">var</span> <span class="nx">prefs</span> <span class="o">*</span><span class="nx">Preferences</span>
+  <span class="nx">err</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">prefs</span><span class="p">)</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">NoError</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="s">&quot;Failed to parse &#39;test&#39; Cookie JSON: %v&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+  <span class="c1">// Check the contents.</span>
+  <span class="nx">require</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;Blue&quot;</span><span class="p">,</span> <span class="nx">prefs</span><span class="p">.</span><span class="nx">Colour</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Have a play with this code on the Go Playground: https://play.golang.org/p/r7aGdX9YEn.</p>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
     <h2><a href="http://jonnyreeves.co.uk/2016/shrinkwrap-your-npm-dependencies/#shrinkwrap-your-npm-dependencies">Shrinkwrap your NPM Dependencies</a></h2>
     <p>
       Posted on Mon 04 January 2016 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
@@ -386,7 +450,7 @@ Swap:             <span class="m">0</span>           <span class="m">0</span>   
   <header>
     <h2><a href="http://jonnyreeves.co.uk/2015/single-page-app-versioning/#single-page-app-versioning">Single Page App Versioning</a></h2>
     <p>
-      Posted on Sat 26 September 2015 in <a href="http://jonnyreeves.co.uk/category/misc.html">misc</a>
+      Posted on Sat 26 September 2015 in <a href="http://jonnyreeves.co.uk/category/2015.html">2015</a>
       &#8226; <a href="http://jonnyreeves.co.uk/2015/single-page-app-versioning/#disqus_thread">Leave a comment</a>
     </p>
   </header>
@@ -471,73 +535,6 @@ Swap:             <span class="m">0</span>           <span class="m">0</span>   
 
 
 <p>Thanks to redditor <a href="https://www.reddit.com/user/pieeta">pieeta</a> who tipped me off :)  I've posted the sample project up on <a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces">Github</a>.</p>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</a></h2>
-    <p>
-      Posted on Fri 14 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm not a fan of extending <code>Object.prototype</code>.</p>
-<p>Installation is straight forward. First install <code>chai</code> as a dev dependency:</p>
-<div class="highlight"><pre>npm install chai --save-dev
-</pre></div>
-
-
-<p>Next grab the <code>d.ts</code> file for chai via <a href="http://definitelytyped.org/tsd/"><code>tsd</code></a> to obtain the type definitions.</p>
-<div class="highlight"><pre>tsd install chai --save
-</pre></div>
-
-
-<p>You can now start refactoring your test cases; given the following simple mocha test-case:</p>
-<div class="highlight"><pre>describe(&#39;Calculator&#39;, () =&gt; {
-  it(&#39;should add two numbers&#39;, () =&gt; {
-    const calc : Calculator = new Calculator();
-
-    // Manual assertion.
-    if (calc.add(5, 3) !== 8) {
-      throw new Error(&#39;expected 5 + 3 to equal 8&#39;);
-    }
-  });
-});
-</pre></div>
-
-
-<p>We can leverage chai's expect method to perform the assertion:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="p">{</span> <span class="n">expect</span> <span class="p">}</span> <span class="kn">from</span> <span class="s">&#39;chai&#39;</span><span class="p">;</span>
-
-<span class="n">describe</span><span class="p">(</span><span class="s">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="n">it</span><span class="p">(</span><span class="s">&#39;should add two numbers&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="n">const</span> <span class="n">calc</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Calculator</span><span class="p">();</span>
-
-    <span class="o">//</span> <span class="n">Chai</span> <span class="n">assertion</span><span class="o">.</span>
-    <span class="n">expect</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">});</span>
-</pre></div>
-
-
-<p>When running the tests, chai will provide a useful error message should the assertion fail:</p>
-<div class="highlight"><pre>1 failing
-
-  1) Calculator should add two numbers:
-
-      AssertionError: expected 6 to equal 8
-      + expected - actual
-
-      -8
-      +6
-
-      at Context.&lt;anonymous&gt; (test/Calculator.spec.js:26:45)
-</pre></div>
-
-
-<p>Check out <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3">this pull request</a> which highlights how I integrated chai into the ts-prop-inject project.</p>
   </div>
 </article>
 
