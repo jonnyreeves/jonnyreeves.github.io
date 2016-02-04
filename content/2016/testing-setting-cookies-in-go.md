@@ -55,4 +55,4 @@ func TestSetPreferencesCookie(t *testing.T) {
 }
 ```
 
-Have a play with this code on the Go Playground: https://play.golang.org/p/r7aGdX9YEn.
+Have a play with this code on the Go Playground: [http://play.golang.org/p/r7aGdX9YEn](http://play.golang.org/p/r7aGdX9YEn).
