@@ -48,6 +48,14 @@ EXTRA_PATH_METADATA = { 'extra/CNAME': {'path': 'CNAME'},
 THEME="../pelican-themes/Flex"
 SITELOGO=SITEURL + '/images/avatar.jpg'
 
+OPENSOURCE = (
+	('js-logger', 'Lightweight, unobtrusive, configurable JavaScript logger.'),
+	('ts-prop-injection', 'Basic Typescript Dependency Injection with Decorators.'),
+	('chunked-request', 'Compatibility layer for efficient streaming of chunked-transfer encoded responses.'),
+	('as3-vanilla', 'Extract strongly typed Objects from dynamic objects without writing a single line of code!'),
+	('jquery-Mustache"', ' Mustache templating plugin for jQuery.'),
+)
+
 # SVBHack Theme Settings
 #THEME="../pelican-themes/Flex"
 #USER_LOGO_URL=SITEURL + '/images/avatar.jpg'
