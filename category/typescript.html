@@ -45,128 +45,32 @@
 
 <article>
   <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/#getting-proper-stack-traces-with-mocha-and-typescript">Getting Proper Stack Traces with Mocha and TypeScript</a></h2>
-    <p>
-      Posted on Thu 20 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/#disqus_thread">Leave a comment</a>
-    </p>
+    <h1>My name is Jonny, and I suck at web design</h1>
   </header>
   <div>
-      <p>Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:</p>
-<div class="highlight"><pre><span class="p">$</span><span class="nv">npm</span><span class="x"> test</span>
+    <h3>What I'm Hacking On</h3>
+    <p>I am the lead front-end developer at <a href="http://improbable.io">Improbable</a> working on <a href="http://improbable.io/2016/02/18/how-a-team-of-five-created-a-next-gen-mmo-with-unity-and-spatialos">SpatialOS</a>.  Me and my team hack with React, Redux, ThreeJS and Golang.  In the past I've worked for Amazon, Yammaha and Mind Candy.
 
-<span class="x">  Calculator</span>
-<span class="x">    </span><span class="cp">#</span><span class="nf">add</span><span class="x"></span>
-<span class="x">      1) should work</span>
+    <h3>Things I've Open Sourced</h3>
+    <ul>
+        <li><a href="https://gitub.com/jonnyreeves/js-logger">js-logger</a> - Lightweight, unobtrusive, configurable JavaScript logger.</li>
+        <li><a href="https://gitub.com/jonnyreeves/ts-prop-injection">ts-prop-injection</a> - Basic Typescript Dependency Injection with Decorators.</li>
+        <li><a href="https://gitub.com/jonnyreeves/chunked-request">chunked-request</a> - Compatibility layer for efficient streaming of chunked-transfer encoded responses.</li>
+        <li><a href="https://gitub.com/jonnyreeves/as3-vanilla">as3-vanilla</a> - Extract strongly typed Objects from dynamic objects without writing a single line of code!</li>
+        <li><a href="https://gitub.com/jonnyreeves/jquery-Mustache"">jquery-Mustache"</a> -  Mustache templating plugin for jQuery.</li>
+    </ul>
 
-
-<span class="x">  0 passing (21ms)</span>
-<span class="x">  1 failing</span>
-
-<span class="x">  1) Calculator </span><span class="cp">#</span><span class="nf">add</span><span class="x"> should work:</span>
-
-<span class="x">      AssertionError: expected 6 to equal 7</span>
-<span class="x">      + expected - actual</span>
-
-<span class="x">      -6</span>
-<span class="x">      +7</span>
-
-<span class="x">      at Context ...</span></pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/#getting-proper-stack-traces-with-mocha-and-typescript">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</a></h2>
-    <p>
-      Posted on Fri 14 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Injecting into Constructors with TypeScript Decorators</a></h2>
-    <p>
-      Posted on Thu 06 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>In the <a href="/2015/injecting-into-methods-with-typescript-decorators/">previous post</a> I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with <a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/">AS3 Metadata</a>, you can't annotate the <code>#constructor()</code> method directly:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">MyClass</span> {
-
-  // <span class="n">Although</span> <span class="n">this</span> <span class="n">would</span> <span class="n">be</span> <span class="n">the</span> <span class="n">preferred</span> <span class="n">syntax</span> <span class="n">it</span> <span class="k">will</span> <span class="n">throw</span> <span class="n">a</span> <span class="n">compiler</span> <span class="n">error</span>,<span class="sr"></span>
-<span class="sr">  //</span> <span class="n">TS1206:</span> <span class="n">Decorators</span> <span class="n">are ...</span></pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Injecting into Methods with TypeScript Decorators</a></h2>
-    <p>
-      Posted on Mon 03 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Expanding upon my <a href="/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
-<div class="highlight"><pre>class Person {
-  private _firstName : string;
-  private _lastName : string;
-
-  @inject(&#39;firstName&#39;, &#39;lastName&#39;)
-  setName(first : string, last : string ...</pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#basic-typescript-dependency-injection-with-decorators">Basic Typescript Dependency Injection with Decorators</a></h2>
-    <p>
-      Posted on Sat 01 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Typescript 1.5 <a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators">introduced decorators</a> to the language which lets us experiment with <a href="https://en.wikipedia.org/wiki/Metaprogramming">meta-programming</a>. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#basic-typescript-dependency-injection-with-decorators">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Hello Typescript and Mocha!</a></h2>
-    <p>
-      Posted on Mon 27 July 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:</p>
-<div class="highlight"><pre>$ npm init
-name: (hello-ts-mocha)
-version: (1.0.0)
-description: Getting started with TypeScript and mocha
-entry point: (index.js)
-test command: mocha
-git repository:
-keywords:
-license: (ISC ...</pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Continue reading</a>
+    <h3>Recent Blog Posts</h3>
+    <ul>
+      <li><a href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/#getting-proper-stack-traces-with-mocha-and-typescript">Getting Proper Stack Traces with Mocha and TypeScript</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Injecting into Constructors with TypeScript Decorators</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Injecting into Methods with TypeScript Decorators</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#basic-typescript-dependency-injection-with-decorators">Basic Typescript Dependency Injection with Decorators</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Hello Typescript and Mocha!</a></li>
+    </ul>
   </div>
 </article>
-
-  <div class="pagination">
-  </div>
 
     <footer>
       <p>&copy; Jonny Reeves </p>

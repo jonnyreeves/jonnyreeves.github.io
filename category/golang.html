@@ -45,56 +45,28 @@
 
 <article>
   <header>
-    <h2><a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Testing Setting HTTP Cookies in Go</a></h2>
-    <p>
-      Posted on Thu 04 February 2016 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#disqus_thread">Leave a comment</a>
-    </p>
+    <h1>My name is Jonny, and I suck at web design</h1>
   </header>
   <div>
-      <p>I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
-and had trouble figuring out how to test it:</p>
-<div class="highlight"><pre><span class="kd">type</span> <span class="nx">Preferences</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Colour</span> <span class="kt">string</span>
-<span class="p">}</span>
+    <h3>What I'm Hacking On</h3>
+    <p>I am the lead front-end developer at <a href="http://improbable.io">Improbable</a> working on <a href="http://improbable.io/2016/02/18/how-a-team-of-five-created-a-next-gen-mmo-with-unity-and-spatialos">SpatialOS</a>.  Me and my team hack with React, Redux, ThreeJS and Golang.  In the past I've worked for Amazon, Yammaha and Mind Candy.
 
-<span class="kd">func</span> <span class="nx">SetPreferencesCookie</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">prefs</span> <span class="o">*</span><span class="nx">Preferences</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
-    <span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">err</span>
-    <span class="p">}</span>
-    <span class="nx">http</span><span class="p">.</span><span class="nx">SetCookie</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Cookie ...</span></pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Testing QueryStrings in http.Request</a></h2>
-    <p>
-      Posted on Sat 14 November 2015 in <a href="http://jonnyreeves.co.uk/category/golang.html">Golang</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this:</p>
-<div class="highlight"><pre><span class="kd">func</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
-    <span class="nx">fwdState</span> <span class="o">:=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Query</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nx">fwdState</span> <span class="o">!=</span><span class="p">=</span> <span class="s">&quot;expected&quot;</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;Unexpected state value: %s&quot;</span><span class="p">,</span> <span class="nx">fwdState</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="kc">nil</span>
-<span class="p">}</span>
-</pre></div>
+    <h3>Things I've Open Sourced</h3>
+    <ul>
+        <li><a href="https://gitub.com/jonnyreeves/js-logger">js-logger</a> - Lightweight, unobtrusive, configurable JavaScript logger.</li>
+        <li><a href="https://gitub.com/jonnyreeves/ts-prop-injection">ts-prop-injection</a> - Basic Typescript Dependency Injection with Decorators.</li>
+        <li><a href="https://gitub.com/jonnyreeves/chunked-request">chunked-request</a> - Compatibility layer for efficient streaming of chunked-transfer encoded responses.</li>
+        <li><a href="https://gitub.com/jonnyreeves/as3-vanilla">as3-vanilla</a> - Extract strongly typed Objects from dynamic objects without writing a single line of code!</li>
+        <li><a href="https://gitub.com/jonnyreeves/jquery-Mustache"">jquery-Mustache"</a> -  Mustache templating plugin for jQuery.</li>
+    </ul>
 
-
-<p>In order to ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Continue reading</a>
+    <h3>Recent Blog Posts</h3>
+    <ul>
+      <li><a href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/#testing-setting-http-cookies-in-go">Testing Setting HTTP Cookies in Go</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/testing-querystrings-in-httprequest/#testing-querystrings-in-httprequest">Testing QueryStrings in http.Request</a></li>
+    </ul>
   </div>
 </article>
-
-  <div class="pagination">
-  </div>
 
     <footer>
       <p>&copy; Jonny Reeves </p>

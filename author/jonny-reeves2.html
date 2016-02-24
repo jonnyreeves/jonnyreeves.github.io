@@ -45,172 +45,36 @@
 
 <article>
   <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</a></h2>
-    <p>
-      Posted on Fri 14 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#disqus_thread">Leave a comment</a>
-    </p>
+    <h1>My name is Jonny, and I suck at web design</h1>
   </header>
   <div>
-      <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Injecting into Constructors with TypeScript Decorators</a></h2>
-    <p>
-      Posted on Thu 06 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>In the <a href="/2015/injecting-into-methods-with-typescript-decorators/">previous post</a> I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with <a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/">AS3 Metadata</a>, you can't annotate the <code>#constructor()</code> method directly:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">MyClass</span> {
+    <h3>What I'm Hacking On</h3>
+    <p>I am the lead front-end developer at <a href="http://improbable.io">Improbable</a> working on <a href="http://improbable.io/2016/02/18/how-a-team-of-five-created-a-next-gen-mmo-with-unity-and-spatialos">SpatialOS</a>.  Me and my team hack with React, Redux, ThreeJS and Golang.  In the past I've worked for Amazon, Yammaha and Mind Candy.
 
-  // <span class="n">Although</span> <span class="n">this</span> <span class="n">would</span> <span class="n">be</span> <span class="n">the</span> <span class="n">preferred</span> <span class="n">syntax</span> <span class="n">it</span> <span class="k">will</span> <span class="n">throw</span> <span class="n">a</span> <span class="n">compiler</span> <span class="n">error</span>,<span class="sr"></span>
-<span class="sr">  //</span> <span class="n">TS1206:</span> <span class="n">Decorators</span> <span class="n">are ...</span></pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Injecting into Methods with TypeScript Decorators</a></h2>
-    <p>
-      Posted on Mon 03 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Expanding upon my <a href="/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
-<div class="highlight"><pre>class Person {
-  private _firstName : string;
-  private _lastName : string;
+    <h3>Things I've Open Sourced</h3>
+    <ul>
+        <li><a href="https://gitub.com/jonnyreeves/js-logger">js-logger</a> - Lightweight, unobtrusive, configurable JavaScript logger.</li>
+        <li><a href="https://gitub.com/jonnyreeves/ts-prop-injection">ts-prop-injection</a> - Basic Typescript Dependency Injection with Decorators.</li>
+        <li><a href="https://gitub.com/jonnyreeves/chunked-request">chunked-request</a> - Compatibility layer for efficient streaming of chunked-transfer encoded responses.</li>
+        <li><a href="https://gitub.com/jonnyreeves/as3-vanilla">as3-vanilla</a> - Extract strongly typed Objects from dynamic objects without writing a single line of code!</li>
+        <li><a href="https://gitub.com/jonnyreeves/jquery-Mustache"">jquery-Mustache"</a> -  Mustache templating plugin for jQuery.</li>
+    </ul>
 
-  @inject(&#39;firstName&#39;, &#39;lastName&#39;)
-  setName(first : string, last : string ...</pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#basic-typescript-dependency-injection-with-decorators">Basic Typescript Dependency Injection with Decorators</a></h2>
-    <p>
-      Posted on Sat 01 August 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Typescript 1.5 <a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators">introduced decorators</a> to the language which lets us experiment with <a href="https://en.wikipedia.org/wiki/Metaprogramming">meta-programming</a>. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#basic-typescript-dependency-injection-with-decorators">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Hello Typescript and Mocha!</a></h2>
-    <p>
-      Posted on Mon 27 July 2015 in <a href="http://jonnyreeves.co.uk/category/typescript.html">TypeScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:</p>
-<div class="highlight"><pre>$ npm init
-name: (hello-ts-mocha)
-version: (1.0.0)
-description: Getting started with TypeScript and mocha
-entry point: (index.js)
-test command: mocha
-git repository:
-keywords:
-license: (ISC ...</pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2014/simple-javascript-classes-in-commonjs/#simple-javascript-classes-in-commonjs">Simple JavaScript Classes in CommonJS</a></h2>
-    <p>
-      Posted on Sat 26 July 2014 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2014/simple-javascript-classes-in-commonjs/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Having recently become an advocate of CommonJS modules and Browserify our team was looking for a simple way to define Plain old JavaScript Classes in our modules.  We've settled on the following style, making use of <a href="https://github.com/justmoon/node-extend">extend</a> and <a href="https://github.com/isaacs/inherits">inherits</a>; two tiny, focused CommonJS modules which will add a whopping ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2014/simple-javascript-classes-in-commonjs/#simple-javascript-classes-in-commonjs">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2014/using-browserify-without-a-node_modules-directory/#using-browserify-without-a-node_modules-directory">Using Browserify without a node_modules directory</a></h2>
-    <p>
-      Posted on Sat 19 July 2014 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2014/using-browserify-without-a-node_modules-directory/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>NPM and Bower are pretty awesome; they provides both NodeJS and web developers a way to share CommonJS modules (aka packages) amongst code-bases without relying on copy/pasting concatenated .js files.  Browserify fills in the missing link for deploying an application to the web; it gathers up disparate CommonJS modules ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2014/using-browserify-without-a-node_modules-directory/#using-browserify-without-a-node_modules-directory">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2013/making-xhr-request-to-https-domains-with-winjs/#making-xhr-request-to-https-domains-with-winjs">Making XHR Request to HTTPS domains with WinJS</a></h2>
-    <p>
-      Posted on Fri 25 January 2013 in <a href="http://jonnyreeves.co.uk/category/winjs.html">WinJS</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2013/making-xhr-request-to-https-domains-with-winjs/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>I recently came across an interesting caveat when working with WinJS (the JavaScript layer for creating Windows 8 Store applications). If you attempt to make an HTTP POST request to a server over the HTTPS protocol you may run into the following error:</p>
-<div class="highlight"><pre><span class="n">XMLHttpRequest</span><span class="o">:</span> <span class="n">Network</span> <span class="n">Error</span> <span class="mh">0x2ef3</span><span class="o">,</span> <span class="n">Could</span> <span class="n">not</span> <span class="n">complete ...</span></pre></div>
-      <a class="btn" href="http://jonnyreeves.co.uk/2013/making-xhr-request-to-https-domains-with-winjs/#making-xhr-request-to-https-domains-with-winjs">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/#modular-javascript-unit-testing-with-qunit-and-requirejs">Modular Javascript Unit Testing with QUnit and RequireJS</a></h2>
-    <p>
-      Posted on Tue 14 August 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/#modular-javascript-unit-testing-with-qunit-and-requirejs">Continue reading</a>
-  </div>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2><a href="http://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/#listening-for-jquery-mobile-slider-events">Listening for jQuery Mobile Slider Events</a></h2>
-    <p>
-      Posted on Tue 24 July 2012 in <a href="http://jonnyreeves.co.uk/category/javascript.html">JavaScript</a>
-      &#8226; <a href="http://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/#disqus_thread">Leave a comment</a>
-    </p>
-  </header>
-  <div>
-      <p>jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. <a href="https://github.com/jquery/jquery-mobile/issues/1589">This issue (#1589)</a> has been raised on jQuery Mobile’s GitHub Issue Tracker but ...</p>
-      <a class="btn" href="http://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/#listening-for-jquery-mobile-slider-events">Continue reading</a>
+    <h3>Recent Blog Posts</h3>
+    <ul>
+      <li><a href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/#using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/#injecting-into-constructors-with-typescript-decorators">Injecting into Constructors with TypeScript Decorators</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/#injecting-into-methods-with-typescript-decorators">Injecting into Methods with TypeScript Decorators</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/#basic-typescript-dependency-injection-with-decorators">Basic Typescript Dependency Injection with Decorators</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/#hello-typescript-and-mocha">Hello Typescript and Mocha!</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2014/simple-javascript-classes-in-commonjs/#simple-javascript-classes-in-commonjs">Simple JavaScript Classes in CommonJS</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2014/using-browserify-without-a-node_modules-directory/#using-browserify-without-a-node_modules-directory">Using Browserify without a node_modules directory</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2013/making-xhr-request-to-https-domains-with-winjs/#making-xhr-request-to-https-domains-with-winjs">Making XHR Request to HTTPS domains with WinJS</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/#modular-javascript-unit-testing-with-qunit-and-requirejs">Modular Javascript Unit Testing with QUnit and RequireJS</a></li>
+      <li><a href="http://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/#listening-for-jquery-mobile-slider-events">Listening for jQuery Mobile Slider Events</a></li>
+    </ul>
   </div>
 </article>
-
-  <div class="pagination">
-    <a class="btn" href="http://jonnyreeves.co.uk/author/jonny-reeves3.html">
-      <i class="fa fa-angle-left"></i> Older Posts
-    </a>
-    <a class="btn float-right" href="http://jonnyreeves.co.uk/author/jonny-reeves.html">
-      Newer Posts <i class="fa fa-angle-right"></i>
-    </a>
-  </div>
 
     <footer>
       <p>&copy; Jonny Reeves </p>
