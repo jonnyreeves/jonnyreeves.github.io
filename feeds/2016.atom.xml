@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/2016.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2016-02-28T14:00:00+00:00</updated><entry><title>Pre-commit Hooks in SmartGit</title><link href="http://jonnyreeves.co.uk/2016/pre-commit-hooks-in-smartgit/" rel="alternate"></link><updated>2016-02-28T14:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-02-28:2016/pre-commit-hooks-in-smartgit/</id><summary type="html">&lt;p&gt;SmartGit is my preferred Git client mainly due to its excellent visual diff tool that it ships with and the ability to easily manage several repositories.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="SmartGit diff tool" src="/images/precommit-hooks-in-smartgit/smartgit-screenshot.png" /&gt;&lt;/p&gt;
+&lt;p&gt;One small annoyance (aside from the lack of spell-check in commit messages...) is the way it doesn't inherit your user profile (and therefore your PATH environment variable); this leads to pre-commit hooks failing to find build tools such as Node, especially if you have installed via &lt;a href="https://github.com/creationix/nvm"&gt;NVM&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Missing tools errors" src="/images/precommit-hooks-in-smartgit/tool-not-found.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Thankfully, syntevo have provided a simple fix for this in SmartGit7; you can now edit the contents of the following file (depending on your OS)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;MacOS: &lt;code&gt;~/Library/Preferences/SmartGit/smartgit.vmoptions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Linux: &lt;code&gt;~/.smartgit/smartgit.vmoptions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Windows: &lt;code&gt;%APPDATA%\syntevo\SmartGit\smartgit.vmoptions&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In my case I needed to expose &lt;code&gt;brew&lt;/code&gt; to SmarGit which was as simple as populating my &lt;code&gt;smartgit.vmoptions&lt;/code&gt; file with the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# Extend SmartGit PATH to include brew / NVM
+path=/usr/local/bin
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Don't forget to restart SmartGit after saving this file.&lt;/p&gt;</summary></entry></feed>

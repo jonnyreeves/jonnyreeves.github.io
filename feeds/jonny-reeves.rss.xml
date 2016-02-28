@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jonny Reeves</title><link>http://jonnyreeves.co.uk/</link><description>code &amp;&amp; coffee || music</description><atom:link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.rss.xml" rel="self"></atom:link><lastBuildDate>Thu, 04 Feb 2016 20:00:00 +0000</lastBuildDate><item><title>Testing Setting HTTP Cookies in Go</title><link>http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/</link><description>&lt;p&gt;I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jonny Reeves</title><link>http://jonnyreeves.co.uk/</link><description>code &amp;&amp; coffee || music</description><atom:link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 28 Feb 2016 14:00:00 +0000</lastBuildDate><item><title>Pre-commit Hooks in SmartGit</title><link>http://jonnyreeves.co.uk/2016/pre-commit-hooks-in-smartgit/</link><description>&lt;p&gt;SmartGit is my preferred Git client mainly due to its excellent visual diff tool that it ships with and the ability to easily manage several repositories.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="SmartGit diff tool" src="/images/precommit-hooks-in-smartgit/smartgit-screenshot.png" /&gt;&lt;/p&gt;
+&lt;p&gt;One small annoyance (aside from the lack of spell-check in commit messages...) is the way it doesn't inherit your user profile (and therefore your PATH environment variable); this leads to pre-commit hooks failing to find build tools such as Node, especially if you have installed via &lt;a href="https://github.com/creationix/nvm"&gt;NVM&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Missing tools errors" src="/images/precommit-hooks-in-smartgit/tool-not-found.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Thankfully, syntevo have provided a simple fix for this in SmartGit7; you can now edit the contents of the following file (depending on your OS)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;MacOS: &lt;code&gt;~/Library/Preferences/SmartGit/smartgit.vmoptions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Linux: &lt;code&gt;~/.smartgit/smartgit.vmoptions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Windows: &lt;code&gt;%APPDATA%\syntevo\SmartGit\smartgit.vmoptions&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In my case I needed to expose &lt;code&gt;brew&lt;/code&gt; to SmarGit which was as simple as populating my &lt;code&gt;smartgit.vmoptions&lt;/code&gt; file with the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# Extend SmartGit PATH to include brew / NVM
+path=/usr/local/bin
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Don't forget to restart SmartGit after saving this file.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jonny Reeves</dc:creator><pubDate>Sun, 28 Feb 2016 14:00:00 +0000</pubDate><guid>tag:jonnyreeves.co.uk,2016-02-28:2016/pre-commit-hooks-in-smartgit/</guid></item><item><title>Testing Setting HTTP Cookies in Go</title><link>http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/</link><description>&lt;p&gt;I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
 and had trouble figuring out how to test it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;type&lt;/span&gt; &lt;span class="nx"&gt;Preferences&lt;/span&gt; &lt;span class="kd"&gt;struct&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nx"&gt;Colour&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt;
