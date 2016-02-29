@@ -5,7 +5,7 @@ Webpack 2 is just around the corner with the [promise of easier command line con
 
 The trick revolves around the fact that webpack configuration can be a CommonJS module and can pick up on environment variables via Node's `process.env` object.
 
-Start by modifying your `webpack.js` file (typically in the root of your project, next to your `package.json` file) to look something like this:
+Start by modifying your `webpack.config.js` file (typically in the root of your project, next to your `package.json` file) to look something like this:
 
 ```js
 var webpack = require("webpack");
