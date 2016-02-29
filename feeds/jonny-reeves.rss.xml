@@ -1,5 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jonny Reeves</title><link>http://jonnyreeves.co.uk/</link><description>code &amp;&amp; coffee || music</description><atom:link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 28 Feb 2016 14:00:00 +0000</lastBuildDate><item><title>Pre-commit Hooks in SmartGit</title><link>http://jonnyreeves.co.uk/2016/pre-commit-hooks-in-smartgit/</link><description>&lt;p&gt;SmartGit is my preferred Git client mainly due to its excellent visual diff tool that it ships with and the ability to easily manage several repositories.&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jonny Reeves</title><link>http://jonnyreeves.co.uk/</link><description>code &amp;&amp; coffee || music</description><atom:link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 29 Feb 2016 21:00:00 +0000</lastBuildDate><item><title>Simple Webpack Prod and Dev Config</title><link>http://jonnyreeves.co.uk/2016/simple-webpack-prod-and-dev-config/</link><description>&lt;p&gt;Webpack 2 is just around the corner with the &lt;a href="https://gist.github.com/sokra/27b24881210b56bbaff7#configuration"&gt;promise of easier command line configuration&lt;/a&gt;, however whilst we're stuck with webpack 1, here's an easy way to split you configuration between your development flow (with hot-module-reloading) and production (with minification).&lt;/p&gt;
+&lt;p&gt;The trick revolves around the fact that webpack configuration can be a CommonJS module and can pick up on environment variables via Node's &lt;code&gt;process.env&lt;/code&gt; object.&lt;/p&gt;
+&lt;p&gt;Start by modifying your &lt;code&gt;webpack.js&lt;/code&gt; file (typically in the root of your project, next to your &lt;code&gt;package.json&lt;/code&gt; file) to look something like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;webpack&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;webpack&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;isProd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;env&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;NODE_ENV&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;production&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Conditionally return a list of plugins to use based on the current environment.&lt;/span&gt;
+&lt;span class="c1"&gt;// Repeat this pattern for any other config key (ie: loaders, etc).&lt;/span&gt;
+&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;getPlugins&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[];&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// Always expose NODE_ENV to webpack, you can now use `process.env.NODE_ENV`&lt;/span&gt;
+  &lt;span class="c1"&gt;// inside your code for any environment checks; UglifyJS will automatically&lt;/span&gt;
+  &lt;span class="c1"&gt;// drop any unreachable code.&lt;/span&gt;
+  &lt;span class="nx"&gt;plugins&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;webpack&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;DefinePlugin&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;process.env&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="s1"&gt;&amp;#39;NODE_ENV&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;env&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;NODE_ENV&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="p"&gt;}));&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// Conditionally add plugins for Production builds.&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;isProd&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;plugins&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;webpack&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;optimize&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;UglifyJsPlugin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// Conditionally add plugins for Development&lt;/span&gt;
+  &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// ...&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;plugins&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Export Webpack configuration.&lt;/span&gt;
+&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;plugins&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;getPlugins&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With this in place you can now set the &lt;code&gt;NODE_ENV&lt;/code&gt; environment variable before invoking webpack's command line tool:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;NODE_ENV=production webpack
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you are using &lt;a href="http://blog.keithcirkel.co.uk/why-we-should-stop-using-grunt/"&gt;npm scripts for your build process&lt;/a&gt;, you can add a &lt;code&gt;start&lt;/code&gt; script to spin up your hot-loading development server and a &lt;code&gt;dist&lt;/code&gt; script for creating your distribution assets for production. (note there's no need to set the &lt;code&gt;NODE_ENV&lt;/code&gt; environment variable outside of production as an empty (&lt;code&gt;undefined&lt;/code&gt;) value will default to false in your webpack config):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&amp;quot;scripts&amp;quot;: {
+  &amp;quot;dist&amp;quot;: &amp;quot;NODE_ENV=production webpack&amp;quot;,
+  &amp;quot;start&amp;quot;: &amp;quot;webpack&amp;quot;,
+}
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jonny Reeves</dc:creator><pubDate>Mon, 29 Feb 2016 21:00:00 +0000</pubDate><guid>tag:jonnyreeves.co.uk,2016-02-29:2016/simple-webpack-prod-and-dev-config/</guid></item><item><title>Pre-commit Hooks in SmartGit</title><link>http://jonnyreeves.co.uk/2016/pre-commit-hooks-in-smartgit/</link><description>&lt;p&gt;SmartGit is my preferred Git client mainly due to its excellent visual diff tool that it ships with and the ability to easily manage several repositories.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="SmartGit diff tool" src="/images/precommit-hooks-in-smartgit/smartgit-screenshot.png" /&gt;&lt;/p&gt;
 &lt;p&gt;One small annoyance (aside from the lack of spell-check in commit messages...) is the way it doesn't inherit your user profile (and therefore your PATH environment variable); this leads to pre-commit hooks failing to find build tools such as Node, especially if you have installed via &lt;a href="https://github.com/creationix/nvm"&gt;NVM&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Missing tools errors" src="/images/precommit-hooks-in-smartgit/tool-not-found.png" /&gt;&lt;/p&gt;
