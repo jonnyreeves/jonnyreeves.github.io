@@ -90,7 +90,7 @@
 </pre></div>
 
 
-<p>This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual erorr cases over 6 test fixture files) - this feels like a great candidate for Golden Masters.</p>
+<p>This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual error cases over 6 test fixture files) - this feels like a great candidate for Golden Masters.</p>
 <h2>Going for Gold</h2>
 <p>My approach would be simple; I would still pass a fixture to <code>linter.Lint()</code>, but instead of comparing the <code>result</code> object, I would pass it direclty to the <code>Formatter</code> and have it written out to a file on disk which could then be loaded and compared in future test-iterations.</p>
 <p>To start I copy and pasted the command line output into a new <code>golden</code> file which mated the name of the fixture - the integration test will be modified to read in the contents of this file and use it for comparison.</p>

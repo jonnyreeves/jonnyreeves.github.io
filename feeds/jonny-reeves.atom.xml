@@ -36,7 +36,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual erorr cases over 6 test fixture files) - this feels like a great candidate for Golden Masters.&lt;/p&gt;
+&lt;p&gt;This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual error cases over 6 test fixture files) - this feels like a great candidate for Golden Masters.&lt;/p&gt;
 &lt;h2&gt;Going for Gold&lt;/h2&gt;
 &lt;p&gt;My approach would be simple; I would still pass a fixture to &lt;code&gt;linter.Lint()&lt;/code&gt;, but instead of comparing the &lt;code&gt;result&lt;/code&gt; object, I would pass it direclty to the &lt;code&gt;Formatter&lt;/code&gt; and have it written out to a file on disk which could then be loaded and compared in future test-iterations.&lt;/p&gt;
 &lt;p&gt;To start I copy and pasted the command line output into a new &lt;code&gt;golden&lt;/code&gt; file which mated the name of the fixture - the integration test will be modified to read in the contents of this file and use it for comparison.&lt;/p&gt;
