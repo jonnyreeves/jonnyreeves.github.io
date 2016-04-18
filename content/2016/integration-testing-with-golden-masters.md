@@ -2,7 +2,7 @@ Title: Integration Testing with Golden Masters
 Date: 2016-04-18 21:00
 Category: Golang
 
-After watching [Mitchell Hashimoto's talk on Advanced Testing with Go](https://www.youtube.com/watch?v=yszygk1cpEc) I was inspired to re-write one of my integration tests to use a golden master.  Golden Master's are a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the output of the program is valid.
+After watching [Mitchell Hashimoto's talk on Advanced Testing with Go](https://www.youtube.com/watch?v=yszygk1cpEc) I was inspired to re-write one of my integration tests to use a golden master.  Golden masters are a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the output of the program is valid.
 
 ## Bronze Age
 The system under test I was working with applied a complex set of rules against a source directory and printed any violations of those rules to `stdout` much like a [code linting](http://stackoverflow.com/questions/8503559/what-is-linting) tool.
