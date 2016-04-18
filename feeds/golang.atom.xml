@@ -96,7 +96,7 @@
 &lt;ol&gt;
 &lt;li&gt;Make changes to the underlying linter (eg: add a new rule)&lt;/li&gt;
 &lt;li&gt;Add failing fixtures to the &lt;code&gt;with_errors&lt;/code&gt; fixture&lt;/li&gt;
-&lt;li&gt;Run the integration test with: &lt;code&gt;go test integ_test.go --update&lt;/code&gt; to update the golden record&lt;/li&gt;
+&lt;li&gt;Run the integration test with: &lt;code&gt;go test integ_test.go --update&lt;/code&gt; to update the golden master&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;It's now a simple case of manually verifying that the golden master generated in step 3 matches the output that I was expecting (made easy with a git diff tool).&lt;/p&gt;</summary></entry><entry><title>Testing Setting HTTP Cookies in Go</title><link href="http://jonnyreeves.co.uk/2016/testing-setting-http-cookies-in-go/" rel="alternate"></link><updated>2016-02-04T20:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-02-04:2016/testing-setting-http-cookies-in-go/</id><summary type="html">&lt;p&gt;I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
 and had trouble figuring out how to test it:&lt;/p&gt;

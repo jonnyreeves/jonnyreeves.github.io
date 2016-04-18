@@ -150,7 +150,7 @@
 <ol>
 <li>Make changes to the underlying linter (eg: add a new rule)</li>
 <li>Add failing fixtures to the <code>with_errors</code> fixture</li>
-<li>Run the integration test with: <code>go test integ_test.go --update</code> to update the golden record</li>
+<li>Run the integration test with: <code>go test integ_test.go --update</code> to update the golden master</li>
 </ol>
 <p>It's now a simple case of manually verifying that the golden master generated in step 3 matches the output that I was expecting (made easy with a git diff tool).</p>
   </div>

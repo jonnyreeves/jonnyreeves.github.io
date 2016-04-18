@@ -96,7 +96,7 @@
 &lt;ol&gt;
 &lt;li&gt;Make changes to the underlying linter (eg: add a new rule)&lt;/li&gt;
 &lt;li&gt;Add failing fixtures to the &lt;code&gt;with_errors&lt;/code&gt; fixture&lt;/li&gt;
-&lt;li&gt;Run the integration test with: &lt;code&gt;go test integ_test.go --update&lt;/code&gt; to update the golden record&lt;/li&gt;
+&lt;li&gt;Run the integration test with: &lt;code&gt;go test integ_test.go --update&lt;/code&gt; to update the golden master&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;It's now a simple case of manually verifying that the golden master generated in step 3 matches the output that I was expecting (made easy with a git diff tool).&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jonny Reeves</dc:creator><pubDate>Mon, 18 Apr 2016 21:00:00 +0100</pubDate><guid>tag:jonnyreeves.co.uk,2016-04-18:2016/integration-testing-with-golden-masters/</guid></item><item><title>Simple Webpack Prod and Dev Config</title><link>http://jonnyreeves.co.uk/2016/simple-webpack-prod-and-dev-config/</link><description>&lt;p&gt;Webpack 2 is just around the corner with the &lt;a href="https://gist.github.com/sokra/27b24881210b56bbaff7#configuration"&gt;promise of easier command line configuration&lt;/a&gt;, however whilst we're stuck with webpack 1, here's an easy way to split you configuration between your development flow (with hot-module-reloading) and production (with minification).&lt;/p&gt;
 &lt;p&gt;The trick revolves around the fact that webpack configuration can be a CommonJS module and can pick up on environment variables via Node's &lt;code&gt;process.env&lt;/code&gt; object.&lt;/p&gt;
