@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2016-04-18T21:00:00+01:00</updated><entry><title>Integration Testing with Golden Masters</title><link href="http://jonnyreeves.co.uk/2016/integration-testing-with-golden-masters/" rel="alternate"></link><updated>2016-04-18T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-04-18:2016/integration-testing-with-golden-masters/</id><summary type="html">&lt;p&gt;After watching &lt;a href="https://www.youtube.com/watch?v=yszygk1cpEc"&gt;Mitchell Hashimoto's talk on Advanced Testing with Go&lt;/a&gt; I was inspired to re-write one of my integration tests to use a golden master.  Golden masters are a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the output of the program is valid.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/all.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2016-04-18T21:00:00+01:00</updated><entry><title>Integration Testing with Golden Masters</title><link href="http://jonnyreeves.co.uk/2016/integration-testing-with-golden-masters/" rel="alternate"></link><updated>2016-04-18T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-04-18:2016/integration-testing-with-golden-masters/</id><summary type="html">&lt;p&gt;After watching &lt;a href="https://www.youtube.com/watch?v=yszygk1cpEc"&gt;Mitchell Hashimoto's talk on Advanced Testing with Go&lt;/a&gt; I was inspired to re-write one of my integration tests to use a golden master.  &lt;a href="http://blog.codeclimate.com/blog/2014/02/20/gold-master-testing/"&gt;Testing with golden masters&lt;/a&gt; is a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the output of the program is valid.&lt;/p&gt;
 &lt;h2&gt;Bronze Age&lt;/h2&gt;
 &lt;p&gt;The system under test I was working with applied a complex set of rules against a source directory and printed any violations of those rules to &lt;code&gt;stdout&lt;/code&gt; much like a &lt;a href="http://stackoverflow.com/questions/8503559/what-is-linting"&gt;code linting&lt;/a&gt; tool.&lt;/p&gt;
 &lt;p&gt;&lt;center&gt;
 &lt;img alt="Alt" src="https://www.websequencediagrams.com/cgi-bin/cdraw?lz=TWFpbi0-TGludGVyOiBsAAMFLkxpbnQoJy9wYXRoL3RvL3NyYycpCgAeBi0-RGlyU2Nhbm5lcjogc2Nhbigkc3JjRGlyKQoAEAoASApbXUZpbGUKCmxvb3AgZm9yICRmaWxlIGluABIIICAAUQhQYXJzZXI6IAADBSgAIwUpCiAACQYARwsAIgVSZXN1bHQKZW5kCgCBEAkAgT0IY3JlYXRlUmVwb3J0KCRwACUKcwCBOwpNYWluOiAkcgAgBQoKAIIABkZvcm1hdACCBAVmAAMILgAPBigAJAcpAIE-C2Vycm9yIGluAD4JICAAOQkAQA1zdGRvdXQuV3JpdGUoKQplbmQ&amp;amp;s=vs2010" /&gt;
 &lt;/center&gt;&lt;/p&gt;
 &lt;p&gt;The Formatter is responsible for the final output generating something along these lines:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;./exampe.md
+&lt;div class="highlight"&gt;&lt;pre&gt;./example.md
   L12 Invalid link: Resource not found: ./missing.png
   L22 Invalid link: Invalid filename: Mixed case: ./BadCase.png
 
@@ -14,7 +14,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Before switching to using a Golden Master, the original integration test would supply a fixture to the linter and then iterate over the &lt;code&gt;$report&lt;/code&gt; variable.&lt;/p&gt;
+&lt;p&gt;Before switching to using a Golden Master, the original integration test would supply a fixture to the linter and then iterate over the report returned by &lt;code&gt;Linter#Lint()&lt;/code&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;TestLinter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nx"&gt;testing&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nx"&gt;p&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;fixtureDir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;t&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;with_errors&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="nx"&gt;linter&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;lint&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;NewLinter&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -36,10 +36,10 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual error cases over 6 test fixture files) - this feels like a great candidate for Golden Masters.&lt;/p&gt;
+&lt;p&gt;This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual error cases over 6 test fixture files) - this feels like a great candidate for using a golden master.&lt;/p&gt;
 &lt;h2&gt;Going for Gold&lt;/h2&gt;
-&lt;p&gt;My approach would be simple; I would still pass a fixture to &lt;code&gt;linter.Lint()&lt;/code&gt;, but instead of comparing the &lt;code&gt;result&lt;/code&gt; object, I would pass it direclty to the &lt;code&gt;Formatter&lt;/code&gt; and have it written out to a file on disk which could then be loaded and compared in future test-iterations.&lt;/p&gt;
-&lt;p&gt;To start I copy and pasted the command line output into a new &lt;code&gt;golden&lt;/code&gt; file which mated the name of the fixture - the integration test will be modified to read in the contents of this file and use it for comparison.&lt;/p&gt;
+&lt;p&gt;My approach would be simple; I would still pass a fixture to &lt;code&gt;linter.Lint()&lt;/code&gt;, but instead of comparing the &lt;code&gt;result&lt;/code&gt; object, I would pass it directly to the &lt;code&gt;Formatter&lt;/code&gt; and have it written out to a file on disk which could then be loaded and compared in future test-iterations.&lt;/p&gt;
+&lt;p&gt;To start I copy and pasted the command line output into a new 'golden' file which mated the name of the fixture - the integration test will be modified to read in the contents of this file and use it for comparison.&lt;/p&gt;
 &lt;p&gt;Next I needed to capture the output of the Formatter, this was not straight forward as the &lt;code&gt;Formatter&lt;/code&gt; wrote directly to &lt;code&gt;os.Stdout&lt;/code&gt;.  I could have used an Interface to provide an alternative implementation of the &lt;code&gt;Formatter&lt;/code&gt; which wrote to a file; but this would have resulted in a lot of duplicated logic; essentially there was nothing wrong with the current output; I just didn't want it to to go to &lt;code&gt;stdout&lt;/code&gt;.  Instead I modified the &lt;code&gt;formatter&lt;/code&gt; object's signature from &lt;code&gt;Format(r Report)&lt;/code&gt; to &lt;code&gt;Format(r Report, out io.Writer)&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;type&lt;/span&gt; &lt;span class="nx"&gt;Formatter&lt;/span&gt; &lt;span class="kd"&gt;struct&lt;/span&gt;&lt;span class="p"&gt;{}&lt;/span&gt;
 
@@ -59,7 +59,7 @@
     &lt;span class="nx"&gt;linter&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;lint&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;NewLinter&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
     &lt;span class="nx"&gt;formatter&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nx"&gt;lint&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;NewFormatter&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-    &lt;span class="c1"&gt;// alloc. a new buffer (`w`) which will capture the formatted output.&lt;/span&gt;
+    &lt;span class="c1"&gt;// alloc. a new buffer (`buff`) which will capture the formatted output.&lt;/span&gt;
     &lt;span class="nx"&gt;buff&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nb"&gt;make&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Buffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="nx"&gt;formatter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;linter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Lint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;p&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nx"&gt;buff&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -70,7 +70,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;This passes, but updating the "with_errors" golden master file is a chore.  To address this I added a &lt;a href="https://golang.org/pkg/flag/"&gt;flag&lt;/a&gt; to my integraiton test which made it simple to flip the test-case into an 'update the golden master' mode:&lt;/p&gt;
+&lt;p&gt;This passes, but updating the "with_errors" golden master file is a chore.  To address this I added a &lt;a href="https://golang.org/pkg/flag/"&gt;flag&lt;/a&gt; to my integration test which made it simple to flip the test-case into an 'update the golden master' mode:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;flagUpdate&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;flag&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Bool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;update&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;false&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Update golden master files&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nx"&gt;TestLinter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nx"&gt;testing&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
