@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/javascript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2016-01-04T20:00:00+00:00</updated><entry><title>Shrinkwrap your NPM Dependencies</title><link href="http://jonnyreeves.co.uk/2016/shrinkwrap-your-npm-dependencies/" rel="alternate"></link><updated>2016-01-04T20:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-01-04:2016/shrinkwrap-your-npm-dependencies/</id><summary type="html">&lt;p&gt;Things move a little too quickly in the NPM ecosystem for my liking at times, modules updates can turn a working project into a broken build with a single &lt;code&gt;npm install&lt;/code&gt;; this is especially bad news if your &lt;a href="https://en.wikipedia.org/wiki/Continuous_integration"&gt;Continuous Integration&lt;/a&gt; server is pulling your NPM dependencies with each build.  Sometimes this can be the result of human error, other times it can be even &lt;a href="https://github.com/rackt/react-router/issues/2195"&gt;more confusing&lt;/a&gt; leading to a lot of wasted effort in your team.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/javascript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2016-05-03T21:00:00+01:00</updated><entry><title>npm-shrinkwrap Sucks</title><link href="http://jonnyreeves.co.uk/2016/npm-shrinkwrap-sucks/" rel="alternate"></link><updated>2016-05-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-05-03:2016/npm-shrinkwrap-sucks/</id><summary type="html">&lt;p&gt;Despite suggesting that you should always &lt;a href="/2016/shrinkwrap-your-npm-dependencies"&gt;shrinkwrap your npm dependencies&lt;/a&gt;, I've come to the conclusion that npm-shrinkwrap not only sucks, but is fundamentally broken.  It doesn't quite suck as much as having your dependencies update underneath your feet, but it still sucks...&lt;/p&gt;
+&lt;h2&gt;Adding new dependencies is a pain&lt;/h2&gt;
+&lt;p&gt;Adding new dependencies to your project without npm-shrinkwrap is pretty straight forward:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Run &lt;code&gt;npm install --save-dev left-pad&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Raise a pull request with a 1 line change.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Performing the same task with a &lt;code&gt;shrinkwrap.json&lt;/code&gt; file present is a pain...&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Run &lt;code&gt;npm install --save-dev left-pad&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;npm prune&lt;/code&gt; to de-dupe the dependency graph incase one of your existing modules made use of &lt;code&gt;left-pad&lt;/code&gt; somewhere otherwise &lt;code&gt;npm shrinkwrap&lt;/code&gt; will fail&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;npm shrinkwrap --dev&lt;/code&gt; to update the shrinkwrap file&lt;/li&gt;
+&lt;li&gt;Raise a pull request, note that hte package.json file has a tonne of &lt;a href="https://github.com/npm/npm/issues/3581"&gt;unreadable and unexpected changes&lt;/a&gt; - enjoy the fact that github refuses to render the diff on the shrinkwrap file...&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Sure you could look to use &lt;a href="https://github.com/uber/npm-shrinkwrap#motivation"&gt;uber's npm-shrinkwrap tool&lt;/a&gt; but that's yet another dependency to add.&lt;/p&gt;
+&lt;h2&gt;It's not obvious when things are broken&lt;/h2&gt;
+&lt;p&gt;So this one is not npm-shrinkwrap's fault, but it caused my team to lose some productivity today: our project makes use of 4 (count em!) package.json files, each of which has their own shrinkwrap file - we use these to lock the dependency graph and have a weekly CI task to update everything using &lt;a href="https://www.npmjs.com/package/npm-check-updates"&gt;npm-check-updates&lt;/a&gt;.  Somehow one of the &lt;code&gt;npm-shrinkwrap.json&lt;/code&gt; files went AWOL; everything carried on working as expected for about two weeks but a chunk of the project's dependencies were being updated with each build.  We only found out when &lt;a href="https://github.com/eslint/eslint/issues/6015"&gt;a bug in ESLint&lt;/a&gt; caused our Pull Request builds to start failing which triggered the obvious question of "Why the hell did ESLint update automatically?!".&lt;/p&gt;
+&lt;h2&gt;So what's the solution?&lt;/h2&gt;
+&lt;p&gt;A co-worker of mine suggested the blindingly obvious approach of just using explicit versions in the &lt;code&gt;package.json&lt;/code&gt; file, so instead of declaring:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;dependencies: {
+  &amp;quot;left-pad&amp;quot;: &amp;quot;^1.0.2&amp;quot;
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You would instead declare:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;dependencies: {
+  &amp;quot;left-pad&amp;quot;: &amp;quot;1.0.2&amp;quot;
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That's it.  npm provides the &lt;code&gt;-E, --save-exact&lt;/code&gt; flag to do this for you when installing with &lt;code&gt;--save&lt;/code&gt; or &lt;code&gt;--save-dev&lt;/code&gt;.  &lt;a href="https://www.npmjs.com/package/npm-check-updates"&gt;npm-check-updates&lt;/a&gt; works as expected (suggesting newer versions) and your pull request diffs go back to a single line.  To prevent developers accidentally committing a "ranged" dependency we've added the following pre-flight check as part of our CI process:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;grep &lt;span class="se"&gt;\&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;~^&lt;span class="o"&gt;]&lt;/span&gt; package.json
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[[&lt;/span&gt; &lt;span class="nv"&gt;$?&lt;/span&gt; !&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt; &lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+  &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Non-exact dependency version detected, install with --save-exact&amp;quot;&lt;/span&gt;
+  &lt;span class="nb"&gt;exit &lt;/span&gt;1
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Having written this, I'm not sure I see any benefits over using &lt;code&gt;npm shrinkwrap&lt;/code&gt; over using, and enforcing exact dependency versions in your &lt;code&gt;package.json&lt;/code&gt; (and using a tool to manaully update them on a controlled cadence).&lt;/p&gt;</summary></entry><entry><title>Shrinkwrap your NPM Dependencies</title><link href="http://jonnyreeves.co.uk/2016/shrinkwrap-your-npm-dependencies/" rel="alternate"></link><updated>2016-01-04T20:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-01-04:2016/shrinkwrap-your-npm-dependencies/</id><summary type="html">&lt;p&gt;Things move a little too quickly in the NPM ecosystem for my liking at times, modules updates can turn a working project into a broken build with a single &lt;code&gt;npm install&lt;/code&gt;; this is especially bad news if your &lt;a href="https://en.wikipedia.org/wiki/Continuous_integration"&gt;Continuous Integration&lt;/a&gt; server is pulling your NPM dependencies with each build.  Sometimes this can be the result of human error, other times it can be even &lt;a href="https://github.com/rackt/react-router/issues/2195"&gt;more confusing&lt;/a&gt; leading to a lot of wasted effort in your team.&lt;/p&gt;
 &lt;p&gt;One way to bring order is to make use of &lt;a href="https://docs.npmjs.com/cli/shrinkwrap"&gt;&lt;code&gt;npm shrinkwrap&lt;/code&gt;&lt;/a&gt; which pins your project's &lt;code&gt;node_modules&lt;/code&gt; at fixed revisions ensuring that you get the exact same dependency graph each time you &lt;code&gt;npm install&lt;/code&gt;.  One major benefit of this approach is that you can safely cache and re-use your node_modules folder between CI builds which should dramatically decrease your pull-request build times.&lt;/p&gt;
 &lt;p&gt;There are however a couple of downsides, the main one being that you can no longer just &lt;code&gt;npm install&lt;/code&gt; as NPM will not update &lt;code&gt;npm-shrinkwrap.json&lt;/code&gt; (so your teammates / CI server won't fetch it), instead you need to go through the following dance and then commit both &lt;code&gt;package.json&lt;/code&gt; and &lt;code&gt;npm-shrinkwrap.json&lt;/code&gt; files.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;npm install --save my-dep
