@@ -50,3 +50,6 @@ fi
 ```
 
 Having written this, I'm not sure I see any benefits over using `npm shrinkwrap` over using, and enforcing exact dependency versions in your `package.json` (and using a tool to manaully update them on a controlled cadence).
+
+## Update (4th May 2016)
+After posting this I got some great feedback in the comments and on [/r/javascript](https://www.reddit.com/r/javascript/comments/4hqdld/npmshrinkwrap_sucks/) - using exact versions in the your project's `package.json` does nothing for your project's transitive dependencies which probably don't make use of exact versions and therefore will be no predictably resolved from one `npm install` to the next.  To address this I've re-instated `npm-shrinkwrap` back into my project (it still sucks), but I've also modified our pre-flight check script to check that the shrinkwrap files are present (and haven't gone wondering off) - combining this with exact versions has made things a little easier to reason about).
