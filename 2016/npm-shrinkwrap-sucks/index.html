@@ -94,7 +94,7 @@
 </pre></div>
 
 
-<p>Having written this, I'm not sure I see any benefits over using <code>npm shrinkwrap</code> over using, and enforcing exact dependency versions in your <code>package.json</code> (and using a tool to manaully update them on a controlled cadence).</p>
+<p>Having written this, I'm not sure I see any benefits of using <code>npm shrinkwrap</code> instead of enforcing exact dependency versions in your <code>package.json</code> (and using a tool to manually update them on a controlled cadence).</p>
 <h2>Update (4th May 2016)</h2>
 <p>After posting this I got some great feedback in the comments and on <a href="https://www.reddit.com/r/javascript/comments/4hqdld/npmshrinkwrap_sucks/">/r/javascript</a> - using exact versions in the your project's <code>package.json</code> does nothing for your project's transitive dependencies which probably don't make use of exact versions and therefore will be no predictably resolved from one <code>npm install</code> to the next.  To address this I've re-instated <code>npm-shrinkwrap</code> back into my project (it still sucks), but I've also modified our pre-flight check script to check that the shrinkwrap files are present (and haven't gone wondering off) - combining this with exact versions has made things a little easier to reason about).</p>
   </div>
