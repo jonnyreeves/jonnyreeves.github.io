@@ -1,6 +1,8 @@
 Title: Redux Middleware
 Date: 2016-05-28 20:00
-Category: JavaScript, Talk
+Category: JavaScript, Talks
+
+This is a supporting post for the talk I am giving at [Moo Tech Tuesday on the 31st May](http://eventbrite.co.uk/e/the-new-shiny-javascript-development-in-2016-tickets-25196915653) where I will be presenting an introduction to Redux Middleware [[slide deck]](https://docs.google.com/a/jonnyreeves.co.uk/presentation/d/1I0s4uCWo7yEU3pLf4R5UjxiCqC3FhFJSSunWq0WAxZI/edit?usp=sharing) with advice on how to test it.  The supporting code can be found over on [Github](https://github.com/jonnyreeves/redux-button-masher-example).
 
 Redux describes itself as a Predictable State Container for JavaScript applications; it's a lightweight (~5kb) framework which has a couple of major benefits:
 
@@ -241,6 +243,8 @@ Next we send two actions through our middleware, an `INC` and a `DEC`.  At this 
 Finally we throw one last `INC` action through, we can now check our business logic was implemented correctly and the callback invoked.
 
 ### Middleware Everywhere!
+![Middleware, Middleware Everywhere](/images/2016/redux-middleware/middleware-everywhere-meme.jpg)
+
 This post has hopefully shown how Redux Middleware provides a simple abstraction which makes it possible to write complex logic that is both predictable and easy to test.  In my day-job we make extensive use of middleware to model all of our application's side effects including XHRs, analytics and multi-stage API calls.  If you find yourself getting tired of writing middleware boilerplate you may be interested in taking a look at Redux Saga's which make use of ES7 generator functions to provide a psuedo-blocking API for your side-effect management
 
 ```js
@@ -253,6 +257,3 @@ export function* watchIncrementAsync() {
  yield* takeEvery('INC_ASYNC', incrementAsync);
 }
 ```
-
-
-This is a placeholder post for the talk I am giving at [Moo Tech Tuesday on the 31st May](http://eventbrite.co.uk/e/the-new-shiny-javascript-development-in-2016-tickets-25196915653) where I will be presenting [an introduction to Redux Middleware](https://docs.google.com/a/jonnyreeves.co.uk/presentation/d/1I0s4uCWo7yEU3pLf4R5UjxiCqC3FhFJSSunWq0WAxZI/edit?usp=sharing) with advice on how to test it.  The supporting code can be found over on [Github](https://github.com/jonnyreeves/redux-button-masher-example).
