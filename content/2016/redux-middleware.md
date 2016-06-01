@@ -236,7 +236,7 @@ it('should callback after N INC actions', () => {
 });
 ```
 
-We use sinon to setup spies for both the Redux Middleware API's `next` function and our own `reportMiddleware`'s `callback` function.  It's worth noting at `sinon.spy()` returns a normal function which can be used interchangeably.
+We use sinon to setup spies for both the Redux Middleware API's `next` function and our own `reportMiddleware`'s `callback` function.  It's worth noting that `sinon.spy()` returns a normal function which can be used interchangeably.
 
 Next we send two actions through our middleware, an `INC` and a `DEC`.  At this point the middleware's `numIncActions` value should be `1`, which is not equal to the target value of `2`, therefore the callback should not have been invoked yet.  This type of assertion acts as a safety net and can make debugging failing tests much easier.
 
