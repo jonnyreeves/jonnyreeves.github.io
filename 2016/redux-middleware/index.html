@@ -253,7 +253,7 @@
 </pre></div>
 
 
-<p>We use sinon to setup spies for both the Redux Middleware API's <code>next</code> function and our own <code>reportMiddleware</code>'s <code>callback</code> function.  It's worth nothing at <code>sinon.spy()</code> returns a normal function which can be used interchangeably.</p>
+<p>We use sinon to setup spies for both the Redux Middleware API's <code>next</code> function and our own <code>reportMiddleware</code>'s <code>callback</code> function.  It's worth noting that <code>sinon.spy()</code> returns a normal function which can be used interchangeably.</p>
 <p>Next we send two actions through our middleware, an <code>INC</code> and a <code>DEC</code>.  At this point the middleware's <code>numIncActions</code> value should be <code>1</code>, which is not equal to the target value of <code>2</code>, therefore the callback should not have been invoked yet.  This type of assertion acts as a safety net and can make debugging failing tests much easier.</p>
 <p>Finally we throw one last <code>INC</code> action through, we can now check our business logic was implemented correctly and the callback invoked.</p>
 <h3>Middleware Everywhere!</h3>
