@@ -54,7 +54,7 @@
   </header>
   <div>
     <p>This one threw me; say you have a subject that reads a value from an HTTP Request's Query, something like this:</p>
-<div class="highlight"><pre><span class="kd">func</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
     <span class="nx">fwdState</span> <span class="o">:=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Query</span><span class="p">().</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nx">fwdState</span> <span class="o">!=</span><span class="p">=</span> <span class="s">&quot;expected&quot;</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;Unexpected state value: %s&quot;</span><span class="p">,</span> <span class="nx">fwdState</span><span class="p">)</span>
@@ -65,7 +65,7 @@
 
 
 <p>In order to test this method, you'll want to create an <code>http.Request</code> instead and pre-populate the QueryString.  My first attempt was the reverse how we read the Query value:</p>
-<div class="highlight"><pre><span class="kd">func</span> <span class="nx">Test_ValidateState</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Test_ValidateState</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">req</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">{</span><span class="nx">URL</span><span class="p">:</span><span class="o">&amp;</span><span class="nx">url</span><span class="p">.</span><span class="nx">URL</span><span class="p">{}}</span>
     <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">Query</span><span class="p">().</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;state&quot;</span><span class="p">,</span> <span class="s">&quot;expected&quot;</span><span class="p">)</span>
     <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
@@ -75,7 +75,7 @@
 
 
 <p>However, this fails with the <code>ValidateState</code> function returning an <code>"Unexepcted state value: "</code> error.  Instead, we need to set the <code>Request.URL.RawQuery</code> value directly:</p>
-<div class="highlight"><pre><span class="kd">func</span> <span class="nx">Test_ValidateState</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Test_ValidateState</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">req</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">{</span><span class="nx">URL</span><span class="p">:</span><span class="o">&amp;</span><span class="nx">url</span><span class="p">.</span><span class="nx">URL</span><span class="p">{}}</span>
     <span class="nx">req</span><span class="p">.</span><span class="nx">URL</span><span class="p">.</span><span class="nx">RawQuery</span> <span class="p">=</span> <span class="s">&quot;state=expected&quot;</span>
     <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ValidateState</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>

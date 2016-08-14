@@ -56,7 +56,7 @@
     <p>Things move a little too quickly in the NPM ecosystem for my liking at times, modules updates can turn a working project into a broken build with a single <code>npm install</code>; this is especially bad news if your <a href="https://en.wikipedia.org/wiki/Continuous_integration">Continuous Integration</a> server is pulling your NPM dependencies with each build.  Sometimes this can be the result of human error, other times it can be even <a href="https://github.com/rackt/react-router/issues/2195">more confusing</a> leading to a lot of wasted effort in your team.</p>
 <p>One way to bring order is to make use of <a href="https://docs.npmjs.com/cli/shrinkwrap"><code>npm shrinkwrap</code></a> which pins your project's <code>node_modules</code> at fixed revisions ensuring that you get the exact same dependency graph each time you <code>npm install</code>.  One major benefit of this approach is that you can safely cache and re-use your node_modules folder between CI builds which should dramatically decrease your pull-request build times.</p>
 <p>There are however a couple of downsides, the main one being that you can no longer just <code>npm install</code> as NPM will not update <code>npm-shrinkwrap.json</code> (so your teammates / CI server won't fetch it), instead you need to go through the following dance and then commit both <code>package.json</code> and <code>npm-shrinkwrap.json</code> files.</p>
-<div class="highlight"><pre>npm install --save my-dep
+<div class="highlight"><pre><span></span>npm install --save my-dep
 npm dedupe
 npm shrinkwrap
 </pre></div>

@@ -54,56 +54,56 @@
   </header>
   <div>
     <p>Having recently become an advocate of CommonJS modules and Browserify our team was looking for a simple way to define Plain old JavaScript Classes in our modules.  We've settled on the following style, making use of <a href="https://github.com/justmoon/node-extend">extend</a> and <a href="https://github.com/isaacs/inherits">inherits</a>; two tiny, focused CommonJS modules which will add a whopping 2kb to our project when unminified.</p>
-<div class="highlight"><pre><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span>&quot;use strict&quot;;
 
-<span class="kd">var</span> <span class="nx">inherits</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;inherits&quot;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">extend</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;extends&quot;</span><span class="p">);</span>
+var inherits = require(&quot;inherits&quot;);
+var extend = require(&quot;extends&quot;);
 
-<span class="c1">// Declare the constructor and member properties.</span>
-<span class="kd">function</span> <span class="nx">MyClass</span><span class="p">(</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">bar</span><span class="p">)</span> <span class="p">{</span>
+// Declare the constructor and member properties.
+function MyClass(foo, bar) {
 
-  <span class="c1">// Make a call to the Parent Class&#39; constructor. The `_super` </span>
-  <span class="c1">// member is provided by the `inherits` call below and is</span>
-  <span class="c1">// preferred to calling the `MyParentClass` constructor function</span>
-  <span class="c1">// directly should we want to alter the inheritence.</span>
-  <span class="nx">MyClass</span><span class="p">.</span><span class="nx">super_</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">foo</span><span class="p">);</span>
+  // Make a call to the Parent Class&#39; constructor. The `_super` 
+  // member is provided by the `inherits` call below and is
+  // preferred to calling the `MyParentClass` constructor function
+  // directly should we want to alter the inheritence.
+  MyClass.super_.call(this, foo);
 
-  <span class="c1">// Keep things straight forward and performant by simply hinting</span>
-  <span class="c1">// at privacy with a leading underscore.</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_bar</span> <span class="o">=</span> <span class="nx">bar</span><span class="p">;</span>
-<span class="p">}</span>
+  // Keep things straight forward and performant by simply hinting
+  // at privacy with a leading underscore.
+  this._bar = bar;
+}
 
-<span class="c1">// Establish an inheritance relationship with another Class.</span>
-<span class="nx">inherits</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,</span> <span class="nx">MyParentClass</span><span class="p">);</span>
+// Establish an inheritance relationship with another Class.
+inherits(MyClass, MyParentClass);
 
-<span class="c1">// Define static members directly on the Constructor function.</span>
-<span class="nx">MyClass</span><span class="p">.</span><span class="nx">explode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;KABOOM!&quot;</span><span class="p">);</span>
-<span class="p">};</span>
+// Define static members directly on the Constructor function.
+MyClass.explode = function () {
+  throw new Error(&quot;KABOOM!&quot;);
+};
 
-<span class="c1">// Declare instance methods.</span>
-<span class="nx">extend</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span>
+// Declare instance methods.
+extend(MyClass.prototype, {
 
-  <span class="c1">// Place all methods on the prototype so they&#39;re shared amongst</span>
-  <span class="c1">// all instances.  Using `extends` in this fashion ensures that</span>
-  <span class="c1">// the `constructor` property remains correctly pointed at the</span>
-  <span class="c1">// `MyClass` function so `instanceof` checks work as expected.</span>
-  <span class="nx">greet</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">someone</span><span class="p">)</span> <span class="p">{</span>
+  // Place all methods on the prototype so they&#39;re shared amongst
+  // all instances.  Using `extends` in this fashion ensures that
+  // the `constructor` property remains correctly pointed at the
+  // `MyClass` function so `instanceof` checks work as expected.
+  greet: function (someone) {
 
-    <span class="c1">// Make a call to the Parent Class&#39; `greet` method.</span>
-    <span class="kd">var</span> <span class="nx">greeting</span> <span class="o">=</span> <span class="nx">MyClass</span><span class="p">.</span><span class="nx">super_</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">greet</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">someone</span><span class="p">);</span>
+    // Make a call to the Parent Class&#39; `greet` method.
+    var greeting = MyClass.super_.prototype.greet.call(this, someone);
 
-    <span class="k">return</span> <span class="nx">greeting</span> <span class="o">+</span> <span class="s2">&quot;, dude!&quot;</span><span class="p">;</span>
-  <span class="p">},</span>
+    return greeting + &quot;, dude!&quot;;
+  },
 
-  <span class="c1">// Again, just hint at privacy with a leading underscore; doing</span>
-  <span class="c1">// so ensures you have easy access to `this` in each method.</span>
-  <span class="nx">_throbulate</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Implementation omitted for brevity.</span>
-  <span class="p">}</span>
-<span class="p">});</span>
+  // Again, just hint at privacy with a leading underscore; doing
+  // so ensures you have easy access to `this` in each method.
+  _throbulate: function () {
+    // Implementation omitted for brevity.
+  }
+});
 
-<span class="nx">module</span><span class="p">.</span><span class="kr">export</span> <span class="o">=</span> <span class="nx">MyClass</span><span class="p">;</span>
+module.export = MyClass;
 </pre></div>
   </div>
   <div class="tag-cloud">

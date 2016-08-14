@@ -54,7 +54,7 @@
   </header>
   <div>
     <p>Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:</p>
-<div class="highlight"><pre><span class="p">$</span><span class="nv">npm</span><span class="x"> test</span>
+<div class="highlight"><pre><span></span><span class="p">$</span><span class="nv">npm</span><span class="x"> test</span>
 
 <span class="x">  Calculator</span>
 <span class="x">    </span><span class="cp">#</span><span class="nf">add</span><span class="x"></span>
@@ -79,7 +79,7 @@
 <p>The stacktrace at the end points us to the failing assertion; however the stacktrace is pointing <code>Calculator.spec.js</code> - not our TypeScript test-case.  </p>
 <p>The TypeScript compiler (<code>tsc</code>) will generate <a href="http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/">source maps</a> to enable debugging the TypeScript source rather than the transpiled ES5 javascript which gets written out by the compiler.  We can enable this with the <code>--sourcemap</code> flag.</p>
 <p>Problem is that V8 (the engine that powers Node) doesn't use these sourcemaps when generating stacktraces; <a href="https://github.com/evanw/node-source-map-support">source-map-support</a> to the rescue!  We can enable it by passing <code>--require source-map-support/register</code> to <code>mocha</code>:</p>
-<div class="highlight"><pre>{
+<div class="highlight"><pre><span></span>{
     &quot;scripts&quot;: {
       &quot;test&quot;: &quot;mocha --require source-map-support/register test/**/*.spec.js&quot;
     }
@@ -88,7 +88,7 @@
 
 
 <p>Now we get an accurate stacktrace on failure :)</p>
-<div class="highlight"><pre>  1) Calculator #add should work:
+<div class="highlight"><pre><span></span>  1) Calculator #add should work:
 
       AssertionError: expected 6 to equal 7
       + expected - actual

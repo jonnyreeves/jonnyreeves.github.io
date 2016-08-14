@@ -55,7 +55,7 @@
   <div>
     <p>When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly.  Jasmine provides <a href="https://github.com/jasmine/jasmine-ajax"><code>jasmine-ajax</code></a> which will replace the <code>XMLHttpRequest</code> constructor on the global (eg: <code>window</code>).</p>
 <p>Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward:</p>
-<div class="highlight"><pre><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
 
 <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">());</span>
@@ -65,7 +65,7 @@
 
 
 <p>As per the <a href="http://jasmine.github.io/2.0/ajax.html">docs</a>, you can then pre-program responses before your subject under test makes them:</p>
-<div class="highlight"><pre><span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">stubRequest</span><span class="p">(</span><span class="s1">&#39;http://example.org/api&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">stubRequest</span><span class="p">(</span><span class="s1">&#39;http://example.org/api&#39;</span><span class="p">)</span>
   <span class="p">.</span><span class="nx">andReturn</span><span class="p">({</span> <span class="nx">responseText</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">json</span><span class="o">:</span> <span class="s1">&#39;ok!&#39;</span> <span class="p">})</span> <span class="p">});</span>
 </pre></div>
 
@@ -73,12 +73,12 @@
 <p>jasmine-ajax executes all XHR callbacks on the same tick making them effectivly syncronous.  This results in your test-code much easier to write and reason about.</p>
 <h3>Pairing with <code>xhr</code></h3>
 <p><code>XMLHttpRequest</code> doesn't have the nicest API to work with; fortunatley the <a href="https://github.com/Raynos/xhr"><code>xhr</code></a> module on NPM provides a nice, lightweight abstraction (it even smooths out the cracks in IE8).  However, it's not all plain sailing as the xhr module caches the <code>XMLHttpRequest</code> object on the window when it is loaded (ie: <code>require()</code>'d).</p>
-<div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
 </pre></div>
 
 
 <p>This results in requests made using the <code>xhr</code> module ignorning the fake <code>XMLHttpRequest</code> constructor that <code>jasmine-ajax</code> has placed on the window.  Fortunatley there's an easy fix, just re-assign <code>xhr.XMLHttpRequest</code> after you've installed jasmine-ajax:</p>
-<div class="highlight"><pre><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="nx">xhr</span> <span class="nx">from</span> <span class="s1">&#39;xhr&#39;</span><span class="p">;</span>
 
 <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>

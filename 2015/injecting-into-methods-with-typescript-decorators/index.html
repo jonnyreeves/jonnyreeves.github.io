@@ -54,49 +54,49 @@
   </header>
   <div>
     <p>Expanding upon my <a href="/2015/basic-typescript-dependency-injection-with-decorators/">last post on Property based Dependency Injection</a>, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:</p>
-<div class="highlight"><pre>class Person {
-  private _firstName : string;
-  private _lastName : string;
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Person</span> <span class="p">{</span>
+  <span class="kr">private</span> <span class="nx">_firstName</span> : <span class="kt">string</span><span class="p">;</span>
+  <span class="kr">private</span> <span class="nx">_lastName</span> : <span class="kt">string</span><span class="p">;</span>
 
-  @inject(&#39;firstName&#39;, &#39;lastName&#39;)
-  setName(first : string, last : string) {
-    this._firstName = first;
-    this._last = last;
-  }
+  <span class="kd">@inject</span><span class="p">(</span><span class="s1">&#39;firstName&#39;</span><span class="p">,</span> <span class="s1">&#39;lastName&#39;</span><span class="p">)</span>
+  <span class="nx">setName</span><span class="p">(</span><span class="nx">first</span> : <span class="kt">string</span><span class="p">,</span> <span class="nx">last</span> : <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_firstName</span> <span class="o">=</span> <span class="nx">first</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_last</span> <span class="o">=</span> <span class="nx">last</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  getFullName() : string {
-    return `<span class="cp">${</span><span class="n">firstName</span><span class="cp">}</span> <span class="cp">${</span><span class="n">lastName</span><span class="cp">}</span>`
-  }
-}
+  <span class="nx">getFullName</span><span class="p">()</span> <span class="o">:</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">firstName</span><span class="p">}</span> <span class="nx">$</span><span class="p">{</span><span class="nx">lastName</span><span class="p">}</span><span class="err">`</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>Here we are decorating the <code>Person#setName()</code> method with the <code>@inject</code> decorator and requesting the values mapped against the 'firstName' and 'lastName' injection keys from the Dependency Container - our test case would look something like this:</p>
-<div class="highlight"><pre>// Setup the container
-injector.map(&#39;firstName&#39;, &#39;Jonny&#39;);
-injector.map(&#39;lastName&#39;, &#39;Reeves&#39;);
+<div class="highlight"><pre><span></span><span class="c1">// Setup the container</span>
+<span class="nx">injector</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="s1">&#39;firstName&#39;</span><span class="p">,</span> <span class="s1">&#39;Jonny&#39;</span><span class="p">);</span>
+<span class="nx">injector</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="s1">&#39;lastName&#39;</span><span class="p">,</span> <span class="s1">&#39;Reeves&#39;</span><span class="p">);</span>
 
-// Instantiate a Person, the container will apply the injections.
-const jonny = injector.instantiate(Person);
+<span class="c1">// Instantiate a Person, the container will apply the injections.</span>
+<span class="kr">const</span> <span class="nx">jonny</span> <span class="o">=</span> <span class="nx">injector</span><span class="p">.</span><span class="nx">instantiate</span><span class="p">(</span><span class="nx">Person</span><span class="p">);</span>
 
-// Test it worked.
-if (jonny.getFullName() !== &#39;Jonny Reeves&#39;) {
-    throw new Error(&#39;expected jonny.getFullName() to be Jonny Reeves but was &#39; + jonny.getFullName());
-}
+<span class="c1">// Test it worked.</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">jonny</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">()</span> <span class="o">!==</span> <span class="s1">&#39;Jonny Reeves&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;expected jonny.getFullName() to be Jonny Reeves but was &#39;</span> <span class="o">+</span> <span class="nx">jonny</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>First of all we need to modify our <code>@inject</code> decorator, originally it only expected a single argument (the <code>injectionKey</code>), as methods can take more than one argument we need to make use of <a href="">rest parameters</a> to accept any number of strings:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
 </pre></div>
 
 
 <p>We face a slightly tricker challenge in the fact that injecting values into methods requires us to inoke a method rather than just assinging a property on the target object, in the previous implementation the <code>__inject__</code> Object was a simple hash of property name to injectionKey, but in order to inovoke the target method with the injection values in the correct scope we will need access to the target object as well.  To group this data together I've created an <code>InjectionPoint</code> object and assign this as the new value in the <code>__inject__</code> map:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="kd">function</span> <span class="nx">recordInjection</span><span class="p">(</span><span class="nx">target</span> <span class="o">:</span> <span class="nb">Object</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span> <span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span> <span class="nx">recordInjection</span><span class="p">(</span><span class="nx">target</span> : <span class="kt">Object</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span> : <span class="kt">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
     <span class="cm">/* ... */</span>
 
-    <span class="nx">targetType</span><span class="p">.</span><span class="nx">__inject__</span><span class="cp">[</span><span class="nx">decoratedPropertyName</span><span class="cp">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InjectionPoint</span><span class="p">(</span>
+    <span class="nx">targetType</span><span class="p">.</span><span class="nx">__inject__</span><span class="p">[</span><span class="nx">decoratedPropertyName</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InjectionPoint</span><span class="p">(</span>
                                         <span class="nx">target</span><span class="p">,</span> <span class="nx">decoratedPropertyName</span><span class="p">,</span> <span class="nx">injectionKeys</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -104,28 +104,28 @@ if (jonny.getFullName() !== &#39;Jonny Reeves&#39;) {
 
 
 <p>Now we're storing the <code>InjectionPoint</code> data we need to modify <code>Injector#instantiate()</code> to make use of it when invoked.  The first change is driven by the fact the target Class' <code>__inject__</code> property is a hash of propertyNames to <code>InjectionPoint</code>'s and that an <code>InjectionPoint</code> provides one or more injectionKeys (before it was a hash of propertyNames to a single injectionKey), <code>Injector#getInjectionValues()</code> makes light work of this returning a collection of values to be injected:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">Injector</span> {
-  /* ... */
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Injector</span> <span class="p">{</span>
+  <span class="cm">/* ... */</span>
 
-  <span class="n">private</span> <span class="n">getInjectionValues</span>(<span class="n">injectionPoint</span> : <span class="n">InjectionPoint</span>) : <span class="nb">Array</span><span class="s">&lt;any&gt;</span> {
-    <span class="k">return</span> <span class="n">injectionPoint</span>.<span class="n">injectionKeys</span>
-      .<span class="nb">map</span>(<span class="nb">key</span> =&gt; <span class="n">this</span>.<span class="n">valuesByInjectionKey</span>[<span class="nb">key</span>]);
-  }
-}
+  <span class="kr">private</span> <span class="nx">getInjectionValues</span><span class="p">(</span><span class="nx">injectionPoint</span> : <span class="kt">InjectionPoint</span><span class="p">)</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">injectionPoint</span><span class="p">.</span><span class="nx">injectionKeys</span>
+      <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">key</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">valuesByInjectionKey</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>Now we need to determine how these values should be injected (either via a property of the target object, or by invoking a method of the target object).  Seeing as the <code>InjectionPoint</code> has all the knowledge it needs to perform the correct injection I employed the <a href="http://c2.com/cgi/wiki?HollywoodPrinciple">Hollywood Principle</a> and added an <code>InjectionPoint#inject()</code> method which the <code>Injector</code> invokes:</p>
-<div class="highlight"><pre><span class="kr">class</span> <span class="nx">InjectionPoint</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">InjectionPoint</span> <span class="p">{</span>
   <span class="cm">/* ... */</span>
 
-  <span class="nx">inject</span><span class="p">(</span><span class="nx">values</span> <span class="o">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="cp">[</span><span class="nx">this._decoratedPropertyName</span><span class="cp">]</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="cp">[</span><span class="nx">this._decoratedPropertyName</span><span class="cp">]</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="p">,</span> <span class="nx">values</span><span class="p">);</span>
+  <span class="nx">inject</span><span class="p">(</span><span class="nx">values</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_decoratedPropertyName</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_decoratedPropertyName</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="p">,</span> <span class="nx">values</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="p">{</span>
       <span class="c1">// Property injection can only use the first value.</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="cp">[</span><span class="nx">this._decoratedPropertyName</span><span class="cp">]</span> <span class="o">=</span> <span class="nx">values</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_target</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_decoratedPropertyName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>

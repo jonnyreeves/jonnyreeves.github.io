@@ -54,7 +54,7 @@
   </header>
   <div>
     <p>Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:</p>
-<div class="highlight"><pre>$ npm init
+<div class="highlight"><pre><span></span>$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
 description: Getting started with TypeScript and mocha
@@ -67,32 +67,32 @@ license: (ISC)
 
 
 <p>Now let's grab the TypeScript compiler so we can build the project:</p>
-<div class="highlight"><pre>npm install typescript --save
+<div class="highlight"><pre><span></span>npm install typescript --save
 </pre></div>
 
 
 <p>Now let's grab Mocha for our tests</p>
-<div class="highlight"><pre>npm install mocha --save-dev
+<div class="highlight"><pre><span></span>npm install mocha --save-dev
 </pre></div>
 
 
 <h2>Create a Subject to Test</h2>
 <p>Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, <code>index.ts</code> in the project root</p>
-<div class="highlight"><pre>export default class Calculator {
-    add(x : number, y : number) : number {
-        return 0;
-    }
-}
+<div class="highlight"><pre><span></span><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">Calculator</span> <span class="p">{</span>
+    <span class="nx">add</span><span class="p">(</span><span class="nx">x</span> : <span class="kt">number</span><span class="p">,</span> <span class="nx">y</span> : <span class="kt">number</span><span class="p">)</span> <span class="o">:</span> <span class="kt">number</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>And now to compile this down to ES5 so we can execute it under node:</p>
-<div class="highlight"><pre>./node_modules/typescript/bin/tsc index.ts --module commonjs
+<div class="highlight"><pre><span></span>./node_modules/typescript/bin/tsc index.ts --module commonjs
 </pre></div>
 
 
 <p>We can simplify the compilation step by adding a prepublish <a href="https://docs.npmjs.com/misc/scripts">npm script</a> to the <code>package.json</code> file:</p>
-<div class="highlight"><pre>{
+<div class="highlight"><pre><span></span>{
     ...
     &quot;scripts&quot;: {
         &quot;prepublish&quot;: &quot;tsc index.ts --module commonjs &quot;,
@@ -107,17 +107,17 @@ license: (ISC)
 <h2>Adding a Test</h2>
 <p>Let's create our first test; following convention lets create our test-case in <code>test/CalculatorTest</code>.</p>
 <p>Before writing the test-case we need to grab the Mocha Type Definitions (requried for the TypeScript compiler (<code>tsc</code>) to work).  Easiest way to get these it to use the DefinitelyTyped TypeScript Definition manager (<code>tsd</code>).</p>
-<div class="highlight"><pre>npm install tsd -g
+<div class="highlight"><pre><span></span>npm install tsd -g
 </pre></div>
 
 
 <p>Once installed we can use it to grab mocha's type definitions:</p>
-<div class="highlight"><pre>tsd install mocha --save
+<div class="highlight"><pre><span></span>tsd install mocha --save
 </pre></div>
 
 
 <p>This will add a <code>typings/</code> folder to our project.  Here's what our source tree looks like so far:</p>
-<div class="highlight"><pre>hello-ts-mocha
+<div class="highlight"><pre><span></span>hello-ts-mocha
 ├── index.ts
 ├── node_modules
 │   └── typescript
@@ -132,21 +132,21 @@ license: (ISC)
 
 
 <p>Now we can reference the mocha type definition using a <code>/// &lt;reference /&gt;</code> comment:</p>
-<div class="highlight"><pre><span class="o">///</span> <span class="o">&lt;</span><span class="n">reference</span> <span class="n">path</span><span class="o">=</span><span class="s">&quot;../typings/mocha/mocha.d.ts&quot;</span> <span class="o">/&gt;</span>
-<span class="kn">import</span> <span class="nn">Calculator</span> <span class="nn">from</span> <span class="s">&#39;../index&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="c1">/// &lt;reference path=&quot;../typings/mocha/mocha.d.ts&quot; /&gt;</span>
+<span class="kr">import</span> <span class="nx">Calculator</span> <span class="nx">from</span> <span class="s1">&#39;../index&#39;</span><span class="p">;</span>
 
-<span class="n">describe</span><span class="p">(</span><span class="s">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="n">var</span> <span class="n">subject</span> <span class="p">:</span> <span class="n">Calculator</span><span class="p">;</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">subject</span> : <span class="kt">Calculator</span><span class="p">;</span>
 
-    <span class="n">beforeEach</span><span class="p">(</span><span class="n">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="n">subject</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Calculator</span><span class="p">();</span>
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">subject</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Calculator</span><span class="p">();</span>
     <span class="p">});</span>
 
-    <span class="n">describe</span><span class="p">(</span><span class="s">&#39;#add&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="n">it</span><span class="p">(</span><span class="s">&#39;should add two numbers together&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-            <span class="n">var</span> <span class="n">result</span> <span class="p">:</span> <span class="n">number</span> <span class="o">=</span> <span class="n">subject</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">!==</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">throw</span> <span class="n">new</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;Expected 2 + 3 = 5 but was &#39;</span> <span class="o">+</span> <span class="n">result</span><span class="p">);</span>
+    <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;#add&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should add two numbers together&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">result</span> : <span class="kt">number</span> <span class="o">=</span> <span class="nx">subject</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">result</span> <span class="o">!==</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Expected 2 + 3 = 5 but was &#39;</span> <span class="o">+</span> <span class="nx">result</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">});</span>
     <span class="p">});</span>
@@ -155,7 +155,7 @@ license: (ISC)
 
 
 <p>Before we can run the tests we need to compile them, best way to do this is to add a <code>preTest</code> NPM script to invoke the typscript compiler before running mocha. Open up the <code>package.json</code> file again:</p>
-<div class="highlight"><pre>{
+<div class="highlight"><pre><span></span>{
     ...
     &quot;scripts&quot;: {
         &quot;pretest&quot;: &quot;tsc test/*Test.ts --module commonjs&quot;,
@@ -166,7 +166,7 @@ license: (ISC)
 
 
 <p>We can now run our test-case with <code>npm test</code>:</p>
-<div class="highlight"><pre>$ npm test
+<div class="highlight"><pre><span></span>$ npm test
 &gt; ts-mocha@1.0.0 pretest /private/tmp/foo
 &gt; tsc test/*Test.ts --module commonjs
 

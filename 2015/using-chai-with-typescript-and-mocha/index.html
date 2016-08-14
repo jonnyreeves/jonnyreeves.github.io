@@ -55,17 +55,17 @@
   <div>
     <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm not a fan of extending <code>Object.prototype</code>.</p>
 <p>Installation is straight forward. First install <code>chai</code> as a dev dependency:</p>
-<div class="highlight"><pre>npm install chai --save-dev
+<div class="highlight"><pre><span></span>npm install chai --save-dev
 </pre></div>
 
 
 <p>Next grab the <code>d.ts</code> file for chai via <a href="http://definitelytyped.org/tsd/"><code>tsd</code></a> to obtain the type definitions.</p>
-<div class="highlight"><pre>tsd install chai --save
+<div class="highlight"><pre><span></span>tsd install chai --save
 </pre></div>
 
 
 <p>You can now start refactoring your test cases; given the following simple mocha test-case:</p>
-<div class="highlight"><pre>describe(&#39;Calculator&#39;, () =&gt; {
+<div class="highlight"><pre><span></span>describe(&#39;Calculator&#39;, () =&gt; {
   it(&#39;should add two numbers&#39;, () =&gt; {
     const calc : Calculator = new Calculator();
 
@@ -79,10 +79,10 @@
 
 
 <p>We can leverage chai's expect method to perform the assertion:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="p">{</span> <span class="n">expect</span> <span class="p">}</span> <span class="kn">from</span> <span class="s">&#39;chai&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="p">{</span> <span class="n">expect</span> <span class="p">}</span> <span class="kn">from</span> <span class="s1">&#39;chai&#39;</span><span class="p">;</span>
 
-<span class="n">describe</span><span class="p">(</span><span class="s">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="n">it</span><span class="p">(</span><span class="s">&#39;should add two numbers&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="n">describe</span><span class="p">(</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="n">it</span><span class="p">(</span><span class="s1">&#39;should add two numbers&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="n">const</span> <span class="n">calc</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Calculator</span><span class="p">();</span>
 
     <span class="o">//</span> <span class="n">Chai</span> <span class="n">assertion</span><span class="o">.</span>
@@ -93,7 +93,7 @@
 
 
 <p>When running the tests, chai will provide a useful error message should the assertion fail:</p>
-<div class="highlight"><pre>1 failing
+<div class="highlight"><pre><span></span>1 failing
 
   1) Calculator should add two numbers:
 

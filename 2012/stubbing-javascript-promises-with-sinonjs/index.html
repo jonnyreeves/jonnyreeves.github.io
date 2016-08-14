@@ -54,7 +54,7 @@
   </header>
   <div>
     <p>Asynchronous code lies at the heart of front end development; in order to make your application feel responsive you can’t afford to block execution until some external data has been read. <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises</a> are a well understood design pattern to help encapsulate the state of an asynchronous action. A Promise will only ever transfer from a pending state (ie: when the initial request has been made to the server) to a resolved state. The resolved state can be one of either a failure state (ie: the server sends back a 500 error) or a success state (ie: the JSON data you were expecting has come back). Once a promise has transferred to a resolved state it will not change (it becomes immutable). By employing this pattern you can write some very succinct code which is both easy to read and maintain:</p>
-<div class="highlight"><pre><span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;someData&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="nx">service</span><span class="p">.</span><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;someData&quot;</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* process response */</span> <span class="p">});</span>
     <span class="p">.</span><span class="nx">otherwise</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* handle the error */</span> <span class="p">});</span>
 </pre></div>
@@ -63,7 +63,7 @@
 <p>The code above makes use of Brain Cavalier’s <a href="https://github.com/cujojs/when">when.js</a> Promises implementation. The rest of this post aims to highlight how you can combine when.js with a mocking framework to make unit testing Promises a piece of cake. If you would still like to learn more about using Promises, and how they make writing asynchronous code easier, then I’d suggest reading <a href="http://blog.briancavalier.com/async-programming-part-1-its-messy">his excellent articles on the subject</a>.</p>
 <h3>Why mock Promises?</h3>
 <p>One of the golden rules of unit testing is that the <a href="http://martinfowler.com/articles/nonDeterminism.html">code under test must be deterministic</a>. Another golden rule is that <a href="http://pragprog.com/magazines/2012-01/unit-tests-are-first">unit tests must be fast to execute</a>. Although Promises make writing asynchronous code easier, they don’t help with the two points above, take the following example:</p>
-<div class="highlight"><pre><span class="c1">// Example of a module that abstracts a RESTful web service.</span>
+<div class="highlight"><pre><span></span><span class="c1">// Example of a module that abstracts a RESTful web service.</span>
 <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">fetch</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Returns a when.js Promise which will resolve when the data</span>
@@ -99,7 +99,7 @@
 
 
 <p>Unit testing the above client is pretty easy; a simple test-case could look like this (This example will be based on QUnit):</p>
-<div class="highlight"><pre><span class="nx">asyncTest</span><span class="p">(</span><span class="s2">&quot;getNumPages fetches expected number of pages&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+<div class="highlight"><pre><span></span><span class="nx">asyncTest</span><span class="p">(</span><span class="s2">&quot;getNumPages fetches expected number of pages&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
 
     <span class="c1">// A special query which we know will return the expected number of pages.</span>
     <span class="nx">client</span><span class="p">.</span><span class="nx">getNumPages</span><span class="p">(</span><span class="s2">&quot;testcase-query&quot;</span><span class="p">)</span>
@@ -121,7 +121,7 @@
 <h3>Promises, Lies and stubbing the truth</h3>
 <p>A mocking framework allows you to alter the way functions behave during a unit test. Mocking frameworks are especially powerful in dynamic languages, like JavaScript, as they are able to make large changes to your codebase for a given unit test and then restore all those changes immediately after the test completes. This tutorial is going to be looking at <a href="http://sinonjs.org/">SinonJS</a></p>
 <p>As mentioned above, Sinon.js is able to completely rewrite a function during a test-case, let’s revisit our service module above:</p>
-<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Sinon.js stubbing example&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Sinon.js stubbing example&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="c1">// Use sinon.js to redefine the `service.fetch` function.</span>
     <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">service</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">);</span>
 
@@ -132,7 +132,7 @@
 
 
 <p>The above example isn’t very useful; however, instead of returning a String, we can just as easily return a Promise instance, and that’s when things start getting useful:</p>
-<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Stubbing the service so it returns an expected response&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+<div class="highlight"><pre><span></span><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Stubbing the service so it returns an expected response&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
 
     <span class="c1">// Stub the service so it returns a resolved promise.  Note that `when(value)`</span>
     <span class="c1">// is a neat short-cut for creating a Deferred and resolving it.</span>
@@ -149,7 +149,7 @@
 
 
 <p>Note that the above test-case didn’t need to make user of QUnits <code>asyncTest</code> block – that’s because the expectedPromise Promise object has already been resolved – no need to wait for anything to complete asynchronously. Our test is no longer reliant on the server (hence deterministic) and it no longer relies on a service call (and will therefore execute almost instantly). That leaves only one last point from our rules above – how to test the failure path…</p>
-<div class="highlight"><pre><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Simulating a service failure&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+<div class="highlight"><pre><span></span><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Simulating a service failure&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
 
     <span class="c1">// Again, start by stubbing our service&#39;s fetch method.  This time we will</span>
     <span class="c1">// return a rejected Promise with an error.</span>
