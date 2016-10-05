@@ -1,5 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2016-08-14T21:00:00+01:00</updated><entry><title>Configuring my Windows 10 Home Server</title><link href="http://jonnyreeves.co.uk/2016/configuring-my-windows-10-home-server/" rel="alternate"></link><published>2016-08-14T21:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-08-14:2016/configuring-my-windows-10-home-server/</id><summary type="html">&lt;p&gt;I used to run Linux on various small NAS devices (most recently a &lt;a href="http://www.dlink.com/uk/en/support/product/dns-320-2-bay-sharecenter-network-storage-enclosure"&gt;D-Link DNS 320&lt;/a&gt; 2 bay device), however I got tired of futzing around with both the hardware and the &lt;a href="https://nas-tweaks.net/371/hdd-installation-of-the-fun_plug-0-7-on-nas-devices/"&gt;esoteric flavor of Linux&lt;/a&gt; you can side-load onto it.  I now run a small &lt;a href="http://www8.hp.com/uk/en/products/proliant-servers/product-detail.html?oid=5379860"&gt;HP Proliant Gen8 Microserver&lt;/a&gt; configured with 4GB Ram and 3TB of mirrored storage at home; this system is running Windows 10 Professional (pro is required to use the built-in Remote Desktop server).  Below is a list of software I've found useful.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/jonny-reeves.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2016-10-04T21:00:00+01:00</updated><entry><title>Wordpress on a Google Compute Engine f1-micro</title><link href="http://jonnyreeves.co.uk/2016/wordpress-on-a-google-compute-engine-f1-micro/" rel="alternate"></link><published>2016-10-04T21:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-10-04:2016/wordpress-on-a-google-compute-engine-f1-micro/</id><summary type="html">&lt;p&gt;The cheapest offering on &lt;a href="https://cloud.google.com/"&gt;Google's cloud platform&lt;/a&gt; is the f1-micro instance.  The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it turns out you can just about cram a moddest-traffic Wordpress instance on it with a little tweaking - and here's the good news, it'll only set you back £50 a year!&lt;/p&gt;
+&lt;h2&gt;Creating a new Instance&lt;/h2&gt;
+&lt;p&gt;Head on over to the &lt;a href="https://console.cloud.google.com/start"&gt;Google Cloud Console&lt;/a&gt; and sign up (Google currently offer a 60 day free trial to sweeten the deal).  Battle your way through the onboarding guide and then head over to the &lt;a href="https://console.cloud.google.com/compute"&gt;Google Compute Engine control panel&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Click create Instance&lt;/li&gt;
+&lt;li&gt;Select the region closest to you (ie: US or EU)&lt;/li&gt;
+&lt;li&gt;Select your machine type (micro 1 shared vCPU)&lt;/li&gt;
+&lt;li&gt;Choose which distro you want to boot into (I am using Debian Jessie) and change the Boot disk size if desired (although the default, 10GB, is plenty)&lt;/li&gt;
+&lt;li&gt;Make sure you check the Allow HTTP and Allow HTTPS Traffic checkboxes under Firewall settings.&lt;/li&gt;
+&lt;li&gt;Click create and wait for Goolge to provision your instance.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Once your machine has been provisioned (should only take a couple of minutes) you can connect direct from your browser by clicking the SSH button from the Compute Engine &lt;a href="https://console.cloud.google.com/compute/instances"&gt;VM Instance Control Panel&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Connect via SSH" src="/images/2016/wordpress-google-compute-engine-f1-micro/ssh-access.png" /&gt;&lt;/p&gt;
+&lt;p&gt;You can also click this drop down to setup SSH access from the command line by adding an SSH KeyPair or by using &lt;a href="https://cloud.google.com/sdk/gcloud/"&gt;gcloud command line interface&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Obtaining a Static IP&lt;/h3&gt;
+&lt;p&gt;By default, Compute Engine instances are assigned an ephemeral IP (meaning that it may change should the instance shutdown); for production websites you need to assign a static IP to your instance so you can point your doman at it; this can be done through the Networking &lt;a href="https://console.cloud.google.com/networking/addresses/list"&gt;External IP Addresses Control Panel&lt;/a&gt; - you can select a the 'Regional' type selecting the same region where your instance is running (eg: &lt;code&gt;europe-west-1&lt;/code&gt;).&lt;/p&gt;
+&lt;h2&gt;Base LEMP Setup&lt;/h2&gt;
+&lt;p&gt;The following is based off a stock Debian Jessie install; I make use of Nginx (less CPU and memory intensive then Apache), &lt;a href="https://php-fpm.org/about/"&gt;PHP-FPM&lt;/a&gt; (connects Nginx and PHP), PHP 5 and MySQL. The following command will install all of the required dependencies:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install mysql-server nginx php5-fpm php5-mysql php-apc &lt;span class="se"&gt;\&lt;/span&gt;
+    pwgen python-setuptools curl git unzip php5-curl php5-gd php5-intl &lt;span class="se"&gt;\&lt;/span&gt;
+    php-pear php5-imagick php5-mcrypt php5-ps php5-pspell php5-recode &lt;span class="se"&gt;\&lt;/span&gt;
+    php5-sqlite php5-xmlrpc php5-xsl
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once installed; you will need to tweak your php-fpm settings, and change the &lt;a href="http://serverfault.com/a/701500/81035"&gt;&lt;code&gt;cgi.fix_pathinfo&lt;/code&gt;&lt;/a&gt; setting from &lt;code&gt;1&lt;/code&gt; to &lt;code&gt;0&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo sed -i &lt;span class="s2"&gt;&amp;quot;s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g&amp;quot;&lt;/span&gt; /etc/php5/fpm/php.ini
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You may also want to increase the max upload filesize from the 2MB default:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo sed -i &lt;span class="s2"&gt;&amp;quot;s/upload_max_filesize =.*/upload_max_filesize = 50/g&amp;quot;&lt;/span&gt; /etc/php5/fpm/php.ini
+$ sudo sed -i &lt;span class="s2"&gt;&amp;quot;s/post_max_size =.*/post_max_size = 50M/g&amp;quot;&lt;/span&gt; /etc/php5/fpm/php.ini
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now configure Nginx's default site by editing &lt;code&gt;/etc/nginx/sites-available/default&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;server {
+        listen   80;
+        listen   [::]:80 default ipv6only=on;
+        root /usr/share/nginx/www;
+        index index.php;
+
+        location / {
+                try_files $uri $uri/ /index.php?q=$uri&amp;amp;$args;
+        }
+
+        location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                include fastcgi_params;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass unix:/var/run/php5-fpm.sock;
+        }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;When you make changes to your configuration, you will need to restart the associated services:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service nginx restart
+$ sudo service php5-fpm restart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This configuration will serve php from &lt;code&gt;/usr/share/nginx/www&lt;/code&gt; - drop an &lt;code&gt;index.php&lt;/code&gt; file there which invokes &lt;code&gt;phpinfo()&lt;/code&gt; and visit your Compute Engine instance's IP address in your browser to confirm that everything has been configured - make sure you delete that file once you're done.&lt;/p&gt;
+&lt;h2&gt;Wordpress Install&lt;/h2&gt;
+&lt;p&gt;Now the easy bit :)  Start by grabbing wordpress:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; /usr/share/nginx
+$ wget https://wordpress.org/latest.tar.gz
+$ tar xvf latest.tar.gz &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; rm latest.tar.gz
+$ mv wordpress www
+$ chown -R www-data:www-data
+$ chmod -R &lt;span class="m"&gt;766&lt;/span&gt; ./www/wp-content/uploads
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can now visit your Compute Engine instance's IP address in your browser and the Wordpress installation script should start; you may want to consider &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql"&gt;creating a MySQL user&lt;/a&gt; for wordpress without GRANT and ALTER permissions.&lt;/p&gt;
+&lt;h3&gt;Enabling Automatic Updates&lt;/h3&gt;
+&lt;p&gt;Wordpress will automatically install security patches if it has a way to write to the local filesystem; one option is to configure the &lt;code&gt;FS-METHOD&lt;/code&gt; constant in your &lt;code&gt;wp-config.php&lt;/code&gt; to use &lt;code&gt;direct&lt;/code&gt; and grant the permissive permissions on your &lt;code&gt;/usr/share/nginx/www&lt;/code&gt; folder; generally speaking this is fine if you only have a single Wordpress installation running on the server, however you may wish to consider setting &lt;code&gt;FS-METHOD&lt;/code&gt; to &lt;code&gt;ssh2&lt;/code&gt; and &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-configure-secure-updates-and-installations-in-wordpress-on-ubuntu"&gt;setting up an SSH key/pair&lt;/a&gt;. &lt;/p&gt;
+&lt;h3&gt;Sending Email&lt;/h3&gt;
+&lt;p&gt;If you need your Wordpress instance to be able to send email (eg: for a contact form); then you may wish to consider installing the &lt;a href="https://wordpress.org/plugins/wp-mail-smtp/"&gt;WP Mail SMTP Plugin&lt;/a&gt; which will reconfigure Wordpress to route all mail through an SMTP server (ie: a &lt;a href="https://support.google.com/a/answer/176600?hl=en"&gt;GMail account&lt;/a&gt;).&lt;/p&gt;
+&lt;h3&gt;Backups&lt;/h3&gt;
+&lt;p&gt;If you care about your content, it's essential that you back up both the database and the &lt;code&gt;wp-content&lt;/code&gt; folder on a regular basis.  I've personally found the &lt;a href="https://wordpress.org/plugins/backupwordpress/"&gt;BackupWordPress&lt;/a&gt; plugin does a great job for creating local archives on the sever; these can then be shipped over to Google Drive by using &lt;a href="https://github.com/prasmussen/gdrive"&gt;gdrive&lt;/a&gt; and cron: don't forget to restore from your backup from time-to-time.&lt;/p&gt;
+&lt;p&gt;Additionally, you can make use of the &lt;a href="https://console.cloud.google.com/compute/snapshots"&gt;Compute Engine Snapshot&lt;/a&gt; feature which makes disaster recovery straight-forward.&lt;/p&gt;
+&lt;h2&gt;Wordpress Hardening&lt;/h2&gt;
+&lt;p&gt;Because of the limited resources avaliable to your instance, it's possible for qutie meagre Denail of Service (DoS) attacks to peg your server's CPU or even knock it offline (by running out of memory).&lt;/p&gt;
+&lt;p&gt;In my case, just minutes after I had got gotten Wordpress configured the nginx access.log (&lt;code&gt;/var/log/nginx/access.log&lt;/code&gt;) started filling up with the following entries:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &amp;quot;POST /xmlrpc.php HTTP/1.1&amp;quot; 499 0 &amp;quot;-&amp;quot; &amp;quot;Googlebot/2.1 (+http://www.go
+ogle.com/bot.html)&amp;quot;
+192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &amp;quot;POST /xmlrpc.php HTTP/1.1&amp;quot; 499 0 &amp;quot;-&amp;quot; &amp;quot;Googlebot/2.1 (+http://www.go
+ogle.com/bot.html)&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That host was hitting me with ~12 requests per second which was enough to spike my CPU usage and cause significant slow-down.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="CPU Graph" src="/images/2016/wordpress-google-compute-engine-f1-micro/cpu-graph.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;Fail2Ban&lt;/h3&gt;
+&lt;p&gt;&lt;a href="http://www.fail2ban.org/wiki/index.php/Main_Page"&gt;Fail2Ban&lt;/a&gt; scans your server's log files and can be configured to ban IP addresses based on filters you define.&lt;/p&gt;
+&lt;p&gt;Start by installing and enabling fail2ban with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install fail2ban
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next create a new filter in &lt;code&gt;/etc/fail2ban/filter.d/wordpress.conf&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[Definition]&lt;/span&gt;
+&lt;span class="na"&gt;failregex&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;lt;HOST&amp;gt;.*POST.*(wp-login\.php|xmlrpc\.php).* (403|499|502)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next copy &lt;code&gt;/etc/fail2ban/jail.conf&lt;/code&gt; to &lt;code&gt;jail.local&lt;/code&gt; and append a new rule:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;[wordpress]&lt;/span&gt;
+&lt;span class="na"&gt;enabled&lt;/span&gt;  &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;span class="na"&gt;port&lt;/span&gt;     &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;http,https&lt;/span&gt;
+&lt;span class="na"&gt;filter&lt;/span&gt;   &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wordpress&lt;/span&gt;
+&lt;span class="na"&gt;logpath&lt;/span&gt;  &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/var/log/nginx/access.log&lt;/span&gt;
+&lt;span class="na"&gt;maxretry&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;3&lt;/span&gt;
+&lt;span class="na"&gt;bantime&lt;/span&gt;  &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;3600&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This configuration will allow 3 such log entries before banning that IP for 1 hour.&lt;/p&gt;
+&lt;h3&gt;WP Super Cache&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://en-gb.wordpress.org/plugins/wp-super-cache/"&gt;WP Super Cache plugin&lt;/a&gt; is essential for a Wordpress install on a low-end server - installation is straight forward from the Wordpress Admin.&lt;/p&gt;
+&lt;h3&gt;CloudFlare&lt;/h3&gt;
+&lt;p&gt;If you don't mind giving up control over your DNS, you can put your install behind &lt;a href="https://www.cloudflare.com/plans/"&gt;CloudFlare's free plan&lt;/a&gt; which should go some way to reducing the amount of traffic that hits your server.&lt;/p&gt;
+&lt;h3&gt;Offloading Comments&lt;/h3&gt;
+&lt;p&gt;Wordpress comments can cause a serious headache for low-end instances as they are the source of a lot of spam and will increase the amount of cache invalidation that needs to occur.  Whilst plugins like &lt;a href="https://en-gb.wordpress.org/plugins/akismet/"&gt;Akisment&lt;/a&gt; (which comes installed by default) certainly help with the former, external comment platforms like &lt;a href="https://disqus.com/"&gt;Disqus&lt;/a&gt; integrate seamlessly into Wordpress if you don't mind giving up a bit of control over your content.&lt;/p&gt;</summary></entry><entry><title>Configuring my Windows 10 Home Server</title><link href="http://jonnyreeves.co.uk/2016/configuring-my-windows-10-home-server/" rel="alternate"></link><published>2016-08-14T21:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-08-14:2016/configuring-my-windows-10-home-server/</id><summary type="html">&lt;p&gt;I used to run Linux on various small NAS devices (most recently a &lt;a href="http://www.dlink.com/uk/en/support/product/dns-320-2-bay-sharecenter-network-storage-enclosure"&gt;D-Link DNS 320&lt;/a&gt; 2 bay device), however I got tired of futzing around with both the hardware and the &lt;a href="https://nas-tweaks.net/371/hdd-installation-of-the-fun_plug-0-7-on-nas-devices/"&gt;esoteric flavor of Linux&lt;/a&gt; you can side-load onto it.  I now run a small &lt;a href="http://www8.hp.com/uk/en/products/proliant-servers/product-detail.html?oid=5379860"&gt;HP Proliant Gen8 Microserver&lt;/a&gt; configured with 4GB Ram and 3TB of mirrored storage at home; this system is running Windows 10 Professional (pro is required to use the built-in Remote Desktop server).  Below is a list of software I've found useful.&lt;/p&gt;
 &lt;h3&gt;Stablebit DrivePool&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="Stablebit DrivePool" src="/images/2016/configuring-windows-10-home-server/drivepool.png" /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://stablebit.com/DrivePool"&gt;DrivePool&lt;/a&gt; is the spiritual successor of &lt;a href="https://en.wikipedia.org/wiki/Windows_Home_Server#Drive_Extender"&gt;Drive Extender&lt;/a&gt; which disappeared with the demise of Windows Home Server (why...?!); it allows you to combine drives of any size into one or more 'pools' which are represented by a single drive letter in Windows Explorer; you can continue to add new drives to extend the size of the pool and configure the level of redundancy on a folder-by-folder basis (eg: if you have 3 physical hard-drives in a single pool, you could triplicate your 'My Documents' folder for additional redundancy but only duplicate your 'My Videos' folder to make more space available to the rest of the pool).&lt;/p&gt;
