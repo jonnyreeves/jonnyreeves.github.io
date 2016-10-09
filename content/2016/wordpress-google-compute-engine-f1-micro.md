@@ -29,7 +29,7 @@ The following is based off a stock Debian Jessie install; I make use of Nginx (l
 ```bash
 $ sudo apt-get install mysql-server nginx php5-fpm php5-mysql php-apc \
     pwgen python-setuptools curl git unzip php5-curl php5-gd php5-intl \
-    php-pear php5-imagick php5-mcrypt php5-ps php5-pspell php5-recode \
+    php-pear php5-imagick php5-mcrypt php5-pspell php5-recode \
     php5-sqlite php5-xmlrpc php5-xsl
 ```
 
