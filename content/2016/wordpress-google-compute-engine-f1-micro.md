@@ -42,8 +42,8 @@ $ sudo sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php5/fpm/php.ini
 You may also want to increase the max upload filesize from the 2MB default:
 
 ```bash
-$ sudo sed -i "s/upload_max_filesize =.*/upload_max_filesize = 50/g" /etc/php5/fpm/php.ini
-$ sudo sed -i "s/post_max_size =.*/post_max_size = 50M/g" /etc/php5/fpm/php.ini
+$ sudo sed -i "s/upload_max_filesize =.*/upload_max_filesize = 20M/g" /etc/php5/fpm/php.ini
+$ sudo sed -i "s/post_max_size =.*/post_max_size = 20M/g" /etc/php5/fpm/php.ini
 ```
 
 Now configure Nginx's default site by editing `/etc/nginx/sites-available/default`:
@@ -54,6 +54,7 @@ server {
         listen   [::]:80 default ipv6only=on;
         root /usr/share/nginx/www;
         index index.php;
+        client_max_body_size 20M;
 
 		location / {
                 try_files $uri $uri/ /index.php?q=$uri&$args;
