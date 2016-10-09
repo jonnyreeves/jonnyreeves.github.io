@@ -19,7 +19,7 @@
 &lt;p&gt;The following is based off a stock Debian Jessie install; I make use of Nginx (less CPU and memory intensive then Apache), &lt;a href="https://php-fpm.org/about/"&gt;PHP-FPM&lt;/a&gt; (connects Nginx and PHP), PHP 5 and MySQL. The following command will install all of the required dependencies:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install mysql-server nginx php5-fpm php5-mysql php-apc &lt;span class="se"&gt;\&lt;/span&gt;
     pwgen python-setuptools curl git unzip php5-curl php5-gd php5-intl &lt;span class="se"&gt;\&lt;/span&gt;
-    php-pear php5-imagick php5-mcrypt php5-ps php5-pspell php5-recode &lt;span class="se"&gt;\&lt;/span&gt;
+    php-pear php5-imagick php5-mcrypt php5-pspell php5-recode &lt;span class="se"&gt;\&lt;/span&gt;
     php5-sqlite php5-xmlrpc php5-xsl
 &lt;/pre&gt;&lt;/div&gt;
 
