@@ -41,7 +41,7 @@ $ sudo sed -i &lt;span class="s2"&gt;&amp;quot;s/post_max_size =.*/post_max_size
         listen   [::]:80 default ipv6only=on;
         root /usr/share/nginx/www;
         index index.php;
-    client_max_body_size 20M;
+        client_max_body_size 20M;
 
         location / {
                 try_files $uri $uri/ /index.php?q=$uri&amp;amp;$args;
