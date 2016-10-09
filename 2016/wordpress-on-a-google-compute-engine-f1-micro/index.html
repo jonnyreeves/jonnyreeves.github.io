@@ -84,8 +84,8 @@
 
 
 <p>You may also want to increase the max upload filesize from the 2MB default:</p>
-<div class="highlight"><pre><span></span>$ sudo sed -i <span class="s2">&quot;s/upload_max_filesize =.*/upload_max_filesize = 50/g&quot;</span> /etc/php5/fpm/php.ini
-$ sudo sed -i <span class="s2">&quot;s/post_max_size =.*/post_max_size = 50M/g&quot;</span> /etc/php5/fpm/php.ini
+<div class="highlight"><pre><span></span>$ sudo sed -i <span class="s2">&quot;s/upload_max_filesize =.*/upload_max_filesize = 20/g&quot;</span> /etc/php5/fpm/php.ini
+$ sudo sed -i <span class="s2">&quot;s/post_max_size =.*/post_max_size = 20M/g&quot;</span> /etc/php5/fpm/php.ini
 </pre></div>
 
 
@@ -95,6 +95,7 @@ $ sudo sed -i <span class="s2">&quot;s/post_max_size =.*/post_max_size = 50M/g&q
         listen   [::]:80 default ipv6only=on;
         root /usr/share/nginx/www;
         index index.php;
+    client_max_body_size 20M;
 
         location / {
                 try_files $uri $uri/ /index.php?q=$uri&amp;$args;
