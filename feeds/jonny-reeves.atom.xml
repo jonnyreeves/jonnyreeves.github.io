@@ -30,7 +30,7 @@
 
 
 &lt;p&gt;You may also want to increase the max upload filesize from the 2MB default:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo sed -i &lt;span class="s2"&gt;&amp;quot;s/upload_max_filesize =.*/upload_max_filesize = 20/g&amp;quot;&lt;/span&gt; /etc/php5/fpm/php.ini
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo sed -i &lt;span class="s2"&gt;&amp;quot;s/upload_max_filesize =.*/upload_max_filesize = 20M/g&amp;quot;&lt;/span&gt; /etc/php5/fpm/php.ini
 $ sudo sed -i &lt;span class="s2"&gt;&amp;quot;s/post_max_size =.*/post_max_size = 20M/g&amp;quot;&lt;/span&gt; /etc/php5/fpm/php.ini
 &lt;/pre&gt;&lt;/div&gt;
 
