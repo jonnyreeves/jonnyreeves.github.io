@@ -1,7 +1,7 @@
 ## Install
 	git clone https://github.com/jonnyreeves/jonnyreeves.github.io -b source
 	mkdir pelican-themes && cd $_
-	git clone https://github.com/jonnyreeves/pelican-svbhack
+	git clone git@github.com:jonnyreeves/Flex.git
 
 	easy_install pip
 	brew install python

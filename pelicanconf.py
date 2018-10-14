@@ -45,7 +45,7 @@ EXTRA_PATH_METADATA = { 'extra/CNAME': {'path': 'CNAME'},
 }
 
 # Flex Theme Settings
-THEME="../pelican-themes/Flex"
+THEME="./pelican-themes/Flex"
 SITELOGO=SITEURL + '/images/avatar.jpg'
 
 OPENSOURCE = (
