@@ -13,19 +13,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually video/mp4). The next problem that you’ll face is that the video …" />
+<meta name="description" content="Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
-<meta property="og:title" content="Streaming Video from Azure Blob Storage"/>
-<meta property="og:description" content="By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually video/mp4). The next problem that you’ll face is that the video …"/>
+<meta property="og:title" content="Continuous Delivery on Github Projects to NPM using Travis"/>
+<meta property="og:description" content="Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://jonnyreeves.co.uk/2012/streaming-video-from-azure-blob-storage/"/>
+<meta property="og:url" content="https://jonnyreeves.co.uk/drafts/continuous-delivery-on-github-projects-to-npm-using-travis.html"/>
 <meta property="og:type" content="article"/>
-<meta property="article:published_time" content="2012-07-20 16:15:00+01:00"/>
+<meta property="article:published_time" content="2018-10-14 21:00:00+01:00"/>
 <meta property="article:modified_time" content=""/>
 <meta property="article:author" content="https://jonnyreeves.co.uk/author/jonny-reeves.html">
-<meta property="article:section" content="Azure"/>
-<meta property="og:image" content="/images/avatar.jpg">  <title>Jonny Reeves &ndash; Streaming Video from Azure Blob Storage</title>
+<meta property="article:section" content="2018"/>
+<meta property="og:image" content="/images/avatar.jpg">  <title>Jonny Reeves &ndash; Continuous Delivery on Github Projects to NPM using Travis</title>
 </head>
 <body>
   <aside>
@@ -51,20 +51,15 @@
 
 <article>
   <header>
-    <h1 id="streaming-video-from-azure-blob-storage">Streaming Video from Azure Blob Storage</h1>
-    <p>Posted on Fri 20 July 2012</p>
+    <h1 id="continuous-delivery-on-github-projects-to-npm-using-travis">Continuous Delivery on Github Projects to NPM using Travis</h1>
+    <p>Posted on Sun 14 October 2018</p>
   </header>
   <div>
-    <p>By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually <code>video/mp4</code>).</p>
-<p>The next problem that you’ll face is that the video will not seek correctly; trying to jump forward or backwards in the video won’t work.</p>
-<p>This is resolved by changing the <code>DefaultServiceVersion</code> to 2011-08-18 which can be achieved via the Azure’s REST API, or the Managed C# Library as laid out at the end of <a href="http://blogs.msdn.com/b/windowsazurestorage/archive/2011/09/15/windows-azure-blobs-improved-http-headers-for-resume-on-download-and-a-change-in-if-match-conditions.aspx">this MSDN blog post</a>.</p>
-<div class="highlight"><pre><span></span>var account = CloudStorageAccount.Parse(ConnectionString);
-var blobClient = account.CreateCloudBlobClient();
-blobClient.SetServiceSettings(new ServiceSettings()
-    {
-        DefaultServiceVersion = &quot;2011-08-18&quot;
-    });
-</pre></div>
+    <p>Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next official release.</p>
+<p>This guide assumes that you have already <a href="https://docs.travis-ci.com/user/languages/javascript-with-nodejs/">configured your JavaScript project to build via Travis</a>.</p>
+<h3>The Workflow</h3>
+<p>The Contrinuous Delivery workflow I'm going to configure will give your consumers two release channels: 'latest' and 'next'. The 'latest' channel will be triggered by a manual release step and provide stability for your consumers whereas the 'next' channel will be released with every commit to master (typically when a Pull Request is squashed and merged).</p>
+<p><img alt="gmvault" src="/images/2018/continuous-delivery-github-npm-travis/cd-flow.jpg"></p>
   </div>
   <div class="tag-cloud">
     <p>
@@ -99,9 +94,9 @@ blobClient.SetServiceSettings(new ServiceSettings()
 {
   "@context": "http://schema.org",
   "@type": "BlogPosting",
-  "name": "Streaming Video from Azure Blob Storage",
-  "headline": "Streaming Video from Azure Blob Storage",
-  "datePublished": "2012-07-20 16:15:00+01:00",
+  "name": "Continuous Delivery on Github Projects to NPM using Travis",
+  "headline": "Continuous Delivery on Github Projects to NPM using Travis",
+  "datePublished": "2018-10-14 21:00:00+01:00",
   "dateModified": "",
   "author": {
     "@type": "Person",
@@ -109,8 +104,8 @@ blobClient.SetServiceSettings(new ServiceSettings()
     "url": "https://jonnyreeves.co.uk/author/jonny-reeves.html"
   },
   "image": "/images/avatar.jpg",
-  "url": "https://jonnyreeves.co.uk/2012/streaming-video-from-azure-blob-storage/",
-  "description": "By default Azure Blob Storage and Video do not mix well; the first hurdle that developers must get over is that the Content Type for the video must be set correctly (for .mp4 videos that’s usually video/mp4). The next problem that you’ll face is that the video …"
+  "url": "https://jonnyreeves.co.uk/drafts/continuous-delivery-on-github-projects-to-npm-using-travis.html",
+  "description": "Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next …"
 }
 </script></body>
 </html>
