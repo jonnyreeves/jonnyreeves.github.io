@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="I used to run Linux on various small NAS devices (most recently a D-Link DNS 320 2 bay device), however I got tired of futzing around with both the hardware and the esoteric flavor of Linux you can side-load onto it. I now run a small HP Proliant Gen8 Microserver ..." />
+<meta name="description" content="I used to run Linux on various small NAS devices (most recently a D-Link DNS 320 2 bay device), however I got tired of futzing around with both the hardware and the esoteric flavor of Linux you can side-load onto it. I now run a small HP Proliant Gen8 Microserver …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="Configuring my Windows 10 Home Server"/>
-<meta property="og:description" content="I used to run Linux on various small NAS devices (most recently a D-Link DNS 320 2 bay device), however I got tired of futzing around with both the hardware and the esoteric flavor of Linux you can side-load onto it. I now run a small HP Proliant Gen8 Microserver ..."/>
+<meta property="og:description" content="I used to run Linux on various small NAS devices (most recently a D-Link DNS 320 2 bay device), however I got tired of futzing around with both the hardware and the esoteric flavor of Linux you can side-load onto it. I now run a small HP Proliant Gen8 Microserver …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk/2016/configuring-my-windows-10-home-server/"/>
 <meta property="og:type" content="article"/>
@@ -28,10 +28,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://jonnyreeves.co.uk">
+      <a href="/">
         <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <h1><a href="/">Jonny Reeves</a></h1>
       <p>code && coffee || music</p>
       <nav>
         <ul class="list">
@@ -55,11 +55,11 @@
   <div>
     <p>I used to run Linux on various small NAS devices (most recently a <a href="http://www.dlink.com/uk/en/support/product/dns-320-2-bay-sharecenter-network-storage-enclosure">D-Link DNS 320</a> 2 bay device), however I got tired of futzing around with both the hardware and the <a href="https://nas-tweaks.net/371/hdd-installation-of-the-fun_plug-0-7-on-nas-devices/">esoteric flavor of Linux</a> you can side-load onto it.  I now run a small <a href="http://www8.hp.com/uk/en/products/proliant-servers/product-detail.html?oid=5379860">HP Proliant Gen8 Microserver</a> configured with 4GB Ram and 3TB of mirrored storage at home; this system is running Windows 10 Professional (pro is required to use the built-in Remote Desktop server).  Below is a list of software I've found useful.</p>
 <h3>Stablebit DrivePool</h3>
-<p><img alt="Stablebit DrivePool" src="/images/2016/configuring-windows-10-home-server/drivepool.png" /></p>
+<p><img alt="Stablebit DrivePool" src="/images/2016/configuring-windows-10-home-server/drivepool.png"></p>
 <p><a href="https://stablebit.com/DrivePool">DrivePool</a> is the spiritual successor of <a href="https://en.wikipedia.org/wiki/Windows_Home_Server#Drive_Extender">Drive Extender</a> which disappeared with the demise of Windows Home Server (why...?!); it allows you to combine drives of any size into one or more 'pools' which are represented by a single drive letter in Windows Explorer; you can continue to add new drives to extend the size of the pool and configure the level of redundancy on a folder-by-folder basis (eg: if you have 3 physical hard-drives in a single pool, you could triplicate your 'My Documents' folder for additional redundancy but only duplicate your 'My Videos' folder to make more space available to the rest of the pool).</p>
 <p>DrivePool can be configured to send you an email should any of the drives fail and is only $29 but a license. </p>
 <h3>Freebyte Task Scheduler</h3>
-<p><img alt="Freebyte Task Scheduler" src="/images/2016/configuring-windows-10-home-server/fbtasksched.png" /></p>
+<p><img alt="Freebyte Task Scheduler" src="/images/2016/configuring-windows-10-home-server/fbtasksched.png"></p>
 <p>I've never got my head around Windows Scheduled tasks; it seems needlessly complicated compared to cron on Linux.  <a href="http://www.freebyte.com/fbtaskscheduler/">Freebyte Task Scheduler</a> provides a straight forward GUI for automating tasks under your windows user account and doesn't cost anything.</p>
 <p>To get the most out of it you will want to ensure it automatically starts should your server automatically reboot for updates; although you can simple add a shortcut to your User's startup items, I prefer to use <a href="https://nssm.cc/">NSSM</a> (Non-Sucking Service Manager) which you can use to start Freebyte Task Scheduler on system boot (without having to first login); to do this run NSSM from the command line with:</p>
 <div class="highlight"><pre><span></span>nssm install fbtaskscheduler
@@ -68,7 +68,7 @@
 
 <p>When the GUI appears, point the application path to your <code>FBTaskScheulder.exe</code> binary and make sure the 'Log on' tab is configured with your user's account.</p>
 <h3>FastGlacier</h3>
-<p><img alt="FastGlacier" src="/images/2016/configuring-windows-10-home-server/fastglacier.png" /></p>
+<p><img alt="FastGlacier" src="/images/2016/configuring-windows-10-home-server/fastglacier.png"></p>
 <p><a href="https://fastglacier.com/">FastGlacier</a> copies files to <a href="https://en.wikipedia.org/wiki/Amazon_Glacier">Amazon Glacier</a> and provides a drag-and-drop Graphical User Interface and a straight forward command line interface.  I use this to archive my photos and music library, both of which are irreplaceable.</p>
 <p>In order to setup an automated backup, you first need to configure a backup set in the GUI.  Once configured use the following command to automate the archive process in a <code>.bat</code> file and schedule it with Freebyte Task Scheduler:</p>
 <div class="highlight"><pre><span></span>REM &#39;s&#39; =&gt; start sync without confirmation.
@@ -77,14 +77,14 @@
 
 
 <h3>GMVault</h3>
-<p><img alt="gmvault" src="/images/2016/configuring-windows-10-home-server/gmvault-screenshot.png" /></p>
+<p><img alt="gmvault" src="/images/2016/configuring-windows-10-home-server/gmvault-screenshot.png"></p>
 <p><a href="http://gmvault.org/">GMVault</a> can be used to pull down the contents of your GMail so you have an offline copy should you (or someone else!) accidentally delete everything.  Start GMVault for the first time to configure your oauth credentials and then use the following <code>.bat</code> file to automate your backup and then schedule it with Freebyte Task Scheduler:</p>
 <div class="highlight"><pre><span></span><span class="c">%LOCALAPPDATA%\gmvault\gmvault.bat sync you@gmail.com --type quick --db-dir D:\backup\gmvault\you@gmail.com --emails-only</span>
 </pre></div>
 
 
 <h3>GoogleMusicSync</h3>
-<p><img alt="googlemusicsync" src="https://raw.githubusercontent.com/jonnyreeves/googlemusicsync/master/googlemusicsync-screenshot.png" /></p>
+<p><img alt="googlemusicsync" src="https://raw.githubusercontent.com/jonnyreeves/googlemusicsync/master/googlemusicsync-screenshot.png"></p>
 <p><a href="https://github.com/jonnyreeves/googlemusicsync">GoogleMusicSync</a> is a little python script I knocked up a few years back to pull down any new tracks I added to Google (Play) Music (either uploaded from the Web UI or purchased from the Play store) - I can then add these to my local library which is stored offline and archived to Amazon Glacier.  This script can be automated using Freebyte Task Scheduler</p>
   </div>
   <div class="tag-cloud">
@@ -131,7 +131,7 @@
   },
   "image": "/images/avatar.jpg",
   "url": "http://jonnyreeves.co.uk/2016/configuring-my-windows-10-home-server/",
-  "description": "I used to run Linux on various small NAS devices (most recently a D-Link DNS 320 2 bay device), however I got tired of futzing around with both the hardware and the esoteric flavor of Linux you can side-load onto it. I now run a small HP Proliant Gen8 Microserver ..."
+  "description": "I used to run Linux on various small NAS devices (most recently a D-Link DNS 320 2 bay device), however I got tired of futzing around with both the hardware and the esoteric flavor of Linux you can side-load onto it. I now run a small HP Proliant Gen8 Microserver …"
 }
 </script></body>
 </html>

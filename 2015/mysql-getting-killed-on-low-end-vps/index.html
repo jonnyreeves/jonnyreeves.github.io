@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="My wife's blog is powered by Wordpress running on a bHost Tiny VPS instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm. Thanks to WP Super Cache; the site is pretty responsive. Things had been going pretty well for the last couple of months until she told ..." />
+<meta name="description" content="My wife's blog is powered by Wordpress running on a bHost Tiny VPS instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm. Thanks to WP Super Cache; the site is pretty responsive. Things had been going pretty well for the last couple of months until she told me …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="MySQL Getting Killed on Low-end VPS"/>
-<meta property="og:description" content="My wife's blog is powered by Wordpress running on a bHost Tiny VPS instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm. Thanks to WP Super Cache; the site is pretty responsive. Things had been going pretty well for the last couple of months until she told ..."/>
+<meta property="og:description" content="My wife's blog is powered by Wordpress running on a bHost Tiny VPS instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm. Thanks to WP Super Cache; the site is pretty responsive. Things had been going pretty well for the last couple of months until she told me …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk/2015/mysql-getting-killed-on-low-end-vps/"/>
 <meta property="og:type" content="article"/>
@@ -28,10 +28,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://jonnyreeves.co.uk">
+      <a href="/">
         <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <h1><a href="/">Jonny Reeves</a></h1>
       <p>code && coffee || music</p>
       <nav>
         <ul class="list">
@@ -57,23 +57,23 @@
 <p>Things had been going pretty well for the last couple of months until she told me that the site was broken; turns out the the MariaDB instance (mysqld) had stopped... odd.</p>
 <p>First port of call was the logs, tailing <code>/var/log/mariadb/mariadb.log</code> showed that the process was being periodically killed and restarted - however there was no mention of why it died, the last log entry was:</p>
 <div class="highlight"><pre><span></span>$ tail -n <span class="m">1</span> /var/log/mariadb/mariadb.log
-<span class="m">151211</span> 19:01:18 mysqld_safe mysqld from pid file /var/run/mariadb/mariadb.pid e$
+<span class="m">151211</span> <span class="m">19</span>:01:18 mysqld_safe mysqld from pid file /var/run/mariadb/mariadb.pid e$
 </pre></div>
 
 
 <p>Upon restarting it (via <code>service mariadb start</code>), the logs were appended with the following:</p>
 <div class="highlight"><pre><span></span>$ tail /var/log/mariadb/mariadb.log
-<span class="m">151211</span> 20:33:33 mysqld_safe Starting mysqld daemon with databases from /var/lib$
-<span class="m">151211</span> 20:33:33 <span class="o">[</span>Note<span class="o">]</span> /usr/libexec/mysqld <span class="o">(</span>mysqld 5.5.44-MariaDB<span class="o">)</span> starting as $
-InnoDB: Log scan progressed past the checkpoint lsn 55316603
-<span class="m">151211</span> 20:33:34  InnoDB: Database was not shut down normally!
+<span class="m">151211</span> <span class="m">20</span>:33:33 mysqld_safe Starting mysqld daemon with databases from /var/lib$
+<span class="m">151211</span> <span class="m">20</span>:33:33 <span class="o">[</span>Note<span class="o">]</span> /usr/libexec/mysqld <span class="o">(</span>mysqld <span class="m">5</span>.5.44-MariaDB<span class="o">)</span> starting as $
+InnoDB: Log scan progressed past the checkpoint lsn <span class="m">55316603</span>
+<span class="m">151211</span> <span class="m">20</span>:33:34  InnoDB: Database was not shut down normally!
 InnoDB: Starting crash recovery.
 </pre></div>
 
 
 <p>It's clear that whatever is killing the database is not doing so cleanly.  <code>dmesg</code> can be used to search all logs and try to shed some light:</p>
 <div class="highlight"><pre><span></span>$ dmesg <span class="p">|</span> egrep -i <span class="s1">&#39;killed process&#39;</span>
-<span class="o">[</span>4038014.625029<span class="o">]</span> Out of memory in UB XXXX: OOM killed process <span class="m">601</span> <span class="o">(</span>mysqld<span class="o">)</span> score <span class="m">0</span> vm:1212112kB, rss:84964kB, swap:748kB
+<span class="o">[</span><span class="m">4038014</span>.625029<span class="o">]</span> Out of memory in UB XXXX: OOM killed process <span class="m">601</span> <span class="o">(</span>mysqld<span class="o">)</span> score <span class="m">0</span> vm:1212112kB, rss:84964kB, swap:748kB
 </pre></div>
 
 
@@ -81,22 +81,22 @@ InnoDB: Starting crash recovery.
 <p>Now I know the problem is related to low memory, let's see how much free memory we currently have available:</p>
 <div class="highlight"><pre><span></span>$ free -m
             total        used        free      shared  buff/cache   available
-Mem:         <span class="m">1024</span>         <span class="m">764</span>           <span class="m">7</span>          <span class="m">10</span>         <span class="m">251</span>         11
-Swap:           <span class="m">0</span>           <span class="m">0</span>           0
+Mem:         <span class="m">1024</span>         <span class="m">764</span>           <span class="m">7</span>          <span class="m">10</span>         <span class="m">251</span>         <span class="m">11</span>
+Swap:           <span class="m">0</span>           <span class="m">0</span>           <span class="m">0</span>
 </pre></div>
 
 
 <p>7MB free... oh dear.  So what's using up all the memory? We can find out using <code>ps</code></p>
 <div class="highlight"><pre><span></span>$ ps aux --sort<span class="o">=</span>-%mem <span class="p">|</span> awk <span class="s1">&#39;NR&lt;=10{print $0}&#39;</span>
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root       <span class="m">980</span>  1.5  1.8 <span class="m">781612</span> <span class="m">19128</span> ?        Ssl  Dec10  21:22 /usr/sbin/rsyslogd -n
-root     <span class="m">17069</span>  0.0  1.1 <span class="m">307316</span> <span class="m">11804</span> ?        Ss   19:37   0:00 php-fpm: master process <span class="o">(</span>/etc/php-fpm.conf<span class="o">)</span>
-root        <span class="m">72</span>  0.0  1.0 <span class="m">237836</span> <span class="m">10496</span> ?        Ss   Dec10   0:26 /usr/lib/systemd/systemd-journald
-nginx    <span class="m">22205</span>  1.0  4.7 <span class="m">307448</span>  <span class="m">7264</span> ?        S    20:19   0:00 php-fpm: pool www
-nginx    <span class="m">22551</span>  1.0  4.4 <span class="m">307448</span>  <span class="m">7661</span> ?        S    20:29   0:00 php-fpm: pool www
-nginx    <span class="m">22445</span>  1.0  4.7 <span class="m">307448</span>  <span class="m">5671</span> ?        S    20:20   0:00 php-fpm: pool www
-nginx    <span class="m">22041</span>  1.0  4.3 <span class="m">307448</span>  <span class="m">7511</span> ?        S    20:12   0:00 php-fpm: pool www
-nginx    <span class="m">17190</span>  0.0  0.3 <span class="m">109980</span>  <span class="m">3524</span> ?        S    20:38   0:00 nginx: worker process
+root       <span class="m">980</span>  <span class="m">1</span>.5  <span class="m">1</span>.8 <span class="m">781612</span> <span class="m">19128</span> ?        Ssl  Dec10  <span class="m">21</span>:22 /usr/sbin/rsyslogd -n
+root     <span class="m">17069</span>  <span class="m">0</span>.0  <span class="m">1</span>.1 <span class="m">307316</span> <span class="m">11804</span> ?        Ss   <span class="m">19</span>:37   <span class="m">0</span>:00 php-fpm: master process <span class="o">(</span>/etc/php-fpm.conf<span class="o">)</span>
+root        <span class="m">72</span>  <span class="m">0</span>.0  <span class="m">1</span>.0 <span class="m">237836</span> <span class="m">10496</span> ?        Ss   Dec10   <span class="m">0</span>:26 /usr/lib/systemd/systemd-journald
+nginx    <span class="m">22205</span>  <span class="m">1</span>.0  <span class="m">4</span>.7 <span class="m">307448</span>  <span class="m">7264</span> ?        S    <span class="m">20</span>:19   <span class="m">0</span>:00 php-fpm: pool www
+nginx    <span class="m">22551</span>  <span class="m">1</span>.0  <span class="m">4</span>.4 <span class="m">307448</span>  <span class="m">7661</span> ?        S    <span class="m">20</span>:29   <span class="m">0</span>:00 php-fpm: pool www
+nginx    <span class="m">22445</span>  <span class="m">1</span>.0  <span class="m">4</span>.7 <span class="m">307448</span>  <span class="m">5671</span> ?        S    <span class="m">20</span>:20   <span class="m">0</span>:00 php-fpm: pool www
+nginx    <span class="m">22041</span>  <span class="m">1</span>.0  <span class="m">4</span>.3 <span class="m">307448</span>  <span class="m">7511</span> ?        S    <span class="m">20</span>:12   <span class="m">0</span>:00 php-fpm: pool www
+nginx    <span class="m">17190</span>  <span class="m">0</span>.0  <span class="m">0</span>.3 <span class="m">109980</span>  <span class="m">3524</span> ?        S    <span class="m">20</span>:38   <span class="m">0</span>:00 nginx: worker process
 </pre></div>
 
 
@@ -110,8 +110,8 @@ $ service mariadb restart
 <p>After restarting the memory usage was dramatically lower:</p>
 <div class="highlight"><pre><span></span>$ free -m
               total        used        free      shared  buff/cache   available
-Mem:           <span class="m">1024</span>          <span class="m">96</span>         <span class="m">677</span>           <span class="m">7</span>         <span class="m">250</span>         830
-Swap:             <span class="m">0</span>           <span class="m">0</span>           0
+Mem:           <span class="m">1024</span>          <span class="m">96</span>         <span class="m">677</span>           <span class="m">7</span>         <span class="m">250</span>         <span class="m">830</span>
+Swap:             <span class="m">0</span>           <span class="m">0</span>           <span class="m">0</span>
 </pre></div>
   </div>
   <div class="tag-cloud">
@@ -158,7 +158,7 @@ Swap:             <span class="m">0</span>           <span class="m">0</span>   
   },
   "image": "/images/avatar.jpg",
   "url": "http://jonnyreeves.co.uk/2015/mysql-getting-killed-on-low-end-vps/",
-  "description": "My wife's blog is powered by Wordpress running on a bHost Tiny VPS instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm. Thanks to WP Super Cache; the site is pretty responsive. Things had been going pretty well for the last couple of months until she told ..."
+  "description": "My wife's blog is powered by Wordpress running on a bHost Tiny VPS instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm. Thanks to WP Super Cache; the site is pretty responsive. Things had been going pretty well for the last couple of months until she told me …"
 }
 </script></body>
 </html>

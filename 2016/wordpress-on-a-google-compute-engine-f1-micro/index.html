@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="The cheapest offering on Google's cloud platform is the f1-micro instance. The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great ..." />
+<meta name="description" content="The cheapest offering on Google's cloud platform is the f1-micro instance. The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="Wordpress on a Google Compute Engine f1-micro"/>
-<meta property="og:description" content="The cheapest offering on Google's cloud platform is the f1-micro instance. The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great ..."/>
+<meta property="og:description" content="The cheapest offering on Google's cloud platform is the f1-micro instance. The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk/2016/wordpress-on-a-google-compute-engine-f1-micro/"/>
 <meta property="og:type" content="article"/>
@@ -28,10 +28,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://jonnyreeves.co.uk">
+      <a href="/">
         <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <h1><a href="/">Jonny Reeves</a></h1>
       <p>code && coffee || music</p>
       <nav>
         <ul class="list">
@@ -65,7 +65,7 @@
 <li>Click create and wait for Goolge to provision your instance.</li>
 </ol>
 <p>Once your machine has been provisioned (should only take a couple of minutes) you can connect direct from your browser by clicking the SSH button from the Compute Engine <a href="https://console.cloud.google.com/compute/instances">VM Instance Control Panel</a>.</p>
-<p><img alt="Connect via SSH" src="/images/2016/wordpress-google-compute-engine-f1-micro/ssh-access.png" /></p>
+<p><img alt="Connect via SSH" src="/images/2016/wordpress-google-compute-engine-f1-micro/ssh-access.png"></p>
 <p>You can also click this drop down to setup SSH access from the command line by adding an SSH KeyPair or by using <a href="https://cloud.google.com/sdk/gcloud/">gcloud command line interface</a>.</p>
 <h3>Obtaining a Static IP</h3>
 <p>By default, Compute Engine instances are assigned an ephemeral IP (meaning that it may change should the instance shutdown); for production websites you need to assign a static IP to your instance so you can point your doman at it; this can be done through the Networking <a href="https://console.cloud.google.com/networking/addresses/list">External IP Addresses Control Panel</a> - you can select a the 'Regional' type selecting the same region where your instance is running (eg: <code>europe-west-1</code>).</p>
@@ -148,7 +148,7 @@ ogle.com/bot.html)&quot;
 
 
 <p>That host was hitting me with ~12 requests per second which was enough to spike my CPU usage and cause significant slow-down.</p>
-<p><img alt="CPU Graph" src="/images/2016/wordpress-google-compute-engine-f1-micro/cpu-graph.png" /></p>
+<p><img alt="CPU Graph" src="/images/2016/wordpress-google-compute-engine-f1-micro/cpu-graph.png"></p>
 <h3>Fail2Ban</h3>
 <p><a href="http://www.fail2ban.org/wiki/index.php/Main_Page">Fail2Ban</a> scans your server's log files and can be configured to ban IP addresses based on filters you define.</p>
 <p>Start by installing and enabling fail2ban with:</p>
@@ -225,7 +225,7 @@ ogle.com/bot.html)&quot;
   },
   "image": "/images/avatar.jpg",
   "url": "http://jonnyreeves.co.uk/2016/wordpress-on-a-google-compute-engine-f1-micro/",
-  "description": "The cheapest offering on Google's cloud platform is the f1-micro instance. The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great ..."
+  "description": "The cheapest offering on Google's cloud platform is the f1-micro instance. The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it …"
 }
 </script></body>
 </html>

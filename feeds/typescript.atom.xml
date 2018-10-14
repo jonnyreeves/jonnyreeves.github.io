@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-20T21:00:00+01:00</updated><entry><title>Getting Proper Stack Traces with Mocha and TypeScript</title><link href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/" rel="alternate"></link><published>2015-08-20T21:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-20:2015/getting-proper-stack-traces-with-mocha-and-typescript/</id><summary type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;npm&lt;/span&gt;&lt;span class="x"&gt; test&lt;/span&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - TypeScript</title><link href="http://jonnyreeves.co.uk/" rel="alternate"></link><link href="http://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>http://jonnyreeves.co.uk/</id><updated>2015-08-20T21:00:00+01:00</updated><entry><title>Getting Proper Stack Traces with Mocha and TypeScript</title><link href="http://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/" rel="alternate"></link><published>2015-08-20T21:00:00+01:00</published><updated>2015-08-20T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-20:/2015/getting-proper-stack-traces-with-mocha-and-typescript/</id><summary type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$npm test
 
-&lt;span class="x"&gt;  Calculator&lt;/span&gt;
-&lt;span class="x"&gt;    &lt;/span&gt;&lt;span class="cp"&gt;#&lt;/span&gt;&lt;span class="nf"&gt;add&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
-&lt;span class="x"&gt;      1) should work&lt;/span&gt;
+  Calculator
+    #add
+      1) should work
 
 
-&lt;span class="x"&gt;  0 passing (21ms)&lt;/span&gt;
-&lt;span class="x"&gt;  1 failing&lt;/span&gt;
+  0 passing (21ms)
+  1 failing
 
-&lt;span class="x"&gt;  1) Calculator &lt;/span&gt;&lt;span class="cp"&gt;#&lt;/span&gt;&lt;span class="nf"&gt;add&lt;/span&gt;&lt;span class="x"&gt; should work:&lt;/span&gt;
+  1) Calculator #add should work:
 
-&lt;span class="x"&gt;      AssertionError: expected 6 to equal 7&lt;/span&gt;
-&lt;span class="x"&gt;      + expected - actual&lt;/span&gt;
+      AssertionError: expected 6 to equal 7
+      + expected - actual
 
-&lt;span class="x"&gt;      -6&lt;/span&gt;
-&lt;span class="x"&gt;      +7&lt;/span&gt;
+      -6
+      +7
 
-&lt;span class="x"&gt;      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.js:12:38)&lt;/span&gt;
+      at Context.&amp;lt;anonymous&amp;gt; (test …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$npm test
+
+  Calculator
+    #add
+      1) should work
+
+
+  0 passing (21ms)
+  1 failing
+
+  1) Calculator #add should work:
+
+      AssertionError: expected 6 to equal 7
+      + expected - actual
+
+      -6
+      +7
+
+      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.js:12:38)
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -46,7 +65,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Thanks to redditor &lt;a href="https://www.reddit.com/user/pieeta"&gt;pieeta&lt;/a&gt; who tipped me off :)  I've posted the sample project up on &lt;a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces"&gt;Github&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Using Chai with TypeScript and Mocha</title><link href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/" rel="alternate"></link><published>2015-08-14T07:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-14:2015/using-chai-with-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a fan of extending &lt;code&gt;Object.prototype&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Thanks to redditor &lt;a href="https://www.reddit.com/user/pieeta"&gt;pieeta&lt;/a&gt; who tipped me off :)  I've posted the sample project up on &lt;a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces"&gt;Github&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Using Chai with TypeScript and Mocha</title><link href="http://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/" rel="alternate"></link><published>2015-08-14T07:00:00+01:00</published><updated>2015-08-14T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-14:/2015/using-chai-with-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a fan of extending &lt;code&gt;Object.prototype&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Installation is straight forward. First install &lt;code&gt;chai&lt;/code&gt; as a dev dependency:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install chai --save-dev
 &lt;/pre&gt;&lt;/div&gt;
@@ -100,7 +119,11 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Check out &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3"&gt;this pull request&lt;/a&gt; which highlights how I integrated chai into the ts-prop-inject project.&lt;/p&gt;</summary></entry><entry><title>Injecting into Constructors with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/" rel="alternate"></link><published>2015-08-06T07:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-06:2015/injecting-into-constructors-with-typescript-decorators/</id><summary type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
+&lt;p&gt;Check out &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3"&gt;this pull request&lt;/a&gt; which highlights how I integrated chai into the ts-prop-inject project.&lt;/p&gt;</content></entry><entry><title>Injecting into Constructors with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/" rel="alternate"></link><published>2015-08-06T07:00:00+01:00</published><updated>2015-08-06T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-06:/2015/injecting-into-constructors-with-typescript-decorators/</id><summary type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// Although this would be the preferred syntax it will throw a compiler error,&lt;/span&gt;
+  &lt;span class="c1"&gt;// TS1206: Decorators are not …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
 
   &lt;span class="c1"&gt;// Although this would be the preferred syntax it will throw a compiler error,&lt;/span&gt;
@@ -219,7 +242,14 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;As before I've pushed the code to &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection"&gt;Github&lt;/a&gt; and create a &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2"&gt;Pull Request&lt;/a&gt; to highlight changes from the previous post.&lt;/p&gt;</summary></entry><entry><title>Injecting into Methods with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/" rel="alternate"></link><published>2015-08-03T21:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-03:2015/injecting-into-methods-with-typescript-decorators/</id><summary type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
+&lt;p&gt;As before I've pushed the code to &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection"&gt;Github&lt;/a&gt; and create a &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2"&gt;Pull Request&lt;/a&gt; to highlight changes from the previous post.&lt;/p&gt;</content></entry><entry><title>Injecting into Methods with TypeScript Decorators</title><link href="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/" rel="alternate"></link><published>2015-08-03T21:00:00+01:00</published><updated>2015-08-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-03:/2015/injecting-into-methods-with-typescript-decorators/</id><summary type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Person&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_firstName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_lastName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+  &lt;span class="kd"&gt;@inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;firstName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;lastName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="nx"&gt;setName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;first&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;last&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;_firstName …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Person&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_firstName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_lastName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -231,7 +261,7 @@
   &lt;span class="p"&gt;}&lt;/span&gt;
 
   &lt;span class="nx"&gt;getFullName&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="err"&gt;`&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;firstName&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;lastName&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="err"&gt;`&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="sb"&gt;`&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;firstName&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt; &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;lastName&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt;`&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -298,7 +328,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;As before, the code and unit tests can be found over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt; - I've also raised a pull request on the repo to highlight the changes: &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/1"&gt;github.com/jonnyreeves/ts-prop-injection/pull/1&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Basic Typescript Dependency Injection with Decorators</title><link href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/" rel="alternate"></link><published>2015-08-01T21:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-01:2015/basic-typescript-dependency-injection-with-decorators/</id><summary type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.&lt;/p&gt;
+&lt;p&gt;As before, the code and unit tests can be found over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt; - I've also raised a pull request on the repo to highlight the changes: &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/1"&gt;github.com/jonnyreeves/ts-prop-injection/pull/1&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Basic Typescript Dependency Injection with Decorators</title><link href="http://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/" rel="alternate"></link><published>2015-08-01T21:00:00+01:00</published><updated>2015-08-01T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-01:/2015/basic-typescript-dependency-injection-with-decorators/</id><summary type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.&lt;/p&gt;
 &lt;p&gt;Let's start with an example of what we want to achieve:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;LoginService&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="nx"&gt;userModel&lt;/span&gt; : &lt;span class="kt"&gt;UserModel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -436,7 +466,20 @@
 
 
 &lt;p&gt;A complete example with Mocha Tests provided over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt;.  &lt;/p&gt;
-&lt;p&gt;Part 2: &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;Adding support of method injection&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Hello Typescript and Mocha!</title><link href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><published>2015-07-27T20:00:00+01:00</published><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
+&lt;p&gt;Part 2: &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;Adding support of method injection&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Hello Typescript and Mocha!</title><link href="http://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><published>2015-07-27T20:00:00+01:00</published><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:/2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm init
+name: (hello-ts-mocha)
+version: (1.0.0)
+description: Getting started with TypeScript and mocha
+entry point: (index.js)
+test command: mocha
+git repository:
+keywords:
+license: (ISC)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
@@ -570,4 +613,4 @@ license: (ISC)
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Have fun fixing the test-case :)  Full source over over at &lt;a href="https://github.com/jonnyreeves/hello-ts-mocha"&gt;github.com/jonnyreeves/hello-ts-mocha&lt;/a&gt;&lt;/p&gt;</summary></entry></feed>
+&lt;p&gt;Have fun fixing the test-case :)  Full source over over at &lt;a href="https://github.com/jonnyreeves/hello-ts-mocha"&gt;github.com/jonnyreeves/hello-ts-mocha&lt;/a&gt;&lt;/p&gt;</content></entry></feed>

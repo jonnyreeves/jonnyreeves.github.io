@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe ..." />
+<meta name="description" content="When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe('myTestSuite …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="Mocking XMLHttpRequests in Jasmine"/>
-<meta property="og:description" content="When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe ..."/>
+<meta property="og:description" content="When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe('myTestSuite …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk/2015/mocking-xmlhttprequests-in-jasmine/"/>
 <meta property="og:type" content="article"/>
@@ -28,10 +28,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://jonnyreeves.co.uk">
+      <a href="/">
         <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <h1><a href="/">Jonny Reeves</a></h1>
       <p>code && coffee || music</p>
       <nav>
         <ul class="list">
@@ -57,9 +57,9 @@
 <p>Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward:</p>
 <div class="highlight"><pre><span></span><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
 
-<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">());</span>
-  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">());</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">());</span>
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">());</span>
 <span class="p">});</span>
 </pre></div>
 
@@ -81,12 +81,12 @@
 <div class="highlight"><pre><span></span><span class="kr">import</span> <span class="s1">&#39;jasmine-ajax&#39;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="nx">xhr</span> <span class="nx">from</span> <span class="s1">&#39;xhr&#39;</span><span class="p">;</span>
 
-<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;myTestSuite&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
     <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">install</span><span class="p">();</span>
     <span class="nx">xhr</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
   <span class="p">});</span>
-  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
     <span class="nx">jasmine</span><span class="p">.</span><span class="nx">Ajax</span><span class="p">.</span><span class="nx">uninstall</span><span class="p">();</span>
     <span class="nx">xhr</span><span class="p">.</span><span class="nx">XMLHttpRequest</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">XMLHttpRequest</span><span class="p">;</span>
   <span class="p">});</span>
@@ -141,7 +141,7 @@
   },
   "image": "/images/avatar.jpg",
   "url": "http://jonnyreeves.co.uk/2015/mocking-xmlhttprequests-in-jasmine/",
-  "description": "When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe ..."
+  "description": "When writing integration tests, it's often useful to fake network requests so your tests can be predictable and execute quickly. Jasmine provides jasmine-ajax which will replace the XMLHttpRequest constructor on the global (eg: window). Wiring up jasmine.Ajax into your test-suites' lifecycle is pretty straight forward: import 'jasmine-ajax'; describe('myTestSuite …"
 }
 </script></body>
 </html>

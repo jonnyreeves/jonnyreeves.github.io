@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="Expanding upon my last post on Property based Dependency Injection, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve: class Person { private _firstName : string; private _lastName : string; @inject('firstName', 'lastName') setName(first : string, last : string ..." />
+<meta name="description" content="Expanding upon my last post on Property based Dependency Injection, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve: class Person { private _firstName : string; private _lastName : string; @inject('firstName', 'lastName') setName(first : string, last : string) { this._firstName …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="Injecting into Methods with TypeScript Decorators"/>
-<meta property="og:description" content="Expanding upon my last post on Property based Dependency Injection, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve: class Person { private _firstName : string; private _lastName : string; @inject('firstName', 'lastName') setName(first : string, last : string ..."/>
+<meta property="og:description" content="Expanding upon my last post on Property based Dependency Injection, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve: class Person { private _firstName : string; private _lastName : string; @inject('firstName', 'lastName') setName(first : string, last : string) { this._firstName …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/"/>
 <meta property="og:type" content="article"/>
@@ -28,10 +28,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://jonnyreeves.co.uk">
+      <a href="/">
         <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <h1><a href="/">Jonny Reeves</a></h1>
       <p>code && coffee || music</p>
       <nav>
         <ul class="list">
@@ -65,7 +65,7 @@
   <span class="p">}</span>
 
   <span class="nx">getFullName</span><span class="p">()</span> <span class="o">:</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nx">firstName</span><span class="p">}</span> <span class="nx">$</span><span class="p">{</span><span class="nx">lastName</span><span class="p">}</span><span class="err">`</span>
+    <span class="k">return</span> <span class="sb">`</span><span class="si">${</span><span class="nx">firstName</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">lastName</span><span class="si">}</span><span class="sb">`</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -178,7 +178,7 @@
   },
   "image": "/images/avatar.jpg",
   "url": "http://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/",
-  "description": "Expanding upon my last post on Property based Dependency Injection, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve: class Person { private _firstName : string; private _lastName : string; @inject('firstName', 'lastName') setName(first : string, last : string ..."
+  "description": "Expanding upon my last post on Property based Dependency Injection, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve: class Person { private _firstName : string; private _lastName : string; @inject('firstName', 'lastName') setName(first : string, last : string) { this._firstName …"
 }
 </script></body>
 </html>

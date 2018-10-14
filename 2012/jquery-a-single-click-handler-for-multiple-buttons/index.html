@@ -11,11 +11,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="Event bubbling is a wonderful thing; in ActionScript mouse events would readily bubble up through the DisplayList all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the event.target property to determine which child button the user ..." />
+<meta name="description" content="Event bubbling is a wonderful thing; in ActionScript mouse events would readily bubble up through the DisplayList all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the event.target property to determine which child button the user …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="jQuery - A single click handler for multiple buttons"/>
-<meta property="og:description" content="Event bubbling is a wonderful thing; in ActionScript mouse events would readily bubble up through the DisplayList all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the event.target property to determine which child button the user ..."/>
+<meta property="og:description" content="Event bubbling is a wonderful thing; in ActionScript mouse events would readily bubble up through the DisplayList all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the event.target property to determine which child button the user …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="http://jonnyreeves.co.uk/2012/jquery-a-single-click-handler-for-multiple-buttons/"/>
 <meta property="og:type" content="article"/>
@@ -28,10 +28,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://jonnyreeves.co.uk">
+      <a href="/">
         <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
       </a>
-      <h1><a href="http://jonnyreeves.co.uk">Jonny Reeves</a></h1>
+      <h1><a href="/">Jonny Reeves</a></h1>
       <p>code && coffee || music</p>
       <nav>
         <ul class="list">
@@ -55,7 +55,7 @@
   <div>
     <p>Event bubbling is a wonderful thing; in ActionScript mouse events would readily <a href="http://www.rubenswieringa.com/blog/eventbubbles-eventcancelable-and-eventcurrenttarget">bubble up through the DisplayList</a> all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the <code>event.target</code> property to determine which child button the user had interacted with. The same is true in JavaScript; but instead of events bubbling up the DisplayList they bubble up through the DOM.</p>
 <p>Take the following example, here we have three buttons that we want to respond to when they’re clicked:</p>
-<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/three-buttons.png" /></p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/three-buttons.png"></p>
 <p>The HTML for this button group is nice and simple, making use of jQuery mobile:</p>
 <div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;screen-selector&quot;</span> <span class="na">data-role</span><span class="o">=</span><span class="s">&quot;navbar&quot;</span><span class="p">&gt;</span>
     <span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
@@ -75,7 +75,7 @@
 
 
 <p>This almost works as desired, but not quite. jQuery Mobile does some magic behind the scenes to transform our button markup into a more complex design, this results in the <code>event.target</code> of the click event being child elements of the <code>&lt;a&gt;</code> tag:</p>
-<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-event-target.png" /></p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-event-target.png"></p>
 <p>Instead, what we really want is to know which <a> element the user clicked so we can tie it back to the buttons in our original HTML. In ActionScript this could be solved quite easily by setting the <a href="http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/DisplayObjectContainer.html#mouseChildren"><code>mouseChildren</code> attribute</a> of the button DisplayObjects to false, ie:</p>
 <div class="highlight"><pre><span></span><span class="kd">var</span> <span class="n">buttons</span> <span class="p">:</span> <span class="kt">Array</span> <span class="o">=</span> <span class="o">[</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnApplications&quot;</span><span class="o">),</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnProperties&quot;</span><span class="o">),</span> <span class="n">getChildByName</span><span class="o">(</span><span class="s2">&quot;btnEvents&quot;</span><span class="o">)</span> <span class="o">];</span>
 <span class="k">for</span> <span class="k">each</span> <span class="o">(</span><span class="kd">var</span> <span class="n">button</span> <span class="p">:</span> <span class="kt">Sprite</span> <span class="k">in</span> <span class="n">buttons</span><span class="o">)</span> <span class="o">{</span>
@@ -131,7 +131,7 @@
 
 
 <p>Which gives us our desired effect! :)</p>
-<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-click-handler.png" /></p>
+<p><img alt="Alt Text" src="http://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-click-handler.png"></p>
   </div>
   <div class="tag-cloud">
     <p>
@@ -177,7 +177,7 @@
   },
   "image": "/images/avatar.jpg",
   "url": "http://jonnyreeves.co.uk/2012/jquery-a-single-click-handler-for-multiple-buttons/",
-  "description": "Event bubbling is a wonderful thing; in ActionScript mouse events would readily bubble up through the DisplayList all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the event.target property to determine which child button the user ..."
+  "description": "Event bubbling is a wonderful thing; in ActionScript mouse events would readily bubble up through the DisplayList all the way up to the Stage allowing you to add a single event Handler to a parent DisplayObject and then inspecting the event.target property to determine which child button the user …"
 }
 </script></body>
 </html>
