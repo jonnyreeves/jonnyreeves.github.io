@@ -47,13 +47,14 @@ EXTRA_PATH_METADATA = { 'extra/CNAME': {'path': 'CNAME'},
 # Flex Theme Settings
 THEME="./pelican-themes/Flex"
 SITELOGO='/images/avatar.jpg'
+FAVICON='/images/favicon.ico'
 
 OPENSOURCE = (
-	('js-logger', 'Lightweight, unobtrusive, configurable JavaScript logger.'),
-	('ts-prop-injection', 'Basic Typescript Dependency Injection with Decorators.'),
-	('chunked-request', 'Compatibility layer for efficient streaming of chunked-transfer encoded responses.'),
-	('as3-vanilla', 'Extract strongly typed Objects from dynamic objects without writing a single line of code!'),
-	('jquery-Mustache', ' Mustache templating plugin for jQuery.'),
+	('jonnyreeves/js-logger', 'Lightweight, unobtrusive, configurable JavaScript logger.'),
+	('jonnyreeves/fetch-readablestream', 'Compatibility layer for efficient streaming of binary data using WHATWG Streams'),
+	('improbable-eng/ts-protoc-gen', 'Protocol Buffers Compiler (protoc) plugin for TypeScript and gRPC-Web.'),
+	('jonnyreeves/as3-vanilla', 'Extract strongly typed Objects from dynamic objects without writing a single line of code!'),
+	('jonnyreeves/jquery-Mustache', ' Mustache templating plugin for jQuery.'),
 )
 
 # SVBHack Theme Settings
