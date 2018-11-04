@@ -1,6 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - Jonny Reeves</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/jonny-reeves.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2016-10-04T21:00:00+01:00</updated><entry><title>Wordpress on a Google Compute Engine f1-micro</title><link href="https://jonnyreeves.co.uk/2016/wordpress-on-a-google-compute-engine-f1-micro/" rel="alternate"></link><published>2016-10-04T21:00:00+01:00</published><updated>2016-10-04T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-10-04:/2016/wordpress-on-a-google-compute-engine-f1-micro/</id><summary type="html">&lt;p&gt;The cheapest offering on &lt;a href="https://cloud.google.com/"&gt;Google's cloud platform&lt;/a&gt; is the f1-micro instance.  The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The cheapest offering on &lt;a href="https://cloud.google.com/"&gt;Google's cloud platform&lt;/a&gt; is the f1-micro instance.  The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it turns out you can just about cram a moddest-traffic Wordpress instance on it with a little tweaking - and here's the good news, it'll only set you back £50 a year!&lt;/p&gt;
-&lt;h2&gt;Creating a new Instance&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - Jonny Reeves</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/jonny-reeves.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2018-11-04T18:00:00+00:00</updated><entry><title>Continuous Delivery on Github Projects to NPM using Travis</title><link href="https://jonnyreeves.co.uk/2018/continuous-delivery-on-github-projects-to-npm-using-travis/" rel="alternate"></link><published>2018-11-04T18:00:00+00:00</published><updated>2018-11-04T18:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2018-11-04:/2018/continuous-delivery-on-github-projects-to-npm-using-travis/</id><summary type="html">&lt;p&gt;Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next official release.&lt;/p&gt;
+&lt;p&gt;This guide assumes that you have already &lt;a href="https://docs.travis-ci.com/user/languages/javascript-with-nodejs/"&gt;configured your JavaScript project to build via Travis&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;TL;DR - jump to the &lt;a href="#putting-it-all-together"&gt;final Travis config&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="the-workflow"&gt;The Workflow&lt;/h3&gt;
+&lt;p&gt;The Continuous Delivery workflow I'm going to configure will give your consumers two release channels: &lt;strong&gt;latest&lt;/strong&gt; and &lt;strong&gt;next&lt;/strong&gt;. Releases on the &lt;strong&gt;latest&lt;/strong&gt; channel will be triggered by a manual release step and provide stability for your consumers whereas the &lt;strong&gt;next&lt;/strong&gt; channel will be released with every commit to master (typically when a Pull Request is squashed and merged).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Diagram of the desired continuous delivery flow" src="/images/2018/continuous-delivery-github-npm-travis/cd-flow.jpg"&gt;&lt;/p&gt;
+&lt;h3 id="travis-setup"&gt;Travis Setup&lt;/h3&gt;
+&lt;p&gt;The first step is to configure &lt;a href="https://docs.travis-ci.com/user/deployment/npm/"&gt;Travis' npm Publisher&lt;/a&gt;. The documentation wants us to run &lt;code&gt;travis setup npm&lt;/code&gt;, but before we can do this, we need to have the Travis CLI installed locally; just follow the &lt;a href="https://github.com/travis-ci/travis.rb#installation"&gt;Travis CLI installation guide&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Nb:&lt;/strong&gt; Assuming you've logged into npm on your local machine, you can obtain your api key from &lt;code&gt;~/.npmrc&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ travis setup npm
+Detected repository as jonnyreeves/js-logger, is this correct? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; yes
+NPM email address: ***@jon***ves.co.uk
+NPM api key: ************************************
+release only tagged commits? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; no
+Release only from jonnyreeves/js-logger? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; no
+Encrypt API key? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; yes
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once complete your &lt;code&gt;.travis.yml&lt;/code&gt; file will have been modified and the following configuration added:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;deploy&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;provider&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;npm&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;email&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="err"&gt;***@&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;jon***ves.co.uk&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;api_key&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secure&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]e=&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For additional privacy from automated scapers, I would suggest you also encrypt your npm email address; again you can use the Travis CLI to perform this action and update your local travis configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;travis encrypt foo@example.com --add deploy.email
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally, we need to configure Travis to &lt;code&gt;skip_cleanup&lt;/code&gt; to ensure that any artifacts generated during the build process are not removed before the publishing step (refer to the docs &lt;a href="https://docs.travis-ci.com/user/deployment/npm/#releasing-build-artifacts"&gt;here&lt;/a&gt;). To do this, modify the &lt;code&gt;deploy&lt;/code&gt; block inside your &lt;code&gt;.travis.yml&lt;/code&gt; so it includes the &lt;code&gt;skip_cleanup&lt;/code&gt; property:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;deploy&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  &lt;span class="n"&gt;provider&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;npm&lt;/span&gt;
+  &lt;span class="n"&gt;skip_cleanup&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;
+  &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;secure&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;[...]&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+  &lt;span class="n"&gt;api_key&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;secure&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;[...]&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Finally, we need to tell travis to only run the deploy step when a commit is made in the &lt;code&gt;master&lt;/code&gt; branch. To do this, modify the &lt;code&gt;deploy&lt;/code&gt; block to make it &lt;a href="https://docs.travis-ci.com/user/deployment/#conditional-releases-with-on"&gt;conditional based on the target branch&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;With this configuration in place, Travis will now publish a release to npm each time you create a new tag; however this does not match our desired Continuous Delivery pipeline where each commit to master results in a new release.&lt;/p&gt;
+&lt;h3 id="npm-release-channels"&gt;Npm Release Channels&lt;/h3&gt;
+&lt;p&gt;In order to create our desired Continuous Delivery pipeline we need to create two release channels: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;latest&lt;/strong&gt;: Periodically created by the maintainers of the project, reccomended for production usage&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;next&lt;/strong&gt;: Automatically created on every change made to master, reccomended for testing out new features in a non-production environment or for those who like to live dangerously.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Npm helps us by providing the concept of &lt;a href="https://docs.npmjs.com/getting-started/using-tags"&gt;dist-tags&lt;/a&gt;. Dist-tags are used by npm to identify what the latest version of any given package is when a user runs npm install. When publishing a package, npm will automatically populate the &lt;code&gt;dist-tag&lt;/code&gt; to be &lt;code&gt;latest&lt;/code&gt; if no value is supplied by the user.&lt;/p&gt;
+&lt;p&gt;Here's an example to explain the concept: let's assume that the &lt;code&gt;example-pkg&lt;/code&gt; package has 3 distinct versions that have been published to npm under the 'latest' dist-tag:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;example-pkg
+- 0.0.1 [dist-tag=latest] &amp;lt;-- published 01/01/2018
+- 0.0.2 [dist-tag=latest] &amp;lt;-- published 02/01/2018
+- 0.0.3 [dist-tag=latest] &amp;lt;-- published 03/01/2018
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now when you run &lt;code&gt;npm install example-pkg&lt;/code&gt; npm will fetch 0.0.3 as that was the most recent version to be published. Now let's publish another release but this time we will specify the dist-tag as 'next', now the release history of &lt;code&gt;example-pkg&lt;/code&gt; looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;example-pkg
+- 0.0.1 [dist-tag=latest] &amp;lt;-- published 01/01/2018
+- 0.0.2 [dist-tag=latest] &amp;lt;-- published 02/01/2018
+- 0.0.3 [dist-tag=latest] &amp;lt;-- published 03/01/2018
+- 0.0.4 [dist-tag=next]   &amp;lt;-- published 04/01/2018
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Should you run &lt;code&gt;npm install example-pkg&lt;/code&gt; now, npm will still fetch version &lt;code&gt;0.0.3&lt;/code&gt;, even tho it was not the most recent version to be published. This is because &lt;code&gt;npm install&lt;/code&gt; defaults to fetching releases from the &lt;code&gt;latest&lt;/code&gt; dist-tag. When running npm-install we can specify an alternative release channel using the &lt;code&gt;@&lt;/code&gt; syntax and specifying a dist-tag, ie:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install example-pkg@next
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now npm will fetch version &lt;code&gt;0.0.4&lt;/code&gt; as it was the most recent version to be published to the &lt;code&gt;latest&lt;/code&gt; release channel.&lt;/p&gt;
+&lt;p&gt;With this in mind we need a way of determining if a release is destined to be published to either the &lt;strong&gt;latest&lt;/strong&gt; or &lt;strong&gt;next&lt;/strong&gt; release channel, but how can we do this? Fortunately semver has us covered with &lt;a href="https://semver.org/spec/v2.0.0.html#spec-item-9"&gt;pre-release versions&lt;/a&gt; where a pre-release version (ie: a release to the &lt;strong&gt;next&lt;/strong&gt; channel) may be denoted by appending a hyphen and a series of dot separated identifies immediately following the patch version. &lt;/p&gt;
+&lt;p&gt;If we set our &lt;code&gt;package.json&lt;/code&gt; file's &lt;code&gt;version&lt;/code&gt; property to &lt;code&gt;x.y.z-next&lt;/code&gt; in master then we can create a distinction between &lt;strong&gt;stable&lt;/strong&gt; and &lt;strong&gt;next&lt;/strong&gt; releases by checking for the presence of the &lt;code&gt;-next&lt;/code&gt; prefix before the Travis deploy step. &lt;/p&gt;
+&lt;p&gt;However, this simple approach will encounter a problem; npm will fail to publish if we try to publish a pre-existing version, and because each pull request we merge into master isn't going to bump our package version we need a way to create unique versions for releases to our &lt;strong&gt;next&lt;/strong&gt; channel. A simple way to achieve this is to append the short git commit hash to our pre-release version suffix, eg: &lt;code&gt;x.y.z-next.d34db33f&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="putting-it-all-together"&gt;Putting it all together&lt;/h2&gt;
+&lt;p&gt;To add all of the above logic to our &lt;code&gt;travis.yml&lt;/code&gt; we add a &lt;code&gt;before_deploy&lt;/code&gt; block and modify our &lt;code&gt;deploy&lt;/code&gt; bock to make use of the new variable (&lt;code&gt;NPM_TAG&lt;/code&gt;) it defines:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;before_deploy&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;|&lt;/span&gt;
+  &lt;span class="no"&gt;PKG_VERSION=$(node -p &amp;quot;require(&amp;#39;./package.json&amp;#39;).version&amp;quot;)&lt;/span&gt;
+  &lt;span class="no"&gt;NPM_TAG=&amp;quot;latest&amp;quot;&lt;/span&gt;
+  &lt;span class="no"&gt;if [[ ${PKG_VERSION} =~ -next$ ]]; then&lt;/span&gt;
+    &lt;span class="no"&gt;NPM_TAG=&amp;quot;next&amp;quot;&lt;/span&gt;
+    &lt;span class="no"&gt;SHORT_COMMIT_HASH=$(git rev-parse --short HEAD)&lt;/span&gt;
+    &lt;span class="no"&gt;UNIQ_PKG_VERSION=&amp;quot;${PKG_VERSION}.${SHORT_COMMIT_HASH}&amp;quot;&lt;/span&gt;
+    &lt;span class="no"&gt;npm --no-git-tag-version version ${UNIQ_PKG_VERSION}&lt;/span&gt;
+  &lt;span class="no"&gt;fi&lt;/span&gt;
+&lt;span class="l l-Scalar l-Scalar-Plain"&gt;deploy&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;skip_cleanup&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;provider&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;npm&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tag&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$NPM_TAG&amp;quot;&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;email&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secure&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]2=&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;api_key&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secure&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]e=&lt;/span&gt;
+  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;on&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
+    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;branch&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;master&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With the above configuration in place we can set our package.json file's &lt;code&gt;version&lt;/code&gt; property to include the &lt;code&gt;-next&lt;/code&gt; suffix by default and push a commit that removes it each time we want to create a stable release on &lt;strong&gt;latest&lt;/strong&gt; channel.&lt;/p&gt;
+&lt;p&gt;You can see this pipeline in action over on my &lt;a href=""&gt;js-logger project&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Wordpress on a Google Compute Engine f1-micro</title><link href="https://jonnyreeves.co.uk/2016/wordpress-on-a-google-compute-engine-f1-micro/" rel="alternate"></link><published>2016-10-04T21:00:00+01:00</published><updated>2016-10-04T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-10-04:/2016/wordpress-on-a-google-compute-engine-f1-micro/</id><summary type="html">&lt;p&gt;The cheapest offering on &lt;a href="https://cloud.google.com/"&gt;Google's cloud platform&lt;/a&gt; is the f1-micro instance.  The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The cheapest offering on &lt;a href="https://cloud.google.com/"&gt;Google's cloud platform&lt;/a&gt; is the f1-micro instance.  The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it turns out you can just about cram a moddest-traffic Wordpress instance on it with a little tweaking - and here's the good news, it'll only set you back £50 a year!&lt;/p&gt;
+&lt;h2 id="creating-a-new-instance"&gt;Creating a new Instance&lt;/h2&gt;
 &lt;p&gt;Head on over to the &lt;a href="https://console.cloud.google.com/start"&gt;Google Cloud Console&lt;/a&gt; and sign up (Google currently offer a 60 day free trial to sweeten the deal).  Battle your way through the onboarding guide and then head over to the &lt;a href="https://console.cloud.google.com/compute"&gt;Google Compute Engine control panel&lt;/a&gt;.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Click create Instance&lt;/li&gt;
@@ -13,9 +117,9 @@
 &lt;p&gt;Once your machine has been provisioned (should only take a couple of minutes) you can connect direct from your browser by clicking the SSH button from the Compute Engine &lt;a href="https://console.cloud.google.com/compute/instances"&gt;VM Instance Control Panel&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Connect via SSH" src="/images/2016/wordpress-google-compute-engine-f1-micro/ssh-access.png"&gt;&lt;/p&gt;
 &lt;p&gt;You can also click this drop down to setup SSH access from the command line by adding an SSH KeyPair or by using &lt;a href="https://cloud.google.com/sdk/gcloud/"&gt;gcloud command line interface&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Obtaining a Static IP&lt;/h3&gt;
+&lt;h3 id="obtaining-a-static-ip"&gt;Obtaining a Static IP&lt;/h3&gt;
 &lt;p&gt;By default, Compute Engine instances are assigned an ephemeral IP (meaning that it may change should the instance shutdown); for production websites you need to assign a static IP to your instance so you can point your doman at it; this can be done through the Networking &lt;a href="https://console.cloud.google.com/networking/addresses/list"&gt;External IP Addresses Control Panel&lt;/a&gt; - you can select a the 'Regional' type selecting the same region where your instance is running (eg: &lt;code&gt;europe-west-1&lt;/code&gt;).&lt;/p&gt;
-&lt;h2&gt;Base LEMP Setup&lt;/h2&gt;
+&lt;h2 id="base-lemp-setup"&gt;Base LEMP Setup&lt;/h2&gt;
 &lt;p&gt;The following is based off a stock Debian Jessie install; I make use of Nginx (less CPU and memory intensive then Apache), &lt;a href="https://php-fpm.org/about/"&gt;PHP-FPM&lt;/a&gt; (connects Nginx and PHP), PHP 5 and MySQL. The following command will install all of the required dependencies:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install mysql-server nginx php5-fpm php5-mysql php-apc &lt;span class="se"&gt;\&lt;/span&gt;
     pwgen python-setuptools curl git unzip php5-curl php5-gd php5-intl &lt;span class="se"&gt;\&lt;/span&gt;
@@ -64,7 +168,7 @@ $ sudo service php5-fpm restart
 
 
 &lt;p&gt;This configuration will serve php from &lt;code&gt;/usr/share/nginx/www&lt;/code&gt; - drop an &lt;code&gt;index.php&lt;/code&gt; file there which invokes &lt;code&gt;phpinfo()&lt;/code&gt; and visit your Compute Engine instance's IP address in your browser to confirm that everything has been configured - make sure you delete that file once you're done.&lt;/p&gt;
-&lt;h2&gt;Wordpress Install&lt;/h2&gt;
+&lt;h2 id="wordpress-install"&gt;Wordpress Install&lt;/h2&gt;
 &lt;p&gt;Now the easy bit :)  Start by grabbing wordpress:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; /usr/share/nginx
 $ wget https://wordpress.org/latest.tar.gz
@@ -76,14 +180,14 @@ $ chmod -R &lt;span class="m"&gt;766&lt;/span&gt; ./www/wp-content/uploads
 
 
 &lt;p&gt;You can now visit your Compute Engine instance's IP address in your browser and the Wordpress installation script should start; you may want to consider &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql"&gt;creating a MySQL user&lt;/a&gt; for wordpress without GRANT and ALTER permissions.&lt;/p&gt;
-&lt;h3&gt;Enabling Automatic Updates&lt;/h3&gt;
+&lt;h3 id="enabling-automatic-updates"&gt;Enabling Automatic Updates&lt;/h3&gt;
 &lt;p&gt;Wordpress will automatically install security patches if it has a way to write to the local filesystem; one option is to configure the &lt;code&gt;FS-METHOD&lt;/code&gt; constant in your &lt;code&gt;wp-config.php&lt;/code&gt; to use &lt;code&gt;direct&lt;/code&gt; and grant the permissive permissions on your &lt;code&gt;/usr/share/nginx/www&lt;/code&gt; folder; generally speaking this is fine if you only have a single Wordpress installation running on the server, however you may wish to consider setting &lt;code&gt;FS-METHOD&lt;/code&gt; to &lt;code&gt;ssh2&lt;/code&gt; and &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-configure-secure-updates-and-installations-in-wordpress-on-ubuntu"&gt;setting up an SSH key/pair&lt;/a&gt;. &lt;/p&gt;
-&lt;h3&gt;Sending Email&lt;/h3&gt;
+&lt;h3 id="sending-email"&gt;Sending Email&lt;/h3&gt;
 &lt;p&gt;If you need your Wordpress instance to be able to send email (eg: for a contact form); then you may wish to consider installing the &lt;a href="https://wordpress.org/plugins/wp-mail-smtp/"&gt;WP Mail SMTP Plugin&lt;/a&gt; which will reconfigure Wordpress to route all mail through an SMTP server (ie: a &lt;a href="https://support.google.com/a/answer/176600?hl=en"&gt;GMail account&lt;/a&gt;).&lt;/p&gt;
-&lt;h3&gt;Backups&lt;/h3&gt;
+&lt;h3 id="backups"&gt;Backups&lt;/h3&gt;
 &lt;p&gt;If you care about your content, it's essential that you back up both the database and the &lt;code&gt;wp-content&lt;/code&gt; folder on a regular basis.  I've personally found the &lt;a href="https://wordpress.org/plugins/backupwordpress/"&gt;BackupWordPress&lt;/a&gt; plugin does a great job for creating local archives on the sever; these can then be shipped over to Google Drive by using &lt;a href="https://github.com/prasmussen/gdrive"&gt;gdrive&lt;/a&gt; and cron: don't forget to restore from your backup from time-to-time.&lt;/p&gt;
 &lt;p&gt;Additionally, you can make use of the &lt;a href="https://console.cloud.google.com/compute/snapshots"&gt;Compute Engine Snapshot&lt;/a&gt; feature which makes disaster recovery straight-forward.&lt;/p&gt;
-&lt;h2&gt;Wordpress Hardening&lt;/h2&gt;
+&lt;h2 id="wordpress-hardening"&gt;Wordpress Hardening&lt;/h2&gt;
 &lt;p&gt;Because of the limited resources avaliable to your instance, it's possible for qutie meagre Denail of Service (DoS) attacks to peg your server's CPU or even knock it offline (by running out of memory).&lt;/p&gt;
 &lt;p&gt;In my case, just minutes after I had got gotten Wordpress configured the nginx access.log (&lt;code&gt;/var/log/nginx/access.log&lt;/code&gt;) started filling up with the following entries:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &amp;quot;POST /xmlrpc.php HTTP/1.1&amp;quot; 499 0 &amp;quot;-&amp;quot; &amp;quot;Googlebot/2.1 (+http://www.go
@@ -95,7 +199,7 @@ ogle.com/bot.html)&amp;quot;
 
 &lt;p&gt;That host was hitting me with ~12 requests per second which was enough to spike my CPU usage and cause significant slow-down.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="CPU Graph" src="/images/2016/wordpress-google-compute-engine-f1-micro/cpu-graph.png"&gt;&lt;/p&gt;
-&lt;h3&gt;Fail2Ban&lt;/h3&gt;
+&lt;h3 id="fail2ban"&gt;Fail2Ban&lt;/h3&gt;
 &lt;p&gt;&lt;a href="http://www.fail2ban.org/wiki/index.php/Main_Page"&gt;Fail2Ban&lt;/a&gt; scans your server's log files and can be configured to ban IP addresses based on filters you define.&lt;/p&gt;
 &lt;p&gt;Start by installing and enabling fail2ban with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install fail2ban
@@ -120,17 +224,17 @@ ogle.com/bot.html)&amp;quot;
 
 
 &lt;p&gt;This configuration will allow 3 such log entries before banning that IP for 1 hour.&lt;/p&gt;
-&lt;h3&gt;WP Super Cache&lt;/h3&gt;
+&lt;h3 id="wp-super-cache"&gt;WP Super Cache&lt;/h3&gt;
 &lt;p&gt;&lt;a href="https://en-gb.wordpress.org/plugins/wp-super-cache/"&gt;WP Super Cache plugin&lt;/a&gt; is essential for a Wordpress install on a low-end server - installation is straight forward from the Wordpress Admin.&lt;/p&gt;
-&lt;h3&gt;CloudFlare&lt;/h3&gt;
+&lt;h3 id="cloudflare"&gt;CloudFlare&lt;/h3&gt;
 &lt;p&gt;If you don't mind giving up control over your DNS, you can put your install behind &lt;a href="https://www.cloudflare.com/plans/"&gt;CloudFlare's free plan&lt;/a&gt; which should go some way to reducing the amount of traffic that hits your server.&lt;/p&gt;
-&lt;h3&gt;Offloading Comments&lt;/h3&gt;
+&lt;h3 id="offloading-comments"&gt;Offloading Comments&lt;/h3&gt;
 &lt;p&gt;Wordpress comments can cause a serious headache for low-end instances as they are the source of a lot of spam and will increase the amount of cache invalidation that needs to occur.  Whilst plugins like &lt;a href="https://en-gb.wordpress.org/plugins/akismet/"&gt;Akisment&lt;/a&gt; (which comes installed by default) certainly help with the former, external comment platforms like &lt;a href="https://disqus.com/"&gt;Disqus&lt;/a&gt; integrate seamlessly into Wordpress if you don't mind giving up a bit of control over your content.&lt;/p&gt;</content></entry><entry><title>Configuring my Windows 10 Home Server</title><link href="https://jonnyreeves.co.uk/2016/configuring-my-windows-10-home-server/" rel="alternate"></link><published>2016-08-14T21:00:00+01:00</published><updated>2016-08-14T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-08-14:/2016/configuring-my-windows-10-home-server/</id><summary type="html">&lt;p&gt;I used to run Linux on various small NAS devices (most recently a &lt;a href="http://www.dlink.com/uk/en/support/product/dns-320-2-bay-sharecenter-network-storage-enclosure"&gt;D-Link DNS 320&lt;/a&gt; 2 bay device), however I got tired of futzing around with both the hardware and the &lt;a href="https://nas-tweaks.net/371/hdd-installation-of-the-fun_plug-0-7-on-nas-devices/"&gt;esoteric flavor of Linux&lt;/a&gt; you can side-load onto it.  I now run a small &lt;a href="http://www8.hp.com/uk/en/products/proliant-servers/product-detail.html?oid=5379860"&gt;HP Proliant Gen8 Microserver …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;I used to run Linux on various small NAS devices (most recently a &lt;a href="http://www.dlink.com/uk/en/support/product/dns-320-2-bay-sharecenter-network-storage-enclosure"&gt;D-Link DNS 320&lt;/a&gt; 2 bay device), however I got tired of futzing around with both the hardware and the &lt;a href="https://nas-tweaks.net/371/hdd-installation-of-the-fun_plug-0-7-on-nas-devices/"&gt;esoteric flavor of Linux&lt;/a&gt; you can side-load onto it.  I now run a small &lt;a href="http://www8.hp.com/uk/en/products/proliant-servers/product-detail.html?oid=5379860"&gt;HP Proliant Gen8 Microserver&lt;/a&gt; configured with 4GB Ram and 3TB of mirrored storage at home; this system is running Windows 10 Professional (pro is required to use the built-in Remote Desktop server).  Below is a list of software I've found useful.&lt;/p&gt;
-&lt;h3&gt;Stablebit DrivePool&lt;/h3&gt;
+&lt;h3 id="stablebit-drivepool"&gt;Stablebit DrivePool&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="Stablebit DrivePool" src="/images/2016/configuring-windows-10-home-server/drivepool.png"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://stablebit.com/DrivePool"&gt;DrivePool&lt;/a&gt; is the spiritual successor of &lt;a href="https://en.wikipedia.org/wiki/Windows_Home_Server#Drive_Extender"&gt;Drive Extender&lt;/a&gt; which disappeared with the demise of Windows Home Server (why...?!); it allows you to combine drives of any size into one or more 'pools' which are represented by a single drive letter in Windows Explorer; you can continue to add new drives to extend the size of the pool and configure the level of redundancy on a folder-by-folder basis (eg: if you have 3 physical hard-drives in a single pool, you could triplicate your 'My Documents' folder for additional redundancy but only duplicate your 'My Videos' folder to make more space available to the rest of the pool).&lt;/p&gt;
 &lt;p&gt;DrivePool can be configured to send you an email should any of the drives fail and is only $29 but a license. &lt;/p&gt;
-&lt;h3&gt;Freebyte Task Scheduler&lt;/h3&gt;
+&lt;h3 id="freebyte-task-scheduler"&gt;Freebyte Task Scheduler&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="Freebyte Task Scheduler" src="/images/2016/configuring-windows-10-home-server/fbtasksched.png"&gt;&lt;/p&gt;
 &lt;p&gt;I've never got my head around Windows Scheduled tasks; it seems needlessly complicated compared to cron on Linux.  &lt;a href="http://www.freebyte.com/fbtaskscheduler/"&gt;Freebyte Task Scheduler&lt;/a&gt; provides a straight forward GUI for automating tasks under your windows user account and doesn't cost anything.&lt;/p&gt;
 &lt;p&gt;To get the most out of it you will want to ensure it automatically starts should your server automatically reboot for updates; although you can simple add a shortcut to your User's startup items, I prefer to use &lt;a href="https://nssm.cc/"&gt;NSSM&lt;/a&gt; (Non-Sucking Service Manager) which you can use to start Freebyte Task Scheduler on system boot (without having to first login); to do this run NSSM from the command line with:&lt;/p&gt;
@@ -139,7 +243,7 @@ ogle.com/bot.html)&amp;quot;
 
 
 &lt;p&gt;When the GUI appears, point the application path to your &lt;code&gt;FBTaskScheulder.exe&lt;/code&gt; binary and make sure the 'Log on' tab is configured with your user's account.&lt;/p&gt;
-&lt;h3&gt;FastGlacier&lt;/h3&gt;
+&lt;h3 id="fastglacier"&gt;FastGlacier&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="FastGlacier" src="/images/2016/configuring-windows-10-home-server/fastglacier.png"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://fastglacier.com/"&gt;FastGlacier&lt;/a&gt; copies files to &lt;a href="https://en.wikipedia.org/wiki/Amazon_Glacier"&gt;Amazon Glacier&lt;/a&gt; and provides a drag-and-drop Graphical User Interface and a straight forward command line interface.  I use this to archive my photos and music library, both of which are irreplaceable.&lt;/p&gt;
 &lt;p&gt;In order to setup an automated backup, you first need to configure a backup set in the GUI.  Once configured use the following command to automate the archive process in a &lt;code&gt;.bat&lt;/code&gt; file and schedule it with Freebyte Task Scheduler:&lt;/p&gt;
@@ -148,14 +252,14 @@ ogle.com/bot.html)&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;GMVault&lt;/h3&gt;
+&lt;h3 id="gmvault"&gt;GMVault&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="gmvault" src="/images/2016/configuring-windows-10-home-server/gmvault-screenshot.png"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://gmvault.org/"&gt;GMVault&lt;/a&gt; can be used to pull down the contents of your GMail so you have an offline copy should you (or someone else!) accidentally delete everything.  Start GMVault for the first time to configure your oauth credentials and then use the following &lt;code&gt;.bat&lt;/code&gt; file to automate your backup and then schedule it with Freebyte Task Scheduler:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;%LOCALAPPDATA%\gmvault\gmvault.bat sync you@gmail.com --type quick --db-dir D:\backup\gmvault\you@gmail.com --emails-only&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;GoogleMusicSync&lt;/h3&gt;
+&lt;h3 id="googlemusicsync"&gt;GoogleMusicSync&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="googlemusicsync" src="https://raw.githubusercontent.com/jonnyreeves/googlemusicsync/master/googlemusicsync-screenshot.png"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/jonnyreeves/googlemusicsync"&gt;GoogleMusicSync&lt;/a&gt; is a little python script I knocked up a few years back to pull down any new tracks I added to Google (Play) Music (either uploaded from the Web UI or purchased from the Play store) - I can then add these to my local library which is stored offline and archived to Amazon Glacier.  This script can be automated using Freebyte Task Scheduler&lt;/p&gt;</content></entry><entry><title>Redux Middleware</title><link href="https://jonnyreeves.co.uk/2016/redux-middleware/" rel="alternate"></link><published>2016-05-28T20:00:00+01:00</published><updated>2016-05-28T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-05-28:/2016/redux-middleware/</id><summary type="html">&lt;p&gt;This is a supporting post for the talk I am giving at &lt;a href="http://eventbrite.co.uk/e/the-new-shiny-javascript-development-in-2016-tickets-25196915653"&gt;Moo Tech Tuesday on the 31st May&lt;/a&gt; where I will be presenting an introduction to Redux Middleware &lt;a href="https://docs.google.com/a/jonnyreeves.co.uk/presentation/d/1I0s4uCWo7yEU3pLf4R5UjxiCqC3FhFJSSunWq0WAxZI/edit?usp=sharing"&gt;[slide deck]&lt;/a&gt; with advice on how to test it.  The supporting code can be found over on &lt;a href="https://github.com/jonnyreeves/redux-button-masher-example"&gt;Github&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Redux describes itself …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is a supporting post for the talk I am giving at &lt;a href="http://eventbrite.co.uk/e/the-new-shiny-javascript-development-in-2016-tickets-25196915653"&gt;Moo Tech Tuesday on the 31st May&lt;/a&gt; where I will be presenting an introduction to Redux Middleware &lt;a href="https://docs.google.com/a/jonnyreeves.co.uk/presentation/d/1I0s4uCWo7yEU3pLf4R5UjxiCqC3FhFJSSunWq0WAxZI/edit?usp=sharing"&gt;[slide deck]&lt;/a&gt; with advice on how to test it.  The supporting code can be found over on &lt;a href="https://github.com/jonnyreeves/redux-button-masher-example"&gt;Github&lt;/a&gt;.&lt;/p&gt;
@@ -165,7 +269,7 @@ ogle.com/bot.html)&amp;quot;
 &lt;li&gt;It makes it easy to isolate (and therefore test) components in the system.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;This blog post will be exploring a simple Redux application which will then be extended to provide additional functionality implemented as Redux Middleware.  I will also be demonstrating how it's easy to write test-cases for Redux Middleware.&lt;/p&gt;
-&lt;h3&gt;Redux vs Traditional MVC&lt;/h3&gt;
+&lt;h3 id="redux-vs-traditional-mvc"&gt;Redux vs Traditional MVC&lt;/h3&gt;
 &lt;p&gt;Redux's architecture was inspired by the &lt;a href="http://guide.elm-lang.org/architecture/index.html"&gt;Elm Architecture&lt;/a&gt; and differs from traditional MVC in the way it enforces a strict uni-direction flow (or cycle) of data from the View-tier to the Model and back again.  &lt;/p&gt;
 &lt;p&gt;&lt;img alt="MVC architecture" src="/images/2016/redux-middleware/mvc-architecture.png"&gt;&lt;/p&gt;
 &lt;p&gt;In traditional MVC based systems you will often find a stateful controller object which has both the Models and the Views injected into it.  The controller will be responsible for fetching data from the models and passing that data through to the views for rendering; as well as binding to events from the view tier as the user interacts with the application.  Depending on the exact MVC implementation the Controller may also be responsible for handling API calls and other custom business logic.  As a result of all these responsibilities and dependencies, Controllers can typically be difficult to bring under test.  Some MVC implementations can compound this problem further by introducing two-way data binding where the Controller is essentially side-stepped and the view and model are injected into each other.  IMHO this is a classic case for &lt;a href="https://www.infoq.com/presentations/Simple-Made-Easy"&gt;Simple over Easy&lt;/a&gt; and should be avoided for long-term maintainability of software.&lt;/p&gt;
@@ -175,7 +279,7 @@ ogle.com/bot.html)&amp;quot;
 &lt;p&gt;The Store's state is modified by a Reducer function.  The Reducer is a &lt;a href="https://en.wikipedia.org/wiki/Pure_function"&gt;pure function&lt;/a&gt; which takes the current state object, and the action object, returning a the new state object.  If the action does not result in a state-change, the reducer can return the current state object.  These components are wrapped in Redux's &lt;code&gt;store&lt;/code&gt; object which manages the single state object and has a subscription mechanism (&lt;code&gt;store.subscribe&lt;/code&gt;) to notify other parts of the system when the state object has changed.  Note that the state object is immutable, instead of being modified in place, the entire object is replaced with a new one when a change occurs.&lt;/p&gt;
 &lt;p&gt;This form of loose coupling and one-way data flow is what makes Redux applications both easy to predict and easy to test.&lt;/p&gt;
 &lt;p&gt;Note that whilst Redux is typically partnered with React, it does not have a dependency on it and can just as easily be paired with &lt;a href="https://vuejs.org/"&gt;Vue.js&lt;/a&gt; or &lt;a href="https://github.com/reactjs/redux/blob/67f9dcca8b359825f1a89b318d2f879f99221032/examples/counter-vanilla/index.html"&gt;plain old DOM manipulation&lt;/a&gt; methods with no other dependencies.&lt;/p&gt;
-&lt;h3&gt;Keeping Count&lt;/h3&gt;
+&lt;h3 id="keeping-count"&gt;Keeping Count&lt;/h3&gt;
 &lt;p&gt;The rest of this post will be dedicated to extending a simple application.  The consists of a single React view component that offers a counter and two buttons.  Users are able to manipulate the counter by pressing the increment and decrement buttons.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;Counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;props&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;count&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;dispatch&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;props&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -208,7 +312,7 @@ ogle.com/bot.html)&amp;quot;
 
 
 &lt;p&gt;Next we have the reducer function for the application; here we simply switch on the incoming &lt;code&gt;action&lt;/code&gt; object and return a new &lt;code&gt;state&lt;/code&gt; value.  Redux will automatically invoke your reducer function with the current &lt;code&gt;state&lt;/code&gt; object whenever &lt;code&gt;dispatch&lt;/code&gt; is called.  Returning a new object (as is the case for both &lt;code&gt;INC&lt;/code&gt; and &lt;code&gt;DEC&lt;/code&gt; cases), will cause Redux to re-render the view tier thereby updating the counter's value on screen.&lt;/p&gt;
-&lt;h3&gt;Bringing Back the Controller&lt;/h3&gt;
+&lt;h3 id="bringing-back-the-controller"&gt;Bringing Back the Controller&lt;/h3&gt;
 &lt;p&gt;So far our same application has been very simple and has not introduced side-effects.  &lt;a href="https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29"&gt;Side-effect&lt;/a&gt; is the term used when a function modifies some state elsewhere in the system, or interacts with the outside world (ie: makes an API call).  Managing side-effects effectively is key to ensuring that your application stays both predictable and easy to bring under test as functions with side-effects require the reader to understand knowledge about the wider system's context and the system's state prior to the call.  Redux provides a simple yet powerful mechanism for managing side-effects: Middleware.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="/images/2016/redux-middleware/redux-with-middleware.png"&gt;&lt;/p&gt;
 &lt;p&gt;Redux Middleware sits between the view-tier and the reducers giving you a hook to invoke asynchronous business logic after each action has been dispatched.  Middleware is used to enhance a store when it is created through the &lt;code&gt;applyMiddleware&lt;/code&gt; function provided by Redux:&lt;/p&gt;
@@ -255,7 +359,7 @@ ogle.com/bot.html)&amp;quot;
 
 
 &lt;p&gt;The &lt;code&gt;reportMiddleware&lt;/code&gt; will intercept all actions after they've been dispatched.  As per the user story, we only want to track 'INC' actions.  Regardless of the type of action we must always pass the action through to &lt;code&gt;next&lt;/code&gt; otherwise it will not be reduced and the app will no longer update when the user clicks on the buttons.&lt;/p&gt;
-&lt;h3&gt;Adding a Testing Framework&lt;/h3&gt;
+&lt;h3 id="adding-a-testing-framework"&gt;Adding a Testing Framework&lt;/h3&gt;
 &lt;p&gt;As mentioned at the start of the article, one of the main benefits of redux is the ease of testability - this is especially true for Redux Middleware which can be used to express complex business logic which remaining trivial to test.  In the follow examples I will be using a combination of Mocha, Chai, SinonJS.&lt;/p&gt;
 &lt;p&gt;Let's start by writing a test which ensures that the intercepted action is always passed the the &lt;code&gt;next&lt;/code&gt; function.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should pass the intercepted action to next&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -289,7 +393,7 @@ ogle.com/bot.html)&amp;quot;
 
 
 &lt;p&gt;If you are new to SinonJS, then you may also be interested to learn of the &lt;a href="http://sinonjs.org/docs/#stubs"&gt;Stub API&lt;/a&gt; which allows you to program the return value of functions, including those attached to existing objects (eg: &lt;code&gt;jQuery.ajax&lt;/code&gt;).&lt;/p&gt;
-&lt;h3&gt;It's Business Time&lt;/h3&gt;
+&lt;h3 id="its-business-time"&gt;It's Business Time&lt;/h3&gt;
 &lt;p&gt;Now we've introduced the core concepts of testing middleware, lets complete this example by implementing a User Story:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;As the product manager I would like to know when users have clicked the increment button 5 times for reporting.&lt;/p&gt;
@@ -361,7 +465,7 @@ ogle.com/bot.html)&amp;quot;
 &lt;p&gt;We use sinon to setup spies for both the Redux Middleware API's &lt;code&gt;next&lt;/code&gt; function and our own &lt;code&gt;reportMiddleware&lt;/code&gt;'s &lt;code&gt;callback&lt;/code&gt; function.  It's worth noting that &lt;code&gt;sinon.spy()&lt;/code&gt; returns a normal function which can be used interchangeably.&lt;/p&gt;
 &lt;p&gt;Next we send two actions through our middleware, an &lt;code&gt;INC&lt;/code&gt; and a &lt;code&gt;DEC&lt;/code&gt;.  At this point the middleware's &lt;code&gt;numIncActions&lt;/code&gt; value should be &lt;code&gt;1&lt;/code&gt;, which is not equal to the target value of &lt;code&gt;2&lt;/code&gt;, therefore the callback should not have been invoked yet.  This type of assertion acts as a safety net and can make debugging failing tests much easier.&lt;/p&gt;
 &lt;p&gt;Finally we throw one last &lt;code&gt;INC&lt;/code&gt; action through, we can now check our business logic was implemented correctly and the callback invoked.&lt;/p&gt;
-&lt;h3&gt;Middleware Everywhere!&lt;/h3&gt;
+&lt;h3 id="middleware-everywhere"&gt;Middleware Everywhere!&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="Middleware, Middleware Everywhere" src="/images/2016/redux-middleware/middleware-everywhere-meme.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;This post has hopefully shown how Redux Middleware provides a simple abstraction which makes it possible to write complex logic that is both predictable and easy to test.  In my day-job we make extensive use of middleware to model all of our application's side effects including XHRs, analytics and multi-stage API calls.  If you find yourself getting tired of writing middleware boilerplate you may be interested in taking a look at Redux Saga's which make use of ES7 generator functions to provide a psuedo-blocking API for your side-effect management&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nx"&gt;incrementAsync&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -373,9 +477,9 @@ ogle.com/bot.html)&amp;quot;
  &lt;span class="k"&gt;yield&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nx"&gt;takeEvery&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;INC_ASYNC&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;incrementAsync&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>npm-shrinkwrap Sucks</title><link href="https://jonnyreeves.co.uk/2016/npm-shrinkwrap-sucks/" rel="alternate"></link><published>2016-05-03T21:00:00+01:00</published><updated>2016-05-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-05-03:/2016/npm-shrinkwrap-sucks/</id><summary type="html">&lt;p&gt;Despite suggesting that you should always &lt;a href="/2016/shrinkwrap-your-npm-dependencies"&gt;shrinkwrap your npm dependencies&lt;/a&gt;, I've come to the conclusion that npm-shrinkwrap not only sucks, but is fundamentally broken.  It doesn't quite suck as much as having your dependencies update underneath your feet, but it still sucks...&lt;/p&gt;
-&lt;h2&gt;Adding new dependencies is a pain&lt;/h2&gt;
+&lt;h2 id="adding-new-dependencies-is-a-pain"&gt;Adding new dependencies is a pain&lt;/h2&gt;
 &lt;p&gt;Adding new …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Despite suggesting that you should always &lt;a href="/2016/shrinkwrap-your-npm-dependencies"&gt;shrinkwrap your npm dependencies&lt;/a&gt;, I've come to the conclusion that npm-shrinkwrap not only sucks, but is fundamentally broken.  It doesn't quite suck as much as having your dependencies update underneath your feet, but it still sucks...&lt;/p&gt;
-&lt;h2&gt;Adding new dependencies is a pain&lt;/h2&gt;
+&lt;h2 id="adding-new-dependencies-is-a-pain"&gt;Adding new dependencies is a pain&lt;/h2&gt;
 &lt;p&gt;Adding new dependencies to your project without npm-shrinkwrap is pretty straight forward:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Run &lt;code&gt;npm install --save-dev left-pad&lt;/code&gt;&lt;/li&gt;
@@ -389,9 +493,9 @@ ogle.com/bot.html)&amp;quot;
 &lt;li&gt;Raise a pull request, note that hte package.json file has a tonne of &lt;a href="https://github.com/npm/npm/issues/3581"&gt;unreadable and unexpected changes&lt;/a&gt; - enjoy the fact that github refuses to render the diff on the shrinkwrap file...&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Sure you could look to use &lt;a href="https://github.com/uber/npm-shrinkwrap#motivation"&gt;uber's npm-shrinkwrap tool&lt;/a&gt; but that's yet another dependency to add.&lt;/p&gt;
-&lt;h2&gt;It's not obvious when things are broken&lt;/h2&gt;
+&lt;h2 id="its-not-obvious-when-things-are-broken"&gt;It's not obvious when things are broken&lt;/h2&gt;
 &lt;p&gt;So this one is not npm-shrinkwrap's fault, but it caused my team to lose some productivity today: our project makes use of 4 (count em!) package.json files, each of which has their own shrinkwrap file - we use these to lock the dependency graph and have a weekly CI task to update everything using &lt;a href="https://www.npmjs.com/package/npm-check-updates"&gt;npm-check-updates&lt;/a&gt;.  Somehow one of the &lt;code&gt;npm-shrinkwrap.json&lt;/code&gt; files went AWOL; everything carried on working as expected for about two weeks but a chunk of the project's dependencies were being updated with each build.  We only found out when &lt;a href="https://github.com/eslint/eslint/issues/6015"&gt;a bug in ESLint&lt;/a&gt; caused our Pull Request builds to start failing which triggered the obvious question of "Why the hell did ESLint update automatically?!".&lt;/p&gt;
-&lt;h2&gt;So what's the solution?&lt;/h2&gt;
+&lt;h2 id="so-whats-the-solution"&gt;So what's the solution?&lt;/h2&gt;
 &lt;p&gt;A co-worker of mine suggested the blindingly obvious approach of just using explicit versions in the &lt;code&gt;package.json&lt;/code&gt; file, so instead of declaring:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dependencies: {
   &amp;quot;left-pad&amp;quot;: &amp;quot;^1.0.2&amp;quot;
@@ -416,9 +520,9 @@ ogle.com/bot.html)&amp;quot;
 
 
 &lt;p&gt;Having written this, I'm not sure I see any benefits of using &lt;code&gt;npm shrinkwrap&lt;/code&gt; instead of enforcing exact dependency versions in your &lt;code&gt;package.json&lt;/code&gt; (and using a tool to manually update them on a controlled cadence).&lt;/p&gt;
-&lt;h2&gt;Update (4th May 2016)&lt;/h2&gt;
+&lt;h2 id="update-4th-may-2016"&gt;Update (4th May 2016)&lt;/h2&gt;
 &lt;p&gt;After posting this I got some great feedback in the comments and on &lt;a href="https://www.reddit.com/r/javascript/comments/4hqdld/npmshrinkwrap_sucks/"&gt;/r/javascript&lt;/a&gt; - using exact versions in the your project's &lt;code&gt;package.json&lt;/code&gt; does nothing for your project's transitive dependencies which probably don't make use of exact versions and therefore will be no predictably resolved from one &lt;code&gt;npm install&lt;/code&gt; to the next.  To address this I've re-instated &lt;code&gt;npm-shrinkwrap&lt;/code&gt; back into my project (it still sucks), but I've also modified our pre-flight check script to check that the shrinkwrap files are present (and haven't gone wondering off) - combining this with exact versions has made things a little easier to reason about).&lt;/p&gt;</content></entry><entry><title>Integration Testing with Golden Masters</title><link href="https://jonnyreeves.co.uk/2016/integration-testing-with-golden-masters/" rel="alternate"></link><published>2016-04-18T21:00:00+01:00</published><updated>2016-04-18T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-04-18:/2016/integration-testing-with-golden-masters/</id><summary type="html">&lt;p&gt;After watching &lt;a href="https://www.youtube.com/watch?v=yszygk1cpEc"&gt;Mitchell Hashimoto's talk on Advanced Testing with Go&lt;/a&gt; I was inspired to re-write one of my integration tests to use a golden master.  &lt;a href="http://blog.codeclimate.com/blog/2014/02/20/gold-master-testing/"&gt;Testing with golden masters&lt;/a&gt; is a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the …&lt;/p&gt;</summary><content type="html">&lt;p&gt;After watching &lt;a href="https://www.youtube.com/watch?v=yszygk1cpEc"&gt;Mitchell Hashimoto's talk on Advanced Testing with Go&lt;/a&gt; I was inspired to re-write one of my integration tests to use a golden master.  &lt;a href="http://blog.codeclimate.com/blog/2014/02/20/gold-master-testing/"&gt;Testing with golden masters&lt;/a&gt; is a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the output of the program is valid.&lt;/p&gt;
-&lt;h2&gt;Bronze Age&lt;/h2&gt;
+&lt;h2 id="bronze-age"&gt;Bronze Age&lt;/h2&gt;
 &lt;p&gt;The system under test I was working with applied a complex set of rules against a source directory and printed any violations of those rules to &lt;code&gt;stdout&lt;/code&gt; much like a &lt;a href="http://stackoverflow.com/questions/8503559/what-is-linting"&gt;code linting&lt;/a&gt; tool.&lt;/p&gt;
 &lt;p&gt;&lt;center&gt;
 &lt;img alt="Alt" src="https://www.websequencediagrams.com/cgi-bin/cdraw?lz=TWFpbi0-TGludGVyOiBsAAMFLkxpbnQoJy9wYXRoL3RvL3NyYycpCgAeBi0-RGlyU2Nhbm5lcjogc2Nhbigkc3JjRGlyKQoAEAoASApbXUZpbGUKCmxvb3AgZm9yICRmaWxlIGluABIIICAAUQhQYXJzZXI6IAADBSgAIwUpCiAACQYARwsAIgVSZXN1bHQKZW5kCgCBEAkAgT0IY3JlYXRlUmVwb3J0KCRwACUKcwCBOwpNYWluOiAkcgAgBQoKAIIABkZvcm1hdACCBAVmAAMILgAPBigAJAcpAIE-C2Vycm9yIGluAD4JICAAOQkAQA1zdGRvdXQuV3JpdGUoKQplbmQ&amp;amp;s=vs2010"&gt;
@@ -455,7 +559,7 @@ ogle.com/bot.html)&amp;quot;
 
 
 &lt;p&gt;This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual error cases over 6 test fixture files) - this feels like a great candidate for using a golden master.&lt;/p&gt;
-&lt;h2&gt;Going for Gold&lt;/h2&gt;
+&lt;h2 id="going-for-gold"&gt;Going for Gold&lt;/h2&gt;
 &lt;p&gt;My approach would be simple; I would still pass a fixture to &lt;code&gt;linter.Lint()&lt;/code&gt;, but instead of comparing the &lt;code&gt;result&lt;/code&gt; object, I would pass it directly to the &lt;code&gt;Formatter&lt;/code&gt; and have it written out to a file on disk which could then be loaded and compared in future test-iterations.&lt;/p&gt;
 &lt;p&gt;To start I copy and pasted the command line output into a new 'golden' file which mated the name of the fixture - the integration test will be modified to read in the contents of this file and use it for comparison.&lt;/p&gt;
 &lt;p&gt;Next I needed to capture the output of the Formatter, this was not straight forward as the &lt;code&gt;Formatter&lt;/code&gt; wrote directly to &lt;code&gt;os.Stdout&lt;/code&gt;.  I could have used an Interface to provide an alternative implementation of the &lt;code&gt;Formatter&lt;/code&gt; which wrote to a file; but this would have resulted in a lot of duplicated logic; essentially there was nothing wrong with the current output; I just didn't want it to to go to &lt;code&gt;stdout&lt;/code&gt;.  Instead I modified the &lt;code&gt;formatter&lt;/code&gt; object's signature from &lt;code&gt;Format(r Report)&lt;/code&gt; to &lt;code&gt;Format(r Report, out io.Writer)&lt;/code&gt;:&lt;/p&gt;
@@ -824,11 +928,11 @@ Swap:             &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class=
 
 
 &lt;p&gt;Et viola, live reloading of mustache templates and their associated data.  Full source over on &lt;a href="https://github.com/jonnyreeves/mustache-express-hotreload"&gt;github&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Babel ❤ NPM</title><link href="https://jonnyreeves.co.uk/2015/babel-npm/" rel="alternate"></link><published>2015-10-24T21:00:00+01:00</published><updated>2015-10-24T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-24:/2015/babel-npm/</id><summary type="html">&lt;p&gt;Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:&lt;/p&gt;
-&lt;h3&gt;babelify&lt;/h3&gt;
+&lt;h3 id="babelify"&gt;babelify&lt;/h3&gt;
 &lt;p&gt;Transpiling your NPM modules to ES5 with &lt;a href="https://babeljs.io/"&gt;babel&lt;/a&gt; will allow them to work in a wide variety of environments.  Add a &lt;code&gt;prepublish&lt;/code&gt; script …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:&lt;/p&gt;
-&lt;h3&gt;babelify&lt;/h3&gt;
+&lt;h3 id="babelify"&gt;babelify&lt;/h3&gt;
 &lt;p&gt;Transpiling your NPM modules to ES5 with &lt;a href="https://babeljs.io/"&gt;babel&lt;/a&gt; will allow them to work in a wide variety of environments.  Add a &lt;code&gt;prepublish&lt;/code&gt; script to your &lt;code&gt;package.json&lt;/code&gt;'s scripts block to automate this when you run &lt;code&gt;npm publish&lt;/code&gt;.  By convention &lt;code&gt;/lib&lt;/code&gt; is a good place to output your ES5 artefacts to, and it's a good idea to produce a clean build each time (with the &lt;a href="https://www.npmjs.com/package/rimraf"&gt;rimraf module&lt;/a&gt; providing a cross platform implementation of &lt;code&gt;rm -rf&lt;/code&gt;, windows users will thank you.)&lt;/p&gt;
-&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
+&lt;h6 id="packagejson"&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
   &amp;quot;scripts&amp;quot;: {
@@ -838,10 +942,10 @@ Swap:             &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class=
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;main&lt;/h3&gt;
+&lt;h3 id="main"&gt;main&lt;/h3&gt;
 &lt;p&gt;Traditionally your &lt;code&gt;index.js&lt;/code&gt; file would reside in the root of your module (this is where NPM will look for it by default); however as we are going to transpile to ES5 you'll want to put your index file, and all other ES6 sources under &lt;code&gt;/src&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Your &lt;code&gt;package.json&lt;/code&gt;'s &lt;code&gt;main&lt;/code&gt; block should point to the transpiled &lt;code&gt;index.js&lt;/code&gt; file in the &lt;code&gt;/lib&lt;/code&gt; folder.  If you're feeling adventurous you incude a &lt;a href="https://github.com/caridy/es6-module-transpiler-npm-resolver"&gt;&lt;code&gt;jsnext:main&lt;/code&gt;&lt;/a&gt; block and point to to your ES6 entry point.&lt;/p&gt;
-&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
+&lt;h6 id="packagejson_1"&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
   &amp;quot;main&amp;quot;: &amp;quot;lib/index.js&amp;quot;,
@@ -850,9 +954,9 @@ Swap:             &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class=
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Mocha&lt;/h2&gt;
+&lt;h2 id="mocha"&gt;Mocha&lt;/h2&gt;
 &lt;p&gt;Mocha does the job well and it's easy to configure for use with babel; just give it a &lt;code&gt;--compilers&lt;/code&gt; flag when you invoke it:&lt;/p&gt;
-&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
+&lt;h6 id="packagejson_2"&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
   &amp;quot;scripts&amp;quot;: {
@@ -862,9 +966,9 @@ Swap:             &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class=
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;.npmignore&lt;/h2&gt;
+&lt;h2 id="npmignore"&gt;.npmignore&lt;/h2&gt;
 &lt;p&gt;This one tripped me up; when I published my first NPM modules which made use of babel (&lt;a href="https://github.com/jonnyreeves/redux-action-side-effects"&gt;redux-action-side-effects&lt;/a&gt;) my &lt;code&gt;/lib&lt;/code&gt; folder wasn't included in the final archived vended by NPM.  Turns out that NPM will &lt;a href="https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package"&gt;automatically exclude everything in your &lt;code&gt;.gitignore&lt;/code&gt; file&lt;/a&gt; (and as the &lt;code&gt;/lib&lt;/code&gt; folder contains build artefacts I excluded it from source control).  To override this add a &lt;code&gt;/.npmignore&lt;/code&gt; file:&lt;/p&gt;
-&lt;h5&gt;&lt;code&gt;/.npmignore&lt;/code&gt;&lt;/h5&gt;
+&lt;h5 id="npmignore_1"&gt;&lt;code&gt;/.npmignore&lt;/code&gt;&lt;/h5&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# If this file is not present the contents of .gitignore are used
 /.gitignore
 &lt;/pre&gt;&lt;/div&gt;
@@ -892,7 +996,7 @@ Swap:             &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class=
 
 
 &lt;p&gt;jasmine-ajax executes all XHR callbacks on the same tick making them effectivly syncronous.  This results in your test-code much easier to write and reason about.&lt;/p&gt;
-&lt;h3&gt;Pairing with &lt;code&gt;xhr&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="pairing-with-xhr"&gt;Pairing with &lt;code&gt;xhr&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;XMLHttpRequest&lt;/code&gt; doesn't have the nicest API to work with; fortunatley the &lt;a href="https://github.com/Raynos/xhr"&gt;&lt;code&gt;xhr&lt;/code&gt;&lt;/a&gt; module on NPM provides a nice, lightweight abstraction (it even smooths out the cracks in IE8).  However, it's not all plain sailing as the xhr module caches the &lt;code&gt;XMLHttpRequest&lt;/code&gt; object on the window when it is loaded (ie: &lt;code&gt;require()&lt;/code&gt;'d).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -915,7 +1019,7 @@ Swap:             &lt;span class="m"&gt;0&lt;/span&gt;           &lt;span class=
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Closing thoughts on Jasmine&lt;/h3&gt;
+&lt;h3 id="closing-thoughts-on-jasmine"&gt;Closing thoughts on Jasmine&lt;/h3&gt;
 &lt;p&gt;I've recently switched to Jasmine after using Mocha and SinonJS succesfully for a few years.  My hope was that the Jasmine ecosystem, which has a lot of funtionality built-in, would be more productive and easier for new-comers to the project to pick up than Mocha.  I've been very impressed by how easy it was to get up and running on Jasmine; and the v2.3 API is pleasant to code against (it will be instantly familiar to &lt;a href="http://chaijs.com/guide/installation/"&gt;chai&lt;/a&gt; users), however I do wish that Jasmine made it easier to write custom matchers as I find myself missing the verbosity of SinonJS's &lt;code&gt;sinon.match(val =&amp;gt; { ... })&lt;/code&gt;.&lt;/p&gt;</content></entry><entry><title>Single Page App Versioning</title><link href="https://jonnyreeves.co.uk/2015/single-page-app-versioning/" rel="alternate"></link><published>2015-09-26T21:00:00+01:00</published><updated>2015-09-26T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-09-26:/2015/single-page-app-versioning/</id><summary type="html">&lt;p&gt;Versioning applications isn't quite as clear cut as &lt;a href="http://semver.org/"&gt;versioning libraries&lt;/a&gt;; individuals on teams will almost certainly fork the codebase to work on features (sometimes long-lived) but you will still want to provide an easy, and consistent way to refer to each build generated from your Continuous Integration system.&lt;/p&gt;
 &lt;p&gt;My preferred …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Versioning applications isn't quite as clear cut as &lt;a href="http://semver.org/"&gt;versioning libraries&lt;/a&gt;; individuals on teams will almost certainly fork the codebase to work on features (sometimes long-lived) but you will still want to provide an easy, and consistent way to refer to each build generated from your Continuous Integration system.&lt;/p&gt;
 &lt;p&gt;My preferred approach combines the human managed semantic version number from a project's &lt;code&gt;package.json&lt;/code&gt; file with the short commit hash; ie: &lt;code&gt;0.1.6-deff00&lt;/code&gt;; you can configure your project's build system to replace the commit hash for local (non-ci) builds.  This also has the nice advantage of making each build traceable back to your project's Git repository should you forget to tag a build :)&lt;/p&gt;
@@ -1439,7 +1543,7 @@ license: (ISC)
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Create a Subject to Test&lt;/h2&gt;
+&lt;h2 id="create-a-subject-to-test"&gt;Create a Subject to Test&lt;/h2&gt;
 &lt;p&gt;Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, &lt;code&gt;index.ts&lt;/code&gt; in the project root&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Calculator&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nx"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;x&lt;/span&gt; : &lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;y&lt;/span&gt; : &lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;number&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1467,7 +1571,7 @@ license: (ISC)
 
 
 &lt;p&gt;We can now compile with &lt;code&gt;npm install&lt;/code&gt;.&lt;/p&gt;
-&lt;h2&gt;Adding a Test&lt;/h2&gt;
+&lt;h2 id="adding-a-test"&gt;Adding a Test&lt;/h2&gt;
 &lt;p&gt;Let's create our first test; following convention lets create our test-case in &lt;code&gt;test/CalculatorTest&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Before writing the test-case we need to grab the Mocha Type Definitions (requried for the TypeScript compiler (&lt;code&gt;tsc&lt;/code&gt;) to work).  Easiest way to get these it to use the DefinitelyTyped TypeScript Definition manager (&lt;code&gt;tsd&lt;/code&gt;).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install tsd -g
@@ -1689,7 +1793,7 @@ module.exports = function(grunt) {
     &lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;HTTPS POST request complete!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>Modular Javascript Unit Testing with QUnit and RequireJS</title><link href="https://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/" rel="alternate"></link><published>2012-08-14T16:15:00+01:00</published><updated>2012-08-14T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-08-14:/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/</id><summary type="html">&lt;p&gt;Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere to &lt;a href="http://www.codinghorror.com/blog/2007/03/curlys-law-do-one-thing.html"&gt;Single Responsibility Principle&lt;/a&gt;. This is all well and good for your application code, but what about the Unit Tests which support it – how can we decompose these tests into modules so they’re well organized and easy to find?&lt;/p&gt;
-&lt;h3&gt;Test Case Structure&lt;/h3&gt;
+&lt;h3 id="test-case-structure"&gt;Test Case Structure&lt;/h3&gt;
 &lt;p&gt;First things first, you need to get your Unit Tests broken up into separate test cases. QUnit provides the QUnit.module method which takes care of this, allowing your to group tests in the QUnit test runner. We can extend this metaphor further by ensuring that each QUnit module resides in its own file, or, in other words – each application module has it’s own QUnit module of tests.&lt;/p&gt;
 &lt;p&gt;Here’s an example of a simple QUnit Test Case defined as a RequireJS module:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;define&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1730,7 +1834,7 @@ module.exports = function(grunt) {
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Configuring QUnit and RequireJS&lt;/h3&gt;
+&lt;h3 id="configuring-qunit-and-requirejs"&gt;Configuring QUnit and RequireJS&lt;/h3&gt;
 &lt;p&gt;Now that we have our unit tests split out into separate modules, we need to configure the QUnit Test Runner so that it will work with RequireJS to resolve the dependencies. The first step is to modify the stock QUnit Test Runner HTML document so RequireJS is loaded along with all our testcases.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
@@ -1779,7 +1883,7 @@ module.exports = function(grunt) {
 
 
 &lt;p&gt;This file configures RequireJS ready for our Unit Test run and also provides a list of all test cases that we wish to execute. Once RequireJS has finished loading all the test cases, it makes a call to &lt;code&gt;QUnit.start&lt;/code&gt; which kicks off the Test Runner.&lt;/p&gt;
-&lt;h3&gt;Example Project Download&lt;/h3&gt;
+&lt;h3 id="example-project-download"&gt;Example Project Download&lt;/h3&gt;
 &lt;p&gt;I’ve pushed all the source for this example project to the &lt;a href="https://github.com/jonnyreeves/qunit-require/"&gt;qunit-require GitHub Repo&lt;/a&gt;. You can &lt;a href="https://github.com/jonnyreeves/qunit-require/zipball/master"&gt;download the zipball&lt;/a&gt; and run the tests to gain a better understanding of the project structure.&lt;/p&gt;</content></entry><entry><title>Listening for jQuery Mobile Slider Events</title><link href="https://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/" rel="alternate"></link><published>2012-07-24T16:15:00+01:00</published><updated>2012-07-24T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-07-24:/2012/listening-for-jquery-mobile-slider-events/</id><summary type="html">&lt;p&gt;jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. &lt;a href="https://github.com/jquery/jquery-mobile/issues/1589"&gt;This issue (#1589)&lt;/a&gt; has been raised on jQuery Mobile’s GitHub Issue Tracker but …&lt;/p&gt;</summary><content type="html">&lt;p&gt;jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. &lt;a href="https://github.com/jquery/jquery-mobile/issues/1589"&gt;This issue (#1589)&lt;/a&gt; has been raised on jQuery Mobile’s GitHub Issue Tracker but it looks like it won’t be addressed until jQuery Mobile 1.2&lt;/p&gt;
 &lt;p&gt;The code below is a patch which you can drop into your application’s startup routine; it adds a couple of event listeners to the DOM which will trigger the start and stop events based on the user’s interaction with the slider’s thumb and track.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
@@ -1828,7 +1932,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;The code above makes use of Brain Cavalier’s &lt;a href="https://github.com/cujojs/when"&gt;when.js&lt;/a&gt; Promises implementation. The rest of this post aims to highlight how you can combine when.js with a mocking framework to make unit testing Promises a piece of cake. If you would still like to learn more about using Promises, and how they make writing asynchronous code easier, then I’d suggest reading &lt;a href="http://blog.briancavalier.com/async-programming-part-1-its-messy"&gt;his excellent articles on the subject&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Why mock Promises?&lt;/h3&gt;
+&lt;h3 id="why-mock-promises"&gt;Why mock Promises?&lt;/h3&gt;
 &lt;p&gt;One of the golden rules of unit testing is that the &lt;a href="http://martinfowler.com/articles/nonDeterminism.html"&gt;code under test must be deterministic&lt;/a&gt;. Another golden rule is that &lt;a href="http://pragprog.com/magazines/2012-01/unit-tests-are-first"&gt;unit tests must be fast to execute&lt;/a&gt;. Although Promises make writing asynchronous code easier, they don’t help with the two points above, take the following example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Example of a module that abstracts a RESTful web service.&lt;/span&gt;
 &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;service&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1885,7 +1989,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 &lt;li&gt;It only tests the success state – we need to test what happens if the service is down, but there’s no obvious way to do that (other than to request an invalid query value from the API.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This is where a mocking framework comes in – it will help us solve all three of the problems listed above.&lt;/p&gt;
-&lt;h3&gt;Promises, Lies and stubbing the truth&lt;/h3&gt;
+&lt;h3 id="promises-lies-and-stubbing-the-truth"&gt;Promises, Lies and stubbing the truth&lt;/h3&gt;
 &lt;p&gt;A mocking framework allows you to alter the way functions behave during a unit test. Mocking frameworks are especially powerful in dynamic languages, like JavaScript, as they are able to make large changes to your codebase for a given unit test and then restore all those changes immediately after the test completes. This tutorial is going to be looking at &lt;a href="http://sinonjs.org/"&gt;SinonJS&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;As mentioned above, Sinon.js is able to completely rewrite a function during a test-case, let’s revisit our service module above:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Sinon.js stubbing example&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -2011,7 +2115,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 &lt;p&gt;Which gives us our desired effect! :)&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt Text" src="https://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-click-handler.png"&gt;&lt;/p&gt;</content></entry><entry><title>Using External Templates with Mustache.js and jQuery</title><link href="https://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/" rel="alternate"></link><published>2012-02-12T16:15:00+00:00</published><updated>2012-02-12T16:15:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-02-12:/2012/using-external-templates-with-mustachejs-and-jquery/</id><summary type="html">&lt;p&gt;&lt;a href="http://mustache.github.com/"&gt;Mustache&lt;/a&gt; is a language independent, logicless &lt;a href="http://en.wikipedia.org/wiki/Template_engine_(web)"&gt;templating engine&lt;/a&gt; which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the &lt;a href="https://github.com/janl/mustache.js"&gt;JavaScript …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="http://mustache.github.com/"&gt;Mustache&lt;/a&gt; is a language independent, logicless &lt;a href="http://en.wikipedia.org/wiki/Template_engine_(web)"&gt;templating engine&lt;/a&gt; which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the &lt;a href="https://github.com/janl/mustache.js"&gt;JavaScript implementation&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Why Bother With Templating At All?&lt;/h3&gt;
+&lt;h3 id="why-bother-with-templating-at-all"&gt;Why Bother With Templating At All?&lt;/h3&gt;
 &lt;p&gt;Fair question; when it comes simple JavaScript powered sites it’s pretty easy to just build up your HTML inline:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;lt;p&amp;gt;Hello John, it is 11:19.&amp;lt;/p&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -2043,7 +2147,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Enter the Templating Engine&lt;/h2&gt;
+&lt;h2 id="enter-the-templating-engine"&gt;Enter the Templating Engine&lt;/h2&gt;
 &lt;p&gt;Templating engines help us solve half the problem by allowing us to move the logic out of the HTML string. The basic premise is fairly simple; instead of having to break out of the String, we can just drop in tokens which the templating engine will replace for us. So instead of having to concatenate lots of Strings together we can simply express our template like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
@@ -2077,7 +2181,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Would you declare your JavaScript in HTML?&lt;/h3&gt;
+&lt;h3 id="would-you-declare-your-javascript-in-html"&gt;Would you declare your JavaScript in HTML?&lt;/h3&gt;
 &lt;p&gt;So we have managed to simplify our code by replacing String concatenation with token substiution (templating); but we are still having to declare our template’s HTML in JavaScript which is far from ideal. What we really want is to be able to write our template in raw HTML as opposed to a String literal – time for some external templates. John Resig is widely regarded as having coined the concept of &lt;a href="https://web.archive.org/web/20120406204734/http://ejohn.org/blog/javascript-micro-templating/"&gt;declaring templates in script blocks&lt;/a&gt;; ie:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;&amp;lt;!-- Our Template is declared in a script block, but we&lt;/span&gt;
 &lt;span class="c"&gt;     can just use regular HTML markup --&amp;gt;&lt;/span&gt;
@@ -2108,7 +2212,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;Much nicer! Now we are able to write our template in HTML as opposed to simply mashing Strings together; however, this method still isn’t ideal; in order for it to work we have to define our template in the parent HTML Document; this is fine for a simple example, but in a real world web application you won’t be writing your JavaScript in a script block, you’ll be using external .js files instead – and you don’t really want to have to send all the HTML Templates down in the original page – let’s externalise those templates and load them in as we need them.&lt;/p&gt;
-&lt;h3&gt;Loading External HTML Templates&lt;/h3&gt;
+&lt;h3 id="loading-external-html-templates"&gt;Loading External HTML Templates&lt;/h3&gt;
 &lt;p&gt;jQuery makes it really easy to load external content via its &lt;code&gt;jQuery.get()&lt;/code&gt; method. We can use this to load an external HTML file which contains our template:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;&amp;lt;!-- You can define as many templates as you like in a single&lt;/span&gt;
 &lt;span class="c"&gt;    .htm file; just add additional &amp;lt;script /&amp;gt; blocks with&lt;/span&gt;
@@ -2134,7 +2238,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;Now we’re talking! Finally, we are able to define our templates in external HTML files which can easily be loaded and rendered in our application’s JavaScript code. However, the above is only a proof of concept and doesn’t really stand up in the real world; what if we want to render our greetings template more than once? If we are going to have to load the template file each time our code is going to be littered with callback functions – again, not pretty and not easy to maintain – what we need is some kind of plugin…&lt;/p&gt;
-&lt;h3&gt;jQuery-Mustache Plugin&lt;/h3&gt;
+&lt;h3 id="jquery-mustache-plugin"&gt;jQuery-Mustache Plugin&lt;/h3&gt;
 &lt;p&gt;To make working with Mustache in jQuery nice and easy I knocked together my first jQuery Plugin, &lt;a href="https://github.com/jonnyreeves/jquery-Mustache"&gt;jquery-mustache.js&lt;/a&gt;. This makes it really easy to load all your external templates at the start and then render them as required.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Mustache&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;greetings.htm&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;mustache&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tpl-greeting&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;templateData&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -2143,7 +2247,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;Sweet!&lt;/p&gt;</content></entry><entry><title>Getting Started with AS3 Vanilla</title><link href="https://jonnyreeves.co.uk/2011/getting-started-with-as3-vanilla/" rel="alternate"></link><published>2011-08-14T16:15:00+01:00</published><updated>2011-08-14T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2011-08-14:/2011/getting-started-with-as3-vanilla/</id><summary type="html">&lt;p&gt;A lot of people are excited about the news that Native JSON support is coming with &lt;a href="https://web.archive.org/web/20120104112810/http://www.bytearray.org/?p=3066"&gt;Flash Player 11&lt;/a&gt;; however, I’ve also seen a lot of people get a bit confused by what this actually means – if you were hoping that Flash would be able to magically convert your …&lt;/p&gt;</summary><content type="html">&lt;p&gt;A lot of people are excited about the news that Native JSON support is coming with &lt;a href="https://web.archive.org/web/20120104112810/http://www.bytearray.org/?p=3066"&gt;Flash Player 11&lt;/a&gt;; however, I’ve also seen a lot of people get a bit confused by what this actually means – if you were hoping that Flash would be able to magically convert your parsed JSON Strings into your own Model objects then you’re going to be left a touch disappointed – until now!&lt;/p&gt;
-&lt;h3&gt;That’s Just Weak...&lt;/h3&gt;
+&lt;h3 id="thats-just-weak"&gt;That’s Just Weak...&lt;/h3&gt;
 &lt;p&gt;Let’s start by using the new native JSON methods to parse some JSON and see what we get back, for this example I will be making use of the Yahoo! Weather API to get the forcast for London.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Main&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="nb"&gt;Sprite&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;loader&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;URLLoader&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;URLLoader&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
@@ -2170,7 +2274,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Getting Harder...&lt;/h3&gt;
+&lt;h3 id="getting-harder"&gt;Getting Harder...&lt;/h3&gt;
 &lt;p&gt;If you plan on passing the forecast data around in your application then you are going to start wishing you were making use of Strongly typed Model objects (for example, if you rely on using dyanmic objects then a simple typo in another class may cause you a headache) – ok, not a problem, the first step is to create a couple: (note I am not representing the entire Object Graph here to save space.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Use a JSON decoder to convert the rawJson String into an Object.&lt;/span&gt;
 &lt;span class="kd"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;jsonObject&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;rawJson&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -2204,7 +2308,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;Crikey, that’s an awful lot of a lot of code; well – at least now if we’ve made a typo anywhere, or if Yahoo decide to change their API at least we only have to make our changes in a single place – there must be an easier way of doing this?!&lt;/p&gt;
-&lt;h2&gt;Adding some Vanilla Extract&lt;/h2&gt;
+&lt;h2 id="adding-some-vanilla-extract"&gt;Adding some Vanilla Extract&lt;/h2&gt;
 &lt;p&gt;Enter &lt;a href="https://github.com/jonnyreeves/as3-vanilla"&gt;AS3 Vanilla&lt;/a&gt;. Vanilla is an open source AS3 library whose sole purpose it to make converting untyped objects (such as the result of calling JSON.decode) into strongly typed Model objects a breeze, let’s see it in action:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Use a JSON decoder to convert the rawJson String into an Object.&lt;/span&gt;
 &lt;span class="kd"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;jsonObject&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Object&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;rawJson&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -2270,7 +2374,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;If you look closely you will notice how some of the field names do not map to the JSON, for example, the field “country_abbreviation” in the JSON is not present in the Model (I’ve named the field countryAbbreviation, as per the AS3 camelCase convention), so how does Vanilla know what to do? Simple answer, it doesn’t – nothing will be mapped and Location.country Abbreviation will be null. &lt;/p&gt;
-&lt;h3&gt;Using Metadata to define Marshalling Rules&lt;/h3&gt;
+&lt;h3 id="using-metadata-to-define-marshalling-rules"&gt;Using Metadata to define Marshalling Rules&lt;/h3&gt;
 &lt;p&gt;In the above example the JSON field &lt;code&gt;country_abbreviation&lt;/code&gt; was not being mapped to our model’s “countryAbbreviation” property because Vanilla didn’t know that these two were related – so how can we tell Vanilla about that relationship? Like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Location&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;Marshall&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;field&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;location_id&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt; &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;locationId&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;String&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
@@ -2285,11 +2389,11 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;Here we have annotated the public fields of the Location model object with the [Marshall] Metadata tag – this tells Vanilla that if we see a field named ‘country_abbreviation’ on the source (JSON) object, then we should copy that value to the annotated filed.&lt;/p&gt;
-&lt;h3&gt;Have It Your Way&lt;/h3&gt;
+&lt;h3 id="have-it-your-way"&gt;Have It Your Way&lt;/h3&gt;
 &lt;p&gt;Although Vanilla aims to be as easy to use as possible, it also tries to be flexible to adapt to different ways of working – lots of teams make use of explicit getter/setter methods instead of using fields; don’t worry – Vanilla can detect metadata on these methods too!&lt;/p&gt;</content></entry><entry><title>Maven and ANT – Managing Your Flash Project’s Build Dependencies</title><link href="https://jonnyreeves.co.uk/2011/maven-and-ant-managing-your-flash-projects-build-dependencies/" rel="alternate"></link><published>2011-04-02T16:15:00+01:00</published><updated>2011-04-02T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2011-04-02:/2011/maven-and-ant-managing-your-flash-projects-build-dependencies/</id><summary type="html">&lt;p&gt;Project build dependency management and resolution is one of the more difficult problems you’ll face as your project grows in size; however even the smallest of projects (and teams) can benefit greatly from getting automatic dependency resolution in place.&lt;/p&gt;
-&lt;h3&gt;What Are My Project’s Build Dependencies?&lt;/h3&gt;
+&lt;h3 id="what-are-my-projects-build-dependencies"&gt;What Are My Project’s Build Dependencies?&lt;/h3&gt;
 &lt;p&gt;Most of us …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Project build dependency management and resolution is one of the more difficult problems you’ll face as your project grows in size; however even the smallest of projects (and teams) can benefit greatly from getting automatic dependency resolution in place.&lt;/p&gt;
-&lt;h3&gt;What Are My Project’s Build Dependencies?&lt;/h3&gt;
+&lt;h3 id="what-are-my-projects-build-dependencies"&gt;What Are My Project’s Build Dependencies?&lt;/h3&gt;
 &lt;p&gt;Most of us are aware of dependencies in object orientated programming – these are the objects that our class in question needs to operate and most of us know the design patterns which we can use to externalise these dependency. Project build dependencies aren’t radically different; instead of referring to objects and instances; we are talking about the source code files (.as) that your project needs when it compiles. Any source code that you haven’t directly written for your project is a build dependency.&lt;/p&gt;
 &lt;p&gt;Imagine a simple project which makes use of TweenLite and where the source files (.as) for the TwenLite library have been copied into the source folder (src). Now if this were a real project it would result in the greensock code also being committed to our source repository. So, what’s the problem with this? Here’s a couple of potential issues:&lt;/p&gt;
 &lt;ul&gt;
@@ -2297,7 +2401,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 &lt;li&gt;Developers need to checkout all the source code for TweenLite even tho they will never be editing it – furthermore, some developers may get over excited and decide to start making modifications to this code (at which point it stops being a 3rd party library!)&lt;/li&gt;
 &lt;li&gt;If your project consists of multiple modules (ie: Other SWFs which are loaded at runtime) you will need to make sure they all have exactly the same copy of the TweenLite source code available on the source-path due to the way Flash manages loaded &lt;a href="https://web.archive.org/web/20120406204734/http://www.senocular.com/flash/tutorials/contentdomains/?page=2#ChildDomainsDefinitionVersioning"&gt;Class Definitions in LoaderContexts&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Using Linked Resource Folders To Share Dependencies Across Projects&lt;/h2&gt;
+&lt;h2 id="using-linked-resource-folders-to-share-dependencies-across-projects"&gt;Using Linked Resource Folders To Share Dependencies Across Projects&lt;/h2&gt;
 &lt;p&gt;Most IDEs allow you to create &lt;a href="http://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fconcepts-13.htm"&gt;Linked Resource Folders&lt;/a&gt;; the concept is simple – projects can import other projects source folders to allow them to share code, similar to unix symlinks – sounds great – however in practice it can cause lots of headaches!&lt;/p&gt;
 &lt;p&gt;Imagine a workspace that includes three folders/libraries which are linked:&lt;/p&gt;
 &lt;ul&gt;
@@ -2326,7 +2430,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;By using linked resources we have broken these rules – the whole Linked Resource concept is tightly coupled to a given IDE; even if you check in all your .project and .settings files it isn’t going to work if someone decides they want to give IntelliJ a spin.&lt;/p&gt;
-&lt;h3&gt;SWCs To The Rescue!&lt;/h3&gt;
+&lt;h3 id="swcs-to-the-rescue"&gt;SWCs To The Rescue!&lt;/h3&gt;
 &lt;p&gt;When ActionScript 3 became available, Adobe provided Flash developers with a new tool, the SWC. SWCs are just zip files in disguise (if you don’t believe me, rename the extension from .swc to .swc.zip and then open it) which contain a SWF file and an XML catalouge which allows your IDE to parse all the class definitions the SWF contains. All the major Actionscript IDEs provide tools for working with SWC files.&lt;/p&gt;
 &lt;p&gt;SWCs are preferable to just dumping the source code into your project for a number of reasons – infact they solve nearly all the points we listed above.&lt;/p&gt;
 &lt;ul&gt;
@@ -2338,7 +2442,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;But one thing is not checked off – what about projects which make use of multiple modules – it would appear we still have the same problem that all of our modules must use the exact same version of the library – now you could just solve this by making use of a LinkedResource which points to a bunch of SWCs but that’s still not great; and when it really comes down to it – should these SWCs really be in version control at all – after all you are in not in control of their development and you don’t decide when they get updated.&lt;/p&gt;
-&lt;h2&gt;Automatically Managing Your SWCs with Maven&lt;/h2&gt;
+&lt;h2 id="automatically-managing-your-swcs-with-maven"&gt;Automatically Managing Your SWCs with Maven&lt;/h2&gt;
 &lt;p&gt;So, it’s now becoming clear that you and your application have some serious dependency issues when it comes to 3rd Party SWCs; don’t worry, the first step is admission – let’s start by declaring them. This article is going to focus on using Maven to declare and resolve your project’s dependencies – other solutions are available :)&lt;/p&gt;
 &lt;p&gt;Maven’s dependency management work on the simple premise that the dependencies your application relies upon (in our case, SWCs) exist out on the Internet on a special type of file server, known to Maven as a &lt;a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/guides/introduction/introduction-to-repositories.html"&gt;Maven Repository&lt;/a&gt;. Maven Repositories can either be public facing (in the case of the &lt;a href="https://web.archive.org/web/20120406204734/http://repo1.maven.org/maven2/"&gt;Central Maven Repo&lt;/a&gt;.) or internal on a company’s own Intranet. Maven Repositories sole purpose is to house and catalogue build artefacts so that they can be fetched (resolved) during a project’s build. Instead of checking your applications dependencies into version control, you instead just list the dependencies in your project and then Maven will fetch them when required.&lt;/p&gt;
 &lt;p&gt;So, let’s start with a very simple application which consists of a single project which has a single build dependency on &lt;a href="https://web.archive.org/web/20120406204734/http://www.as3commons.org/as3-commons-logging/index.html"&gt;AS3Commons Logging&lt;/a&gt;. (I would have used TweenLite as an example, but it’s not available on any public Maven repositories at the time of writing). The first thing we need to do is get a simple build script on the go – I’m going to use ANT to perform the build (Maven, which describes itself as a project management tool is more than capable of both compiling and managing your project’s dependencies, but this article is is just focuses on using Maven for managing dependencies). Maven and ANT get along just fine (although their user’s pdon't always see eye to eye](https://web.archive.org/web/20120406204734/http://java.dzone.com/news/maven-or-ant) on the Internet!); all we need to do is grab a copy of the &lt;a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/ant-tasks/index.html"&gt;Maven ANT Tasks JAR&lt;/a&gt;, add it to our project and reference it in our ANT Script:&lt;/p&gt;
@@ -2395,7 +2499,7 @@ blobClient.SetServiceSettings(new ServiceSettings()
 
 
 &lt;p&gt;The above target breaks down into two major parts – the &lt;a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/ant-tasks/reference.html#dependencies"&gt;&lt;code&gt;artifact:dependencies&lt;/code&gt; task&lt;/a&gt; lists and resolves the project’s dependencies and the copy task then copies these dependencies into the “libs” folder in the project. The two interesting lines int he artifact:dependenciestask are the dependency line which lists as3commons-logging as a dependency (note how we specify the type as “swc” (Maven defaults the type to “jar”) and the version at 1.2). and the remoteRepository line which tells Maven which Maven Repository the dependency should be resolved from – in this project’s case we are using &lt;a href="https://web.archive.org/web/20120406204734/http://opensource.adobe.com/svn/opensource/cairngorm3/maven-repository/"&gt;Adobe’s OpenSource Maven Repository&lt;/a&gt;; however as mentioned in the comments, you will probably want to create and maintain your own Maven Repo to house your project’s artifacts in (I’m hoping to cover how to setup your own Repo in another post).&lt;/p&gt;
-&lt;h3&gt;Next Steps&lt;/h3&gt;
+&lt;h3 id="next-steps"&gt;Next Steps&lt;/h3&gt;
 &lt;p&gt;The above is really just the tip of the iceberg; if you want to really get to grips with dependency management through Maven then you are going to want to start listing your dependencies (and the Maven Repositories they can be resolved from) in a &lt;a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/pom.html#What_is_the_POM"&gt;POM file&lt;/a&gt; (Project Object Model). POM files not only serve as a place to list dependencies and the URLs of Repositories, but they can define the entire build cycle of the project when using Maven (and in the case of Flash, &lt;a href="https://web.archive.org/web/20120406204734/http://flexmojos.sonatype.org/"&gt;FlexMojos&lt;/a&gt;) to compile. POM files include an &lt;a href="https://web.archive.org/web/20120406204734/http://maven.apache.org/pom.html#Inheritance"&gt;inheritance model&lt;/a&gt; (so a Modules’ POM file can extend the main Project’s POM file) allowing you to keep all your dependency definitions in a central place.&lt;/p&gt;
 &lt;p&gt;Also, this tutorial hasn’t touched on one of the most powerful feature of Maven, &lt;a href="https://web.archive.org/web/20120406204734/http://www.sonatype.com/books/mvnref-book/reference/pom-relationships-sect-transitive.html"&gt;transitive dependency resolution&lt;/a&gt;. A quick example would be if your project depends on the RobotLegs Framework; from the example above you can see how you could define a dependency on RobotLegs:&lt;/p&gt;
 &lt;p&gt;Now, you would expect Maven to pull down RobotLegs.swc for you – but those of you familiar with RobotLegs will remember that RobotLegs itself has a dependency upon SwiftSuspenders.swc – Maven will automatically pull down both RobotLegs.swc AND the required version of the SwiftSuspenders.swc for you, even tho you only listed RobotLegs as a dependency! However, in order for this to work, RobotLegs needs to be uploaded to a Maven Repo along with a POM file which lists SwiftSuspenders as a dependency (and where it can be fetched from in turn) – The Java community is all over this and it works like magic – unfortunatley the Flash community is lagging quite far behind – it would be amazing if FlashDevs started pushing their SWCs up to the Central Maven Repo (it would certainly save people from having to setup and maintain their own local repos!)&lt;/p&gt;</content></entry><entry><title>Builder Pattern in ActionScript – Fluent Constructors</title><link href="https://jonnyreeves.co.uk/2011/builder-pattern-in-actionscript-fluent-constructors/" rel="alternate"></link><published>2011-03-25T16:15:00+00:00</published><updated>2011-03-25T16:15:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2011-03-25:/2011/builder-pattern-in-actionscript-fluent-constructors/</id><summary type="html">&lt;p&gt;How many times have you come across a class which looks like this:&lt;/p&gt;

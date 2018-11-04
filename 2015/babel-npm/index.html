@@ -56,9 +56,9 @@
   </header>
   <div>
     <p>Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:</p>
-<h3>babelify</h3>
+<h3 id="babelify">babelify</h3>
 <p>Transpiling your NPM modules to ES5 with <a href="https://babeljs.io/">babel</a> will allow them to work in a wide variety of environments.  Add a <code>prepublish</code> script to your <code>package.json</code>'s scripts block to automate this when you run <code>npm publish</code>.  By convention <code>/lib</code> is a good place to output your ES5 artefacts to, and it's a good idea to produce a clean build each time (with the <a href="https://www.npmjs.com/package/rimraf">rimraf module</a> providing a cross platform implementation of <code>rm -rf</code>, windows users will thank you.)</p>
-<h6><code>/package.json</code></h6>
+<h6 id="packagejson"><code>/package.json</code></h6>
 <div class="highlight"><pre><span></span>{
   &quot;name&quot;: &quot;my_pkg&quot;,
   &quot;scripts&quot;: {
@@ -68,10 +68,10 @@
 </pre></div>
 
 
-<h3>main</h3>
+<h3 id="main">main</h3>
 <p>Traditionally your <code>index.js</code> file would reside in the root of your module (this is where NPM will look for it by default); however as we are going to transpile to ES5 you'll want to put your index file, and all other ES6 sources under <code>/src</code>.</p>
 <p>Your <code>package.json</code>'s <code>main</code> block should point to the transpiled <code>index.js</code> file in the <code>/lib</code> folder.  If you're feeling adventurous you incude a <a href="https://github.com/caridy/es6-module-transpiler-npm-resolver"><code>jsnext:main</code></a> block and point to to your ES6 entry point.</p>
-<h6><code>/package.json</code></h6>
+<h6 id="packagejson_1"><code>/package.json</code></h6>
 <div class="highlight"><pre><span></span>{
   &quot;name&quot;: &quot;my_pkg&quot;,
   &quot;main&quot;: &quot;lib/index.js&quot;,
@@ -80,9 +80,9 @@
 </pre></div>
 
 
-<h2>Mocha</h2>
+<h2 id="mocha">Mocha</h2>
 <p>Mocha does the job well and it's easy to configure for use with babel; just give it a <code>--compilers</code> flag when you invoke it:</p>
-<h6><code>/package.json</code></h6>
+<h6 id="packagejson_2"><code>/package.json</code></h6>
 <div class="highlight"><pre><span></span>{
   &quot;name&quot;: &quot;my_pkg&quot;,
   &quot;scripts&quot;: {
@@ -92,9 +92,9 @@
 </pre></div>
 
 
-<h2>.npmignore</h2>
+<h2 id="npmignore">.npmignore</h2>
 <p>This one tripped me up; when I published my first NPM modules which made use of babel (<a href="https://github.com/jonnyreeves/redux-action-side-effects">redux-action-side-effects</a>) my <code>/lib</code> folder wasn't included in the final archived vended by NPM.  Turns out that NPM will <a href="https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package">automatically exclude everything in your <code>.gitignore</code> file</a> (and as the <code>/lib</code> folder contains build artefacts I excluded it from source control).  To override this add a <code>/.npmignore</code> file:</p>
-<h5><code>/.npmignore</code></h5>
+<h5 id="npmignore_1"><code>/.npmignore</code></h5>
 <div class="highlight"><pre><span></span># If this file is not present the contents of .gitignore are used
 /.gitignore
 </pre></div>

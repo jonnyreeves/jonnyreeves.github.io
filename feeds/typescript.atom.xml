@@ -502,7 +502,7 @@ license: (ISC)
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Create a Subject to Test&lt;/h2&gt;
+&lt;h2 id="create-a-subject-to-test"&gt;Create a Subject to Test&lt;/h2&gt;
 &lt;p&gt;Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, &lt;code&gt;index.ts&lt;/code&gt; in the project root&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Calculator&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nx"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;x&lt;/span&gt; : &lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;y&lt;/span&gt; : &lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;number&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -530,7 +530,7 @@ license: (ISC)
 
 
 &lt;p&gt;We can now compile with &lt;code&gt;npm install&lt;/code&gt;.&lt;/p&gt;
-&lt;h2&gt;Adding a Test&lt;/h2&gt;
+&lt;h2 id="adding-a-test"&gt;Adding a Test&lt;/h2&gt;
 &lt;p&gt;Let's create our first test; following convention lets create our test-case in &lt;code&gt;test/CalculatorTest&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Before writing the test-case we need to grab the Mocha Type Definitions (requried for the TypeScript compiler (&lt;code&gt;tsc&lt;/code&gt;) to work).  Easiest way to get these it to use the DefinitelyTyped TypeScript Definition manager (&lt;code&gt;tsd&lt;/code&gt;).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install tsd -g

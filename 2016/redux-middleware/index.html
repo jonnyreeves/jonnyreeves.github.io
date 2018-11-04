@@ -62,7 +62,7 @@
 <li>It makes it easy to isolate (and therefore test) components in the system.</li>
 </ol>
 <p>This blog post will be exploring a simple Redux application which will then be extended to provide additional functionality implemented as Redux Middleware.  I will also be demonstrating how it's easy to write test-cases for Redux Middleware.</p>
-<h3>Redux vs Traditional MVC</h3>
+<h3 id="redux-vs-traditional-mvc">Redux vs Traditional MVC</h3>
 <p>Redux's architecture was inspired by the <a href="http://guide.elm-lang.org/architecture/index.html">Elm Architecture</a> and differs from traditional MVC in the way it enforces a strict uni-direction flow (or cycle) of data from the View-tier to the Model and back again.  </p>
 <p><img alt="MVC architecture" src="/images/2016/redux-middleware/mvc-architecture.png"></p>
 <p>In traditional MVC based systems you will often find a stateful controller object which has both the Models and the Views injected into it.  The controller will be responsible for fetching data from the models and passing that data through to the views for rendering; as well as binding to events from the view tier as the user interacts with the application.  Depending on the exact MVC implementation the Controller may also be responsible for handling API calls and other custom business logic.  As a result of all these responsibilities and dependencies, Controllers can typically be difficult to bring under test.  Some MVC implementations can compound this problem further by introducing two-way data binding where the Controller is essentially side-stepped and the view and model are injected into each other.  IMHO this is a classic case for <a href="https://www.infoq.com/presentations/Simple-Made-Easy">Simple over Easy</a> and should be avoided for long-term maintainability of software.</p>
@@ -72,7 +72,7 @@
 <p>The Store's state is modified by a Reducer function.  The Reducer is a <a href="https://en.wikipedia.org/wiki/Pure_function">pure function</a> which takes the current state object, and the action object, returning a the new state object.  If the action does not result in a state-change, the reducer can return the current state object.  These components are wrapped in Redux's <code>store</code> object which manages the single state object and has a subscription mechanism (<code>store.subscribe</code>) to notify other parts of the system when the state object has changed.  Note that the state object is immutable, instead of being modified in place, the entire object is replaced with a new one when a change occurs.</p>
 <p>This form of loose coupling and one-way data flow is what makes Redux applications both easy to predict and easy to test.</p>
 <p>Note that whilst Redux is typically partnered with React, it does not have a dependency on it and can just as easily be paired with <a href="https://vuejs.org/">Vue.js</a> or <a href="https://github.com/reactjs/redux/blob/67f9dcca8b359825f1a89b318d2f879f99221032/examples/counter-vanilla/index.html">plain old DOM manipulation</a> methods with no other dependencies.</p>
-<h3>Keeping Count</h3>
+<h3 id="keeping-count">Keeping Count</h3>
 <p>The rest of this post will be dedicated to extending a simple application.  The consists of a single React view component that offers a counter and two buttons.  Users are able to manipulate the counter by pressing the increment and decrement buttons.</p>
 <div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">Counter</span> <span class="o">=</span> <span class="nx">props</span> <span class="p">=&gt;</span> <span class="p">{</span>
   <span class="kr">const</span> <span class="p">{</span> <span class="nx">count</span><span class="p">,</span> <span class="nx">dispatch</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">props</span><span class="p">;</span>
@@ -105,7 +105,7 @@
 
 
 <p>Next we have the reducer function for the application; here we simply switch on the incoming <code>action</code> object and return a new <code>state</code> value.  Redux will automatically invoke your reducer function with the current <code>state</code> object whenever <code>dispatch</code> is called.  Returning a new object (as is the case for both <code>INC</code> and <code>DEC</code> cases), will cause Redux to re-render the view tier thereby updating the counter's value on screen.</p>
-<h3>Bringing Back the Controller</h3>
+<h3 id="bringing-back-the-controller">Bringing Back the Controller</h3>
 <p>So far our same application has been very simple and has not introduced side-effects.  <a href="https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29">Side-effect</a> is the term used when a function modifies some state elsewhere in the system, or interacts with the outside world (ie: makes an API call).  Managing side-effects effectively is key to ensuring that your application stays both predictable and easy to bring under test as functions with side-effects require the reader to understand knowledge about the wider system's context and the system's state prior to the call.  Redux provides a simple yet powerful mechanism for managing side-effects: Middleware.</p>
 <p><img alt="" src="/images/2016/redux-middleware/redux-with-middleware.png"></p>
 <p>Redux Middleware sits between the view-tier and the reducers giving you a hook to invoke asynchronous business logic after each action has been dispatched.  Middleware is used to enhance a store when it is created through the <code>applyMiddleware</code> function provided by Redux:</p>
@@ -152,7 +152,7 @@
 
 
 <p>The <code>reportMiddleware</code> will intercept all actions after they've been dispatched.  As per the user story, we only want to track 'INC' actions.  Regardless of the type of action we must always pass the action through to <code>next</code> otherwise it will not be reduced and the app will no longer update when the user clicks on the buttons.</p>
-<h3>Adding a Testing Framework</h3>
+<h3 id="adding-a-testing-framework">Adding a Testing Framework</h3>
 <p>As mentioned at the start of the article, one of the main benefits of redux is the ease of testability - this is especially true for Redux Middleware which can be used to express complex business logic which remaining trivial to test.  In the follow examples I will be using a combination of Mocha, Chai, SinonJS.</p>
 <p>Let's start by writing a test which ensures that the intercepted action is always passed the the <code>next</code> function.</p>
 <div class="highlight"><pre><span></span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should pass the intercepted action to next&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
@@ -186,7 +186,7 @@
 
 
 <p>If you are new to SinonJS, then you may also be interested to learn of the <a href="http://sinonjs.org/docs/#stubs">Stub API</a> which allows you to program the return value of functions, including those attached to existing objects (eg: <code>jQuery.ajax</code>).</p>
-<h3>It's Business Time</h3>
+<h3 id="its-business-time">It's Business Time</h3>
 <p>Now we've introduced the core concepts of testing middleware, lets complete this example by implementing a User Story:</p>
 <blockquote>
 <p>As the product manager I would like to know when users have clicked the increment button 5 times for reporting.</p>
@@ -258,7 +258,7 @@
 <p>We use sinon to setup spies for both the Redux Middleware API's <code>next</code> function and our own <code>reportMiddleware</code>'s <code>callback</code> function.  It's worth noting that <code>sinon.spy()</code> returns a normal function which can be used interchangeably.</p>
 <p>Next we send two actions through our middleware, an <code>INC</code> and a <code>DEC</code>.  At this point the middleware's <code>numIncActions</code> value should be <code>1</code>, which is not equal to the target value of <code>2</code>, therefore the callback should not have been invoked yet.  This type of assertion acts as a safety net and can make debugging failing tests much easier.</p>
 <p>Finally we throw one last <code>INC</code> action through, we can now check our business logic was implemented correctly and the callback invoked.</p>
-<h3>Middleware Everywhere!</h3>
+<h3 id="middleware-everywhere">Middleware Everywhere!</h3>
 <p><img alt="Middleware, Middleware Everywhere" src="/images/2016/redux-middleware/middleware-everywhere-meme.jpg"></p>
 <p>This post has hopefully shown how Redux Middleware provides a simple abstraction which makes it possible to write complex logic that is both predictable and easy to test.  In my day-job we make extensive use of middleware to model all of our application's side effects including XHRs, analytics and multi-stage API calls.  If you find yourself getting tired of writing middleware boilerplate you may be interested in taking a look at Redux Saga's which make use of ES7 generator functions to provide a psuedo-blocking API for your side-effect management</p>
 <div class="highlight"><pre><span></span><span class="kr">export</span> <span class="kd">function</span><span class="o">*</span> <span class="nx">incrementAsync</span><span class="p">()</span> <span class="p">{</span>

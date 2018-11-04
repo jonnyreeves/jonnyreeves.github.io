@@ -56,7 +56,7 @@
   </header>
   <div>
     <p>Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere to <a href="http://www.codinghorror.com/blog/2007/03/curlys-law-do-one-thing.html">Single Responsibility Principle</a>. This is all well and good for your application code, but what about the Unit Tests which support it – how can we decompose these tests into modules so they’re well organized and easy to find?</p>
-<h3>Test Case Structure</h3>
+<h3 id="test-case-structure">Test Case Structure</h3>
 <p>First things first, you need to get your Unit Tests broken up into separate test cases. QUnit provides the QUnit.module method which takes care of this, allowing your to group tests in the QUnit test runner. We can extend this metaphor further by ensuring that each QUnit module resides in its own file, or, in other words – each application module has it’s own QUnit module of tests.</p>
 <p>Here’s an example of a simple QUnit Test Case defined as a RequireJS module:</p>
 <div class="highlight"><pre><span></span><span class="nx">define</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">require</span><span class="p">)</span> <span class="p">{</span>
@@ -97,7 +97,7 @@
 </pre></div>
 
 
-<h3>Configuring QUnit and RequireJS</h3>
+<h3 id="configuring-qunit-and-requirejs">Configuring QUnit and RequireJS</h3>
 <p>Now that we have our unit tests split out into separate modules, we need to configure the QUnit Test Runner so that it will work with RequireJS to resolve the dependencies. The first step is to modify the stock QUnit Test Runner HTML document so RequireJS is loaded along with all our testcases.</p>
 <div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
@@ -146,7 +146,7 @@
 
 
 <p>This file configures RequireJS ready for our Unit Test run and also provides a list of all test cases that we wish to execute. Once RequireJS has finished loading all the test cases, it makes a call to <code>QUnit.start</code> which kicks off the Test Runner.</p>
-<h3>Example Project Download</h3>
+<h3 id="example-project-download">Example Project Download</h3>
 <p>I’ve pushed all the source for this example project to the <a href="https://github.com/jonnyreeves/qunit-require/">qunit-require GitHub Repo</a>. You can <a href="https://github.com/jonnyreeves/qunit-require/zipball/master">download the zipball</a> and run the tests to gain a better understanding of the project structure.</p>
   </div>
   <div class="tag-cloud">

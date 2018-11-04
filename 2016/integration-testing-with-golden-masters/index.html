@@ -56,7 +56,7 @@
   </header>
   <div>
     <p>After watching <a href="https://www.youtube.com/watch?v=yszygk1cpEc">Mitchell Hashimoto's talk on Advanced Testing with Go</a> I was inspired to re-write one of my integration tests to use a golden master.  <a href="http://blog.codeclimate.com/blog/2014/02/20/gold-master-testing/">Testing with golden masters</a> is a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the output of the program is valid.</p>
-<h2>Bronze Age</h2>
+<h2 id="bronze-age">Bronze Age</h2>
 <p>The system under test I was working with applied a complex set of rules against a source directory and printed any violations of those rules to <code>stdout</code> much like a <a href="http://stackoverflow.com/questions/8503559/what-is-linting">code linting</a> tool.</p>
 <p><center>
 <img alt="Alt" src="https://www.websequencediagrams.com/cgi-bin/cdraw?lz=TWFpbi0-TGludGVyOiBsAAMFLkxpbnQoJy9wYXRoL3RvL3NyYycpCgAeBi0-RGlyU2Nhbm5lcjogc2Nhbigkc3JjRGlyKQoAEAoASApbXUZpbGUKCmxvb3AgZm9yICRmaWxlIGluABIIICAAUQhQYXJzZXI6IAADBSgAIwUpCiAACQYARwsAIgVSZXN1bHQKZW5kCgCBEAkAgT0IY3JlYXRlUmVwb3J0KCRwACUKcwCBOwpNYWluOiAkcgAgBQoKAIIABkZvcm1hdACCBAVmAAMILgAPBigAJAcpAIE-C2Vycm9yIGluAD4JICAAOQkAQA1zdGRvdXQuV3JpdGUoKQplbmQ&amp;s=vs2010">
@@ -93,7 +93,7 @@
 
 
 <p>This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual error cases over 6 test fixture files) - this feels like a great candidate for using a golden master.</p>
-<h2>Going for Gold</h2>
+<h2 id="going-for-gold">Going for Gold</h2>
 <p>My approach would be simple; I would still pass a fixture to <code>linter.Lint()</code>, but instead of comparing the <code>result</code> object, I would pass it directly to the <code>Formatter</code> and have it written out to a file on disk which could then be loaded and compared in future test-iterations.</p>
 <p>To start I copy and pasted the command line output into a new 'golden' file which mated the name of the fixture - the integration test will be modified to read in the contents of this file and use it for comparison.</p>
 <p>Next I needed to capture the output of the Formatter, this was not straight forward as the <code>Formatter</code> wrote directly to <code>os.Stdout</code>.  I could have used an Interface to provide an alternative implementation of the <code>Formatter</code> which wrote to a file; but this would have resulted in a lot of duplicated logic; essentially there was nothing wrong with the current output; I just didn't want it to to go to <code>stdout</code>.  Instead I modified the <code>formatter</code> object's signature from <code>Format(r Report)</code> to <code>Format(r Report, out io.Writer)</code>:</p>

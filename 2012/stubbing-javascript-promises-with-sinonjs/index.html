@@ -63,7 +63,7 @@
 
 
 <p>The code above makes use of Brain Cavalier’s <a href="https://github.com/cujojs/when">when.js</a> Promises implementation. The rest of this post aims to highlight how you can combine when.js with a mocking framework to make unit testing Promises a piece of cake. If you would still like to learn more about using Promises, and how they make writing asynchronous code easier, then I’d suggest reading <a href="http://blog.briancavalier.com/async-programming-part-1-its-messy">his excellent articles on the subject</a>.</p>
-<h3>Why mock Promises?</h3>
+<h3 id="why-mock-promises">Why mock Promises?</h3>
 <p>One of the golden rules of unit testing is that the <a href="http://martinfowler.com/articles/nonDeterminism.html">code under test must be deterministic</a>. Another golden rule is that <a href="http://pragprog.com/magazines/2012-01/unit-tests-are-first">unit tests must be fast to execute</a>. Although Promises make writing asynchronous code easier, they don’t help with the two points above, take the following example:</p>
 <div class="highlight"><pre><span></span><span class="c1">// Example of a module that abstracts a RESTful web service.</span>
 <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
@@ -120,7 +120,7 @@
 <li>It only tests the success state – we need to test what happens if the service is down, but there’s no obvious way to do that (other than to request an invalid query value from the API.</li>
 </ul>
 <p>This is where a mocking framework comes in – it will help us solve all three of the problems listed above.</p>
-<h3>Promises, Lies and stubbing the truth</h3>
+<h3 id="promises-lies-and-stubbing-the-truth">Promises, Lies and stubbing the truth</h3>
 <p>A mocking framework allows you to alter the way functions behave during a unit test. Mocking frameworks are especially powerful in dynamic languages, like JavaScript, as they are able to make large changes to your codebase for a given unit test and then restore all those changes immediately after the test completes. This tutorial is going to be looking at <a href="http://sinonjs.org/">SinonJS</a></p>
 <p>As mentioned above, Sinon.js is able to completely rewrite a function during a test-case, let’s revisit our service module above:</p>
 <div class="highlight"><pre><span></span><span class="nx">test</span><span class="p">(</span><span class="s2">&quot;Sinon.js stubbing example&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>

@@ -78,7 +78,7 @@ license: (ISC)
 </pre></div>
 
 
-<h2>Create a Subject to Test</h2>
+<h2 id="create-a-subject-to-test">Create a Subject to Test</h2>
 <p>Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, <code>index.ts</code> in the project root</p>
 <div class="highlight"><pre><span></span><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">Calculator</span> <span class="p">{</span>
     <span class="nx">add</span><span class="p">(</span><span class="nx">x</span> : <span class="kt">number</span><span class="p">,</span> <span class="nx">y</span> : <span class="kt">number</span><span class="p">)</span> <span class="o">:</span> <span class="kt">number</span> <span class="p">{</span>
@@ -106,7 +106,7 @@ license: (ISC)
 
 
 <p>We can now compile with <code>npm install</code>.</p>
-<h2>Adding a Test</h2>
+<h2 id="adding-a-test">Adding a Test</h2>
 <p>Let's create our first test; following convention lets create our test-case in <code>test/CalculatorTest</code>.</p>
 <p>Before writing the test-case we need to grab the Mocha Type Definitions (requried for the TypeScript compiler (<code>tsc</code>) to work).  Easiest way to get these it to use the DefinitelyTyped TypeScript Definition manager (<code>tsd</code>).</p>
 <div class="highlight"><pre><span></span>npm install tsd -g

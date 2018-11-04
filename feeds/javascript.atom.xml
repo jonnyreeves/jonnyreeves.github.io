@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - JavaScript</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/javascript.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2016-05-03T21:00:00+01:00</updated><entry><title>npm-shrinkwrap Sucks</title><link href="https://jonnyreeves.co.uk/2016/npm-shrinkwrap-sucks/" rel="alternate"></link><published>2016-05-03T21:00:00+01:00</published><updated>2016-05-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-05-03:/2016/npm-shrinkwrap-sucks/</id><summary type="html">&lt;p&gt;Despite suggesting that you should always &lt;a href="/2016/shrinkwrap-your-npm-dependencies"&gt;shrinkwrap your npm dependencies&lt;/a&gt;, I've come to the conclusion that npm-shrinkwrap not only sucks, but is fundamentally broken.  It doesn't quite suck as much as having your dependencies update underneath your feet, but it still sucks...&lt;/p&gt;
-&lt;h2&gt;Adding new dependencies is a pain&lt;/h2&gt;
+&lt;h2 id="adding-new-dependencies-is-a-pain"&gt;Adding new dependencies is a pain&lt;/h2&gt;
 &lt;p&gt;Adding new …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Despite suggesting that you should always &lt;a href="/2016/shrinkwrap-your-npm-dependencies"&gt;shrinkwrap your npm dependencies&lt;/a&gt;, I've come to the conclusion that npm-shrinkwrap not only sucks, but is fundamentally broken.  It doesn't quite suck as much as having your dependencies update underneath your feet, but it still sucks...&lt;/p&gt;
-&lt;h2&gt;Adding new dependencies is a pain&lt;/h2&gt;
+&lt;h2 id="adding-new-dependencies-is-a-pain"&gt;Adding new dependencies is a pain&lt;/h2&gt;
 &lt;p&gt;Adding new dependencies to your project without npm-shrinkwrap is pretty straight forward:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Run &lt;code&gt;npm install --save-dev left-pad&lt;/code&gt;&lt;/li&gt;
@@ -16,9 +16,9 @@
 &lt;li&gt;Raise a pull request, note that hte package.json file has a tonne of &lt;a href="https://github.com/npm/npm/issues/3581"&gt;unreadable and unexpected changes&lt;/a&gt; - enjoy the fact that github refuses to render the diff on the shrinkwrap file...&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Sure you could look to use &lt;a href="https://github.com/uber/npm-shrinkwrap#motivation"&gt;uber's npm-shrinkwrap tool&lt;/a&gt; but that's yet another dependency to add.&lt;/p&gt;
-&lt;h2&gt;It's not obvious when things are broken&lt;/h2&gt;
+&lt;h2 id="its-not-obvious-when-things-are-broken"&gt;It's not obvious when things are broken&lt;/h2&gt;
 &lt;p&gt;So this one is not npm-shrinkwrap's fault, but it caused my team to lose some productivity today: our project makes use of 4 (count em!) package.json files, each of which has their own shrinkwrap file - we use these to lock the dependency graph and have a weekly CI task to update everything using &lt;a href="https://www.npmjs.com/package/npm-check-updates"&gt;npm-check-updates&lt;/a&gt;.  Somehow one of the &lt;code&gt;npm-shrinkwrap.json&lt;/code&gt; files went AWOL; everything carried on working as expected for about two weeks but a chunk of the project's dependencies were being updated with each build.  We only found out when &lt;a href="https://github.com/eslint/eslint/issues/6015"&gt;a bug in ESLint&lt;/a&gt; caused our Pull Request builds to start failing which triggered the obvious question of "Why the hell did ESLint update automatically?!".&lt;/p&gt;
-&lt;h2&gt;So what's the solution?&lt;/h2&gt;
+&lt;h2 id="so-whats-the-solution"&gt;So what's the solution?&lt;/h2&gt;
 &lt;p&gt;A co-worker of mine suggested the blindingly obvious approach of just using explicit versions in the &lt;code&gt;package.json&lt;/code&gt; file, so instead of declaring:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dependencies: {
   &amp;quot;left-pad&amp;quot;: &amp;quot;^1.0.2&amp;quot;
@@ -43,7 +43,7 @@
 
 
 &lt;p&gt;Having written this, I'm not sure I see any benefits of using &lt;code&gt;npm shrinkwrap&lt;/code&gt; instead of enforcing exact dependency versions in your &lt;code&gt;package.json&lt;/code&gt; (and using a tool to manually update them on a controlled cadence).&lt;/p&gt;
-&lt;h2&gt;Update (4th May 2016)&lt;/h2&gt;
+&lt;h2 id="update-4th-may-2016"&gt;Update (4th May 2016)&lt;/h2&gt;
 &lt;p&gt;After posting this I got some great feedback in the comments and on &lt;a href="https://www.reddit.com/r/javascript/comments/4hqdld/npmshrinkwrap_sucks/"&gt;/r/javascript&lt;/a&gt; - using exact versions in the your project's &lt;code&gt;package.json&lt;/code&gt; does nothing for your project's transitive dependencies which probably don't make use of exact versions and therefore will be no predictably resolved from one &lt;code&gt;npm install&lt;/code&gt; to the next.  To address this I've re-instated &lt;code&gt;npm-shrinkwrap&lt;/code&gt; back into my project (it still sucks), but I've also modified our pre-flight check script to check that the shrinkwrap files are present (and haven't gone wondering off) - combining this with exact versions has made things a little easier to reason about).&lt;/p&gt;</content></entry><entry><title>Shrinkwrap your NPM Dependencies</title><link href="https://jonnyreeves.co.uk/2016/shrinkwrap-your-npm-dependencies/" rel="alternate"></link><published>2016-01-04T20:00:00+00:00</published><updated>2016-01-04T20:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-01-04:/2016/shrinkwrap-your-npm-dependencies/</id><summary type="html">&lt;p&gt;Things move a little too quickly in the NPM ecosystem for my liking at times, modules updates can turn a working project into a broken build with a single &lt;code&gt;npm install&lt;/code&gt;; this is especially bad news if your &lt;a href="https://en.wikipedia.org/wiki/Continuous_integration"&gt;Continuous Integration&lt;/a&gt; server is pulling your NPM dependencies with each build.  Sometimes …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Things move a little too quickly in the NPM ecosystem for my liking at times, modules updates can turn a working project into a broken build with a single &lt;code&gt;npm install&lt;/code&gt;; this is especially bad news if your &lt;a href="https://en.wikipedia.org/wiki/Continuous_integration"&gt;Continuous Integration&lt;/a&gt; server is pulling your NPM dependencies with each build.  Sometimes this can be the result of human error, other times it can be even &lt;a href="https://github.com/rackt/react-router/issues/2195"&gt;more confusing&lt;/a&gt; leading to a lot of wasted effort in your team.&lt;/p&gt;
 &lt;p&gt;One way to bring order is to make use of &lt;a href="https://docs.npmjs.com/cli/shrinkwrap"&gt;&lt;code&gt;npm shrinkwrap&lt;/code&gt;&lt;/a&gt; which pins your project's &lt;code&gt;node_modules&lt;/code&gt; at fixed revisions ensuring that you get the exact same dependency graph each time you &lt;code&gt;npm install&lt;/code&gt;.  One major benefit of this approach is that you can safely cache and re-use your node_modules folder between CI builds which should dramatically decrease your pull-request build times.&lt;/p&gt;
 &lt;p&gt;There are however a couple of downsides, the main one being that you can no longer just &lt;code&gt;npm install&lt;/code&gt; as NPM will not update &lt;code&gt;npm-shrinkwrap.json&lt;/code&gt; (so your teammates / CI server won't fetch it), instead you need to go through the following dance and then commit both &lt;code&gt;package.json&lt;/code&gt; and &lt;code&gt;npm-shrinkwrap.json&lt;/code&gt; files.&lt;/p&gt;
@@ -121,11 +121,11 @@ npm shrinkwrap
 
 
 &lt;p&gt;Et viola, live reloading of mustache templates and their associated data.  Full source over on &lt;a href="https://github.com/jonnyreeves/mustache-express-hotreload"&gt;github&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Babel ❤ NPM</title><link href="https://jonnyreeves.co.uk/2015/babel-npm/" rel="alternate"></link><published>2015-10-24T21:00:00+01:00</published><updated>2015-10-24T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-10-24:/2015/babel-npm/</id><summary type="html">&lt;p&gt;Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:&lt;/p&gt;
-&lt;h3&gt;babelify&lt;/h3&gt;
+&lt;h3 id="babelify"&gt;babelify&lt;/h3&gt;
 &lt;p&gt;Transpiling your NPM modules to ES5 with &lt;a href="https://babeljs.io/"&gt;babel&lt;/a&gt; will allow them to work in a wide variety of environments.  Add a &lt;code&gt;prepublish&lt;/code&gt; script …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Once you go ES6, you never go back ;)  In order to create ES5-backwards-compatible modules, there's are a few nuances that you need to be aware of:&lt;/p&gt;
-&lt;h3&gt;babelify&lt;/h3&gt;
+&lt;h3 id="babelify"&gt;babelify&lt;/h3&gt;
 &lt;p&gt;Transpiling your NPM modules to ES5 with &lt;a href="https://babeljs.io/"&gt;babel&lt;/a&gt; will allow them to work in a wide variety of environments.  Add a &lt;code&gt;prepublish&lt;/code&gt; script to your &lt;code&gt;package.json&lt;/code&gt;'s scripts block to automate this when you run &lt;code&gt;npm publish&lt;/code&gt;.  By convention &lt;code&gt;/lib&lt;/code&gt; is a good place to output your ES5 artefacts to, and it's a good idea to produce a clean build each time (with the &lt;a href="https://www.npmjs.com/package/rimraf"&gt;rimraf module&lt;/a&gt; providing a cross platform implementation of &lt;code&gt;rm -rf&lt;/code&gt;, windows users will thank you.)&lt;/p&gt;
-&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
+&lt;h6 id="packagejson"&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
   &amp;quot;scripts&amp;quot;: {
@@ -135,10 +135,10 @@ npm shrinkwrap
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;main&lt;/h3&gt;
+&lt;h3 id="main"&gt;main&lt;/h3&gt;
 &lt;p&gt;Traditionally your &lt;code&gt;index.js&lt;/code&gt; file would reside in the root of your module (this is where NPM will look for it by default); however as we are going to transpile to ES5 you'll want to put your index file, and all other ES6 sources under &lt;code&gt;/src&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Your &lt;code&gt;package.json&lt;/code&gt;'s &lt;code&gt;main&lt;/code&gt; block should point to the transpiled &lt;code&gt;index.js&lt;/code&gt; file in the &lt;code&gt;/lib&lt;/code&gt; folder.  If you're feeling adventurous you incude a &lt;a href="https://github.com/caridy/es6-module-transpiler-npm-resolver"&gt;&lt;code&gt;jsnext:main&lt;/code&gt;&lt;/a&gt; block and point to to your ES6 entry point.&lt;/p&gt;
-&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
+&lt;h6 id="packagejson_1"&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
   &amp;quot;main&amp;quot;: &amp;quot;lib/index.js&amp;quot;,
@@ -147,9 +147,9 @@ npm shrinkwrap
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Mocha&lt;/h2&gt;
+&lt;h2 id="mocha"&gt;Mocha&lt;/h2&gt;
 &lt;p&gt;Mocha does the job well and it's easy to configure for use with babel; just give it a &lt;code&gt;--compilers&lt;/code&gt; flag when you invoke it:&lt;/p&gt;
-&lt;h6&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
+&lt;h6 id="packagejson_2"&gt;&lt;code&gt;/package.json&lt;/code&gt;&lt;/h6&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
   &amp;quot;name&amp;quot;: &amp;quot;my_pkg&amp;quot;,
   &amp;quot;scripts&amp;quot;: {
@@ -159,9 +159,9 @@ npm shrinkwrap
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;.npmignore&lt;/h2&gt;
+&lt;h2 id="npmignore"&gt;.npmignore&lt;/h2&gt;
 &lt;p&gt;This one tripped me up; when I published my first NPM modules which made use of babel (&lt;a href="https://github.com/jonnyreeves/redux-action-side-effects"&gt;redux-action-side-effects&lt;/a&gt;) my &lt;code&gt;/lib&lt;/code&gt; folder wasn't included in the final archived vended by NPM.  Turns out that NPM will &lt;a href="https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package"&gt;automatically exclude everything in your &lt;code&gt;.gitignore&lt;/code&gt; file&lt;/a&gt; (and as the &lt;code&gt;/lib&lt;/code&gt; folder contains build artefacts I excluded it from source control).  To override this add a &lt;code&gt;/.npmignore&lt;/code&gt; file:&lt;/p&gt;
-&lt;h5&gt;&lt;code&gt;/.npmignore&lt;/code&gt;&lt;/h5&gt;
+&lt;h5 id="npmignore_1"&gt;&lt;code&gt;/.npmignore&lt;/code&gt;&lt;/h5&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# If this file is not present the contents of .gitignore are used
 /.gitignore
 &lt;/pre&gt;&lt;/div&gt;
@@ -189,7 +189,7 @@ npm shrinkwrap
 
 
 &lt;p&gt;jasmine-ajax executes all XHR callbacks on the same tick making them effectivly syncronous.  This results in your test-code much easier to write and reason about.&lt;/p&gt;
-&lt;h3&gt;Pairing with &lt;code&gt;xhr&lt;/code&gt;&lt;/h3&gt;
+&lt;h3 id="pairing-with-xhr"&gt;Pairing with &lt;code&gt;xhr&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;XMLHttpRequest&lt;/code&gt; doesn't have the nicest API to work with; fortunatley the &lt;a href="https://github.com/Raynos/xhr"&gt;&lt;code&gt;xhr&lt;/code&gt;&lt;/a&gt; module on NPM provides a nice, lightweight abstraction (it even smooths out the cracks in IE8).  However, it's not all plain sailing as the xhr module caches the &lt;code&gt;XMLHttpRequest&lt;/code&gt; object on the window when it is loaded (ie: &lt;code&gt;require()&lt;/code&gt;'d).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;window&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;XMLHttpRequest&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -212,7 +212,7 @@ npm shrinkwrap
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Closing thoughts on Jasmine&lt;/h3&gt;
+&lt;h3 id="closing-thoughts-on-jasmine"&gt;Closing thoughts on Jasmine&lt;/h3&gt;
 &lt;p&gt;I've recently switched to Jasmine after using Mocha and SinonJS succesfully for a few years.  My hope was that the Jasmine ecosystem, which has a lot of funtionality built-in, would be more productive and easier for new-comers to the project to pick up than Mocha.  I've been very impressed by how easy it was to get up and running on Jasmine; and the v2.3 API is pleasant to code against (it will be instantly familiar to &lt;a href="http://chaijs.com/guide/installation/"&gt;chai&lt;/a&gt; users), however I do wish that Jasmine made it easier to write custom matchers as I find myself missing the verbosity of SinonJS's &lt;code&gt;sinon.match(val =&amp;gt; { ... })&lt;/code&gt;.&lt;/p&gt;</content></entry><entry><title>Simple JavaScript Classes in CommonJS</title><link href="https://jonnyreeves.co.uk/2014/simple-javascript-classes-in-commonjs/" rel="alternate"></link><published>2014-07-26T18:00:00+01:00</published><updated>2014-07-26T18:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2014-07-26:/2014/simple-javascript-classes-in-commonjs/</id><summary type="html">&lt;p&gt;Having recently become an advocate of CommonJS modules and Browserify our team was looking for a simple way to define Plain old JavaScript Classes in our modules.  We've settled on the following style, making use of &lt;a href="https://github.com/justmoon/node-extend"&gt;extend&lt;/a&gt; and &lt;a href="https://github.com/isaacs/inherits"&gt;inherits&lt;/a&gt;; two tiny, focused CommonJS modules which will add a whopping 2kb …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Having recently become an advocate of CommonJS modules and Browserify our team was looking for a simple way to define Plain old JavaScript Classes in our modules.  We've settled on the following style, making use of &lt;a href="https://github.com/justmoon/node-extend"&gt;extend&lt;/a&gt; and &lt;a href="https://github.com/isaacs/inherits"&gt;inherits&lt;/a&gt;; two tiny, focused CommonJS modules which will add a whopping 2kb to our project when unminified.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;use strict&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
@@ -327,7 +327,7 @@ module.exports = function(grunt) {
   grunt.initConfig({ .. });
 });
 &lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>Modular Javascript Unit Testing with QUnit and RequireJS</title><link href="https://jonnyreeves.co.uk/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/" rel="alternate"></link><published>2012-08-14T16:15:00+01:00</published><updated>2012-08-14T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-08-14:/2012/modular-javascript-unit-testing-with-qunit-and-requirejs/</id><summary type="html">&lt;p&gt;Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Modular application development is essential when working on a large project with more than a handful of developers. Breaking your code into separate modules improves code legibility and organization making it easier to locate logic and help create ‘seams’ in your code so you can do your best to adhere to &lt;a href="http://www.codinghorror.com/blog/2007/03/curlys-law-do-one-thing.html"&gt;Single Responsibility Principle&lt;/a&gt;. This is all well and good for your application code, but what about the Unit Tests which support it – how can we decompose these tests into modules so they’re well organized and easy to find?&lt;/p&gt;
-&lt;h3&gt;Test Case Structure&lt;/h3&gt;
+&lt;h3 id="test-case-structure"&gt;Test Case Structure&lt;/h3&gt;
 &lt;p&gt;First things first, you need to get your Unit Tests broken up into separate test cases. QUnit provides the QUnit.module method which takes care of this, allowing your to group tests in the QUnit test runner. We can extend this metaphor further by ensuring that each QUnit module resides in its own file, or, in other words – each application module has it’s own QUnit module of tests.&lt;/p&gt;
 &lt;p&gt;Here’s an example of a simple QUnit Test Case defined as a RequireJS module:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;define&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -368,7 +368,7 @@ module.exports = function(grunt) {
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Configuring QUnit and RequireJS&lt;/h3&gt;
+&lt;h3 id="configuring-qunit-and-requirejs"&gt;Configuring QUnit and RequireJS&lt;/h3&gt;
 &lt;p&gt;Now that we have our unit tests split out into separate modules, we need to configure the QUnit Test Runner so that it will work with RequireJS to resolve the dependencies. The first step is to modify the stock QUnit Test Runner HTML document so RequireJS is loaded along with all our testcases.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
 &lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;html&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;
@@ -417,7 +417,7 @@ module.exports = function(grunt) {
 
 
 &lt;p&gt;This file configures RequireJS ready for our Unit Test run and also provides a list of all test cases that we wish to execute. Once RequireJS has finished loading all the test cases, it makes a call to &lt;code&gt;QUnit.start&lt;/code&gt; which kicks off the Test Runner.&lt;/p&gt;
-&lt;h3&gt;Example Project Download&lt;/h3&gt;
+&lt;h3 id="example-project-download"&gt;Example Project Download&lt;/h3&gt;
 &lt;p&gt;I’ve pushed all the source for this example project to the &lt;a href="https://github.com/jonnyreeves/qunit-require/"&gt;qunit-require GitHub Repo&lt;/a&gt;. You can &lt;a href="https://github.com/jonnyreeves/qunit-require/zipball/master"&gt;download the zipball&lt;/a&gt; and run the tests to gain a better understanding of the project structure.&lt;/p&gt;</content></entry><entry><title>Listening for jQuery Mobile Slider Events</title><link href="https://jonnyreeves.co.uk/2012/listening-for-jquery-mobile-slider-events/" rel="alternate"></link><published>2012-07-24T16:15:00+01:00</published><updated>2012-07-24T16:15:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-07-24:/2012/listening-for-jquery-mobile-slider-events/</id><summary type="html">&lt;p&gt;jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. &lt;a href="https://github.com/jquery/jquery-mobile/issues/1589"&gt;This issue (#1589)&lt;/a&gt; has been raised on jQuery Mobile’s GitHub Issue Tracker but …&lt;/p&gt;</summary><content type="html">&lt;p&gt;jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. &lt;a href="https://github.com/jquery/jquery-mobile/issues/1589"&gt;This issue (#1589)&lt;/a&gt; has been raised on jQuery Mobile’s GitHub Issue Tracker but it looks like it won’t be addressed until jQuery Mobile 1.2&lt;/p&gt;
 &lt;p&gt;The code below is a patch which you can drop into your application’s startup routine; it adds a couple of event listeners to the DOM which will trigger the start and stop events based on the user’s interaction with the slider’s thumb and track.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;document&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
@@ -456,7 +456,7 @@ module.exports = function(grunt) {
 
 
 &lt;p&gt;The code above makes use of Brain Cavalier’s &lt;a href="https://github.com/cujojs/when"&gt;when.js&lt;/a&gt; Promises implementation. The rest of this post aims to highlight how you can combine when.js with a mocking framework to make unit testing Promises a piece of cake. If you would still like to learn more about using Promises, and how they make writing asynchronous code easier, then I’d suggest reading &lt;a href="http://blog.briancavalier.com/async-programming-part-1-its-messy"&gt;his excellent articles on the subject&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Why mock Promises?&lt;/h3&gt;
+&lt;h3 id="why-mock-promises"&gt;Why mock Promises?&lt;/h3&gt;
 &lt;p&gt;One of the golden rules of unit testing is that the &lt;a href="http://martinfowler.com/articles/nonDeterminism.html"&gt;code under test must be deterministic&lt;/a&gt;. Another golden rule is that &lt;a href="http://pragprog.com/magazines/2012-01/unit-tests-are-first"&gt;unit tests must be fast to execute&lt;/a&gt;. Although Promises make writing asynchronous code easier, they don’t help with the two points above, take the following example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Example of a module that abstracts a RESTful web service.&lt;/span&gt;
 &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;service&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -513,7 +513,7 @@ module.exports = function(grunt) {
 &lt;li&gt;It only tests the success state – we need to test what happens if the service is down, but there’s no obvious way to do that (other than to request an invalid query value from the API.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This is where a mocking framework comes in – it will help us solve all three of the problems listed above.&lt;/p&gt;
-&lt;h3&gt;Promises, Lies and stubbing the truth&lt;/h3&gt;
+&lt;h3 id="promises-lies-and-stubbing-the-truth"&gt;Promises, Lies and stubbing the truth&lt;/h3&gt;
 &lt;p&gt;A mocking framework allows you to alter the way functions behave during a unit test. Mocking frameworks are especially powerful in dynamic languages, like JavaScript, as they are able to make large changes to your codebase for a given unit test and then restore all those changes immediately after the test completes. This tutorial is going to be looking at &lt;a href="http://sinonjs.org/"&gt;SinonJS&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;As mentioned above, Sinon.js is able to completely rewrite a function during a test-case, let’s revisit our service module above:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Sinon.js stubbing example&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -639,7 +639,7 @@ module.exports = function(grunt) {
 
 &lt;p&gt;Which gives us our desired effect! :)&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Alt Text" src="https://jonnyreeves.co.uk/images/jquery-a-single-click-handler-for-multiple-buttons/button-click-handler.png"&gt;&lt;/p&gt;</content></entry><entry><title>Using External Templates with Mustache.js and jQuery</title><link href="https://jonnyreeves.co.uk/2012/using-external-templates-with-mustachejs-and-jquery/" rel="alternate"></link><published>2012-02-12T16:15:00+00:00</published><updated>2012-02-12T16:15:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2012-02-12:/2012/using-external-templates-with-mustachejs-and-jquery/</id><summary type="html">&lt;p&gt;&lt;a href="http://mustache.github.com/"&gt;Mustache&lt;/a&gt; is a language independent, logicless &lt;a href="http://en.wikipedia.org/wiki/Template_engine_(web)"&gt;templating engine&lt;/a&gt; which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the &lt;a href="https://github.com/janl/mustache.js"&gt;JavaScript …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="http://mustache.github.com/"&gt;Mustache&lt;/a&gt; is a language independent, logicless &lt;a href="http://en.wikipedia.org/wiki/Template_engine_(web)"&gt;templating engine&lt;/a&gt; which, in the context of a JavaScript / HTML5 style web application, means you can use it to separate your logic (javascript code) from your view (HTML Markup). Mustache comes in a variety of flavours; this article will be focusing on the &lt;a href="https://github.com/janl/mustache.js"&gt;JavaScript implementation&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Why Bother With Templating At All?&lt;/h3&gt;
+&lt;h3 id="why-bother-with-templating-at-all"&gt;Why Bother With Templating At All?&lt;/h3&gt;
 &lt;p&gt;Fair question; when it comes simple JavaScript powered sites it’s pretty easy to just build up your HTML inline:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;lt;p&amp;gt;Hello John, it is 11:19.&amp;lt;/p&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -671,7 +671,7 @@ module.exports = function(grunt) {
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Enter the Templating Engine&lt;/h2&gt;
+&lt;h2 id="enter-the-templating-engine"&gt;Enter the Templating Engine&lt;/h2&gt;
 &lt;p&gt;Templating engines help us solve half the problem by allowing us to move the logic out of the HTML string. The basic premise is fairly simple; instead of having to break out of the String, we can just drop in tokens which the templating engine will replace for us. So instead of having to concatenate lots of Strings together we can simply express our template like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Date&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
@@ -705,7 +705,7 @@ module.exports = function(grunt) {
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Would you declare your JavaScript in HTML?&lt;/h3&gt;
+&lt;h3 id="would-you-declare-your-javascript-in-html"&gt;Would you declare your JavaScript in HTML?&lt;/h3&gt;
 &lt;p&gt;So we have managed to simplify our code by replacing String concatenation with token substiution (templating); but we are still having to declare our template’s HTML in JavaScript which is far from ideal. What we really want is to be able to write our template in raw HTML as opposed to a String literal – time for some external templates. John Resig is widely regarded as having coined the concept of &lt;a href="https://web.archive.org/web/20120406204734/http://ejohn.org/blog/javascript-micro-templating/"&gt;declaring templates in script blocks&lt;/a&gt;; ie:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;&amp;lt;!-- Our Template is declared in a script block, but we&lt;/span&gt;
 &lt;span class="c"&gt;     can just use regular HTML markup --&amp;gt;&lt;/span&gt;
@@ -736,7 +736,7 @@ module.exports = function(grunt) {
 
 
 &lt;p&gt;Much nicer! Now we are able to write our template in HTML as opposed to simply mashing Strings together; however, this method still isn’t ideal; in order for it to work we have to define our template in the parent HTML Document; this is fine for a simple example, but in a real world web application you won’t be writing your JavaScript in a script block, you’ll be using external .js files instead – and you don’t really want to have to send all the HTML Templates down in the original page – let’s externalise those templates and load them in as we need them.&lt;/p&gt;
-&lt;h3&gt;Loading External HTML Templates&lt;/h3&gt;
+&lt;h3 id="loading-external-html-templates"&gt;Loading External HTML Templates&lt;/h3&gt;
 &lt;p&gt;jQuery makes it really easy to load external content via its &lt;code&gt;jQuery.get()&lt;/code&gt; method. We can use this to load an external HTML file which contains our template:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;&amp;lt;!-- You can define as many templates as you like in a single&lt;/span&gt;
 &lt;span class="c"&gt;    .htm file; just add additional &amp;lt;script /&amp;gt; blocks with&lt;/span&gt;
@@ -762,7 +762,7 @@ module.exports = function(grunt) {
 
 
 &lt;p&gt;Now we’re talking! Finally, we are able to define our templates in external HTML files which can easily be loaded and rendered in our application’s JavaScript code. However, the above is only a proof of concept and doesn’t really stand up in the real world; what if we want to render our greetings template more than once? If we are going to have to load the template file each time our code is going to be littered with callback functions – again, not pretty and not easy to maintain – what we need is some kind of plugin…&lt;/p&gt;
-&lt;h3&gt;jQuery-Mustache Plugin&lt;/h3&gt;
+&lt;h3 id="jquery-mustache-plugin"&gt;jQuery-Mustache Plugin&lt;/h3&gt;
 &lt;p&gt;To make working with Mustache in jQuery nice and easy I knocked together my first jQuery Plugin, &lt;a href="https://github.com/jonnyreeves/jquery-Mustache"&gt;jquery-mustache.js&lt;/a&gt;. This makes it really easy to load all your external templates at the start and then render them as required.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Mustache&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;greetings.htm&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;body&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;mustache&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tpl-greeting&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;templateData&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;

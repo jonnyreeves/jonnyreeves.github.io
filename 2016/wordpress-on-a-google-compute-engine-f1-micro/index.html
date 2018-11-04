@@ -56,7 +56,7 @@
   </header>
   <div>
     <p>The cheapest offering on <a href="https://cloud.google.com/">Google's cloud platform</a> is the f1-micro instance.  The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it turns out you can just about cram a moddest-traffic Wordpress instance on it with a little tweaking - and here's the good news, it'll only set you back £50 a year!</p>
-<h2>Creating a new Instance</h2>
+<h2 id="creating-a-new-instance">Creating a new Instance</h2>
 <p>Head on over to the <a href="https://console.cloud.google.com/start">Google Cloud Console</a> and sign up (Google currently offer a 60 day free trial to sweeten the deal).  Battle your way through the onboarding guide and then head over to the <a href="https://console.cloud.google.com/compute">Google Compute Engine control panel</a>.</p>
 <ol>
 <li>Click create Instance</li>
@@ -69,9 +69,9 @@
 <p>Once your machine has been provisioned (should only take a couple of minutes) you can connect direct from your browser by clicking the SSH button from the Compute Engine <a href="https://console.cloud.google.com/compute/instances">VM Instance Control Panel</a>.</p>
 <p><img alt="Connect via SSH" src="/images/2016/wordpress-google-compute-engine-f1-micro/ssh-access.png"></p>
 <p>You can also click this drop down to setup SSH access from the command line by adding an SSH KeyPair or by using <a href="https://cloud.google.com/sdk/gcloud/">gcloud command line interface</a>.</p>
-<h3>Obtaining a Static IP</h3>
+<h3 id="obtaining-a-static-ip">Obtaining a Static IP</h3>
 <p>By default, Compute Engine instances are assigned an ephemeral IP (meaning that it may change should the instance shutdown); for production websites you need to assign a static IP to your instance so you can point your doman at it; this can be done through the Networking <a href="https://console.cloud.google.com/networking/addresses/list">External IP Addresses Control Panel</a> - you can select a the 'Regional' type selecting the same region where your instance is running (eg: <code>europe-west-1</code>).</p>
-<h2>Base LEMP Setup</h2>
+<h2 id="base-lemp-setup">Base LEMP Setup</h2>
 <p>The following is based off a stock Debian Jessie install; I make use of Nginx (less CPU and memory intensive then Apache), <a href="https://php-fpm.org/about/">PHP-FPM</a> (connects Nginx and PHP), PHP 5 and MySQL. The following command will install all of the required dependencies:</p>
 <div class="highlight"><pre><span></span>$ sudo apt-get install mysql-server nginx php5-fpm php5-mysql php-apc <span class="se">\</span>
     pwgen python-setuptools curl git unzip php5-curl php5-gd php5-intl <span class="se">\</span>
@@ -120,7 +120,7 @@ $ sudo service php5-fpm restart
 
 
 <p>This configuration will serve php from <code>/usr/share/nginx/www</code> - drop an <code>index.php</code> file there which invokes <code>phpinfo()</code> and visit your Compute Engine instance's IP address in your browser to confirm that everything has been configured - make sure you delete that file once you're done.</p>
-<h2>Wordpress Install</h2>
+<h2 id="wordpress-install">Wordpress Install</h2>
 <p>Now the easy bit :)  Start by grabbing wordpress:</p>
 <div class="highlight"><pre><span></span>$ <span class="nb">cd</span> /usr/share/nginx
 $ wget https://wordpress.org/latest.tar.gz
@@ -132,14 +132,14 @@ $ chmod -R <span class="m">766</span> ./www/wp-content/uploads
 
 
 <p>You can now visit your Compute Engine instance's IP address in your browser and the Wordpress installation script should start; you may want to consider <a href="https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql">creating a MySQL user</a> for wordpress without GRANT and ALTER permissions.</p>
-<h3>Enabling Automatic Updates</h3>
+<h3 id="enabling-automatic-updates">Enabling Automatic Updates</h3>
 <p>Wordpress will automatically install security patches if it has a way to write to the local filesystem; one option is to configure the <code>FS-METHOD</code> constant in your <code>wp-config.php</code> to use <code>direct</code> and grant the permissive permissions on your <code>/usr/share/nginx/www</code> folder; generally speaking this is fine if you only have a single Wordpress installation running on the server, however you may wish to consider setting <code>FS-METHOD</code> to <code>ssh2</code> and <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-secure-updates-and-installations-in-wordpress-on-ubuntu">setting up an SSH key/pair</a>. </p>
-<h3>Sending Email</h3>
+<h3 id="sending-email">Sending Email</h3>
 <p>If you need your Wordpress instance to be able to send email (eg: for a contact form); then you may wish to consider installing the <a href="https://wordpress.org/plugins/wp-mail-smtp/">WP Mail SMTP Plugin</a> which will reconfigure Wordpress to route all mail through an SMTP server (ie: a <a href="https://support.google.com/a/answer/176600?hl=en">GMail account</a>).</p>
-<h3>Backups</h3>
+<h3 id="backups">Backups</h3>
 <p>If you care about your content, it's essential that you back up both the database and the <code>wp-content</code> folder on a regular basis.  I've personally found the <a href="https://wordpress.org/plugins/backupwordpress/">BackupWordPress</a> plugin does a great job for creating local archives on the sever; these can then be shipped over to Google Drive by using <a href="https://github.com/prasmussen/gdrive">gdrive</a> and cron: don't forget to restore from your backup from time-to-time.</p>
 <p>Additionally, you can make use of the <a href="https://console.cloud.google.com/compute/snapshots">Compute Engine Snapshot</a> feature which makes disaster recovery straight-forward.</p>
-<h2>Wordpress Hardening</h2>
+<h2 id="wordpress-hardening">Wordpress Hardening</h2>
 <p>Because of the limited resources avaliable to your instance, it's possible for qutie meagre Denail of Service (DoS) attacks to peg your server's CPU or even knock it offline (by running out of memory).</p>
 <p>In my case, just minutes after I had got gotten Wordpress configured the nginx access.log (<code>/var/log/nginx/access.log</code>) started filling up with the following entries:</p>
 <div class="highlight"><pre><span></span>192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &quot;POST /xmlrpc.php HTTP/1.1&quot; 499 0 &quot;-&quot; &quot;Googlebot/2.1 (+http://www.go
@@ -151,7 +151,7 @@ ogle.com/bot.html)&quot;
 
 <p>That host was hitting me with ~12 requests per second which was enough to spike my CPU usage and cause significant slow-down.</p>
 <p><img alt="CPU Graph" src="/images/2016/wordpress-google-compute-engine-f1-micro/cpu-graph.png"></p>
-<h3>Fail2Ban</h3>
+<h3 id="fail2ban">Fail2Ban</h3>
 <p><a href="http://www.fail2ban.org/wiki/index.php/Main_Page">Fail2Ban</a> scans your server's log files and can be configured to ban IP addresses based on filters you define.</p>
 <p>Start by installing and enabling fail2ban with:</p>
 <div class="highlight"><pre><span></span>$ sudo apt-get install fail2ban
@@ -176,11 +176,11 @@ ogle.com/bot.html)&quot;
 
 
 <p>This configuration will allow 3 such log entries before banning that IP for 1 hour.</p>
-<h3>WP Super Cache</h3>
+<h3 id="wp-super-cache">WP Super Cache</h3>
 <p><a href="https://en-gb.wordpress.org/plugins/wp-super-cache/">WP Super Cache plugin</a> is essential for a Wordpress install on a low-end server - installation is straight forward from the Wordpress Admin.</p>
-<h3>CloudFlare</h3>
+<h3 id="cloudflare">CloudFlare</h3>
 <p>If you don't mind giving up control over your DNS, you can put your install behind <a href="https://www.cloudflare.com/plans/">CloudFlare's free plan</a> which should go some way to reducing the amount of traffic that hits your server.</p>
-<h3>Offloading Comments</h3>
+<h3 id="offloading-comments">Offloading Comments</h3>
 <p>Wordpress comments can cause a serious headache for low-end instances as they are the source of a lot of spam and will increase the amount of cache invalidation that needs to occur.  Whilst plugins like <a href="https://en-gb.wordpress.org/plugins/akismet/">Akisment</a> (which comes installed by default) certainly help with the former, external comment platforms like <a href="https://disqus.com/">Disqus</a> integrate seamlessly into Wordpress if you don't mind giving up a bit of control over your content.</p>
   </div>
   <div class="tag-cloud">

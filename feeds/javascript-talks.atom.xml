@@ -7,7 +7,7 @@
 &lt;li&gt;It makes it easy to isolate (and therefore test) components in the system.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;This blog post will be exploring a simple Redux application which will then be extended to provide additional functionality implemented as Redux Middleware.  I will also be demonstrating how it's easy to write test-cases for Redux Middleware.&lt;/p&gt;
-&lt;h3&gt;Redux vs Traditional MVC&lt;/h3&gt;
+&lt;h3 id="redux-vs-traditional-mvc"&gt;Redux vs Traditional MVC&lt;/h3&gt;
 &lt;p&gt;Redux's architecture was inspired by the &lt;a href="http://guide.elm-lang.org/architecture/index.html"&gt;Elm Architecture&lt;/a&gt; and differs from traditional MVC in the way it enforces a strict uni-direction flow (or cycle) of data from the View-tier to the Model and back again.  &lt;/p&gt;
 &lt;p&gt;&lt;img alt="MVC architecture" src="/images/2016/redux-middleware/mvc-architecture.png"&gt;&lt;/p&gt;
 &lt;p&gt;In traditional MVC based systems you will often find a stateful controller object which has both the Models and the Views injected into it.  The controller will be responsible for fetching data from the models and passing that data through to the views for rendering; as well as binding to events from the view tier as the user interacts with the application.  Depending on the exact MVC implementation the Controller may also be responsible for handling API calls and other custom business logic.  As a result of all these responsibilities and dependencies, Controllers can typically be difficult to bring under test.  Some MVC implementations can compound this problem further by introducing two-way data binding where the Controller is essentially side-stepped and the view and model are injected into each other.  IMHO this is a classic case for &lt;a href="https://www.infoq.com/presentations/Simple-Made-Easy"&gt;Simple over Easy&lt;/a&gt; and should be avoided for long-term maintainability of software.&lt;/p&gt;
@@ -17,7 +17,7 @@
 &lt;p&gt;The Store's state is modified by a Reducer function.  The Reducer is a &lt;a href="https://en.wikipedia.org/wiki/Pure_function"&gt;pure function&lt;/a&gt; which takes the current state object, and the action object, returning a the new state object.  If the action does not result in a state-change, the reducer can return the current state object.  These components are wrapped in Redux's &lt;code&gt;store&lt;/code&gt; object which manages the single state object and has a subscription mechanism (&lt;code&gt;store.subscribe&lt;/code&gt;) to notify other parts of the system when the state object has changed.  Note that the state object is immutable, instead of being modified in place, the entire object is replaced with a new one when a change occurs.&lt;/p&gt;
 &lt;p&gt;This form of loose coupling and one-way data flow is what makes Redux applications both easy to predict and easy to test.&lt;/p&gt;
 &lt;p&gt;Note that whilst Redux is typically partnered with React, it does not have a dependency on it and can just as easily be paired with &lt;a href="https://vuejs.org/"&gt;Vue.js&lt;/a&gt; or &lt;a href="https://github.com/reactjs/redux/blob/67f9dcca8b359825f1a89b318d2f879f99221032/examples/counter-vanilla/index.html"&gt;plain old DOM manipulation&lt;/a&gt; methods with no other dependencies.&lt;/p&gt;
-&lt;h3&gt;Keeping Count&lt;/h3&gt;
+&lt;h3 id="keeping-count"&gt;Keeping Count&lt;/h3&gt;
 &lt;p&gt;The rest of this post will be dedicated to extending a simple application.  The consists of a single React view component that offers a counter and two buttons.  Users are able to manipulate the counter by pressing the increment and decrement buttons.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;Counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;props&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;count&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;dispatch&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;props&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -50,7 +50,7 @@
 
 
 &lt;p&gt;Next we have the reducer function for the application; here we simply switch on the incoming &lt;code&gt;action&lt;/code&gt; object and return a new &lt;code&gt;state&lt;/code&gt; value.  Redux will automatically invoke your reducer function with the current &lt;code&gt;state&lt;/code&gt; object whenever &lt;code&gt;dispatch&lt;/code&gt; is called.  Returning a new object (as is the case for both &lt;code&gt;INC&lt;/code&gt; and &lt;code&gt;DEC&lt;/code&gt; cases), will cause Redux to re-render the view tier thereby updating the counter's value on screen.&lt;/p&gt;
-&lt;h3&gt;Bringing Back the Controller&lt;/h3&gt;
+&lt;h3 id="bringing-back-the-controller"&gt;Bringing Back the Controller&lt;/h3&gt;
 &lt;p&gt;So far our same application has been very simple and has not introduced side-effects.  &lt;a href="https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29"&gt;Side-effect&lt;/a&gt; is the term used when a function modifies some state elsewhere in the system, or interacts with the outside world (ie: makes an API call).  Managing side-effects effectively is key to ensuring that your application stays both predictable and easy to bring under test as functions with side-effects require the reader to understand knowledge about the wider system's context and the system's state prior to the call.  Redux provides a simple yet powerful mechanism for managing side-effects: Middleware.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="/images/2016/redux-middleware/redux-with-middleware.png"&gt;&lt;/p&gt;
 &lt;p&gt;Redux Middleware sits between the view-tier and the reducers giving you a hook to invoke asynchronous business logic after each action has been dispatched.  Middleware is used to enhance a store when it is created through the &lt;code&gt;applyMiddleware&lt;/code&gt; function provided by Redux:&lt;/p&gt;
@@ -97,7 +97,7 @@
 
 
 &lt;p&gt;The &lt;code&gt;reportMiddleware&lt;/code&gt; will intercept all actions after they've been dispatched.  As per the user story, we only want to track 'INC' actions.  Regardless of the type of action we must always pass the action through to &lt;code&gt;next&lt;/code&gt; otherwise it will not be reduced and the app will no longer update when the user clicks on the buttons.&lt;/p&gt;
-&lt;h3&gt;Adding a Testing Framework&lt;/h3&gt;
+&lt;h3 id="adding-a-testing-framework"&gt;Adding a Testing Framework&lt;/h3&gt;
 &lt;p&gt;As mentioned at the start of the article, one of the main benefits of redux is the ease of testability - this is especially true for Redux Middleware which can be used to express complex business logic which remaining trivial to test.  In the follow examples I will be using a combination of Mocha, Chai, SinonJS.&lt;/p&gt;
 &lt;p&gt;Let's start by writing a test which ensures that the intercepted action is always passed the the &lt;code&gt;next&lt;/code&gt; function.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should pass the intercepted action to next&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -131,7 +131,7 @@
 
 
 &lt;p&gt;If you are new to SinonJS, then you may also be interested to learn of the &lt;a href="http://sinonjs.org/docs/#stubs"&gt;Stub API&lt;/a&gt; which allows you to program the return value of functions, including those attached to existing objects (eg: &lt;code&gt;jQuery.ajax&lt;/code&gt;).&lt;/p&gt;
-&lt;h3&gt;It's Business Time&lt;/h3&gt;
+&lt;h3 id="its-business-time"&gt;It's Business Time&lt;/h3&gt;
 &lt;p&gt;Now we've introduced the core concepts of testing middleware, lets complete this example by implementing a User Story:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;As the product manager I would like to know when users have clicked the increment button 5 times for reporting.&lt;/p&gt;
@@ -203,7 +203,7 @@
 &lt;p&gt;We use sinon to setup spies for both the Redux Middleware API's &lt;code&gt;next&lt;/code&gt; function and our own &lt;code&gt;reportMiddleware&lt;/code&gt;'s &lt;code&gt;callback&lt;/code&gt; function.  It's worth noting that &lt;code&gt;sinon.spy()&lt;/code&gt; returns a normal function which can be used interchangeably.&lt;/p&gt;
 &lt;p&gt;Next we send two actions through our middleware, an &lt;code&gt;INC&lt;/code&gt; and a &lt;code&gt;DEC&lt;/code&gt;.  At this point the middleware's &lt;code&gt;numIncActions&lt;/code&gt; value should be &lt;code&gt;1&lt;/code&gt;, which is not equal to the target value of &lt;code&gt;2&lt;/code&gt;, therefore the callback should not have been invoked yet.  This type of assertion acts as a safety net and can make debugging failing tests much easier.&lt;/p&gt;
 &lt;p&gt;Finally we throw one last &lt;code&gt;INC&lt;/code&gt; action through, we can now check our business logic was implemented correctly and the callback invoked.&lt;/p&gt;
-&lt;h3&gt;Middleware Everywhere!&lt;/h3&gt;
+&lt;h3 id="middleware-everywhere"&gt;Middleware Everywhere!&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="Middleware, Middleware Everywhere" src="/images/2016/redux-middleware/middleware-everywhere-meme.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;This post has hopefully shown how Redux Middleware provides a simple abstraction which makes it possible to write complex logic that is both predictable and easy to test.  In my day-job we make extensive use of middleware to model all of our application's side effects including XHRs, analytics and multi-stage API calls.  If you find yourself getting tired of writing middleware boilerplate you may be interested in taking a look at Redux Saga's which make use of ES7 generator functions to provide a psuedo-blocking API for your side-effect management&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nx"&gt;incrementAsync&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
