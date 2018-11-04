@@ -8,14 +8,14 @@ This guide assumes that you have already [configured your JavaScript project to 
 TL;DR - jump to the [final Travis config](#putting-it-all-together).
 
 ### The Workflow
-The Continuous Delivery workflow I'm going to configure will give your consumers two release channels: __latest__ and __next__. Releases on the __latest__ channel will be triggered by a manual release step and provide stability for your consumers whereas the __next__ channel will be released with every commit to master (typically when a Pull Request is squashed and merged).
+The Continuous Delivery workflow I'm going to configure will give your consumers two release channels: *latest* and *next*. Releases on the *latest* channel will be triggered by a manual release step and provide stability for your consumers whereas the *next* channel will be released with every commit to master (typically when a Pull Request is squashed and merged).
 
 ![Diagram of the desired continuous delivery flow](/images/2018/continuous-delivery-github-npm-travis/cd-flow.jpg)
 
 ### Travis Setup
 The first step is to configure [Travis' npm Publisher](https://docs.travis-ci.com/user/deployment/npm/). The documentation wants us to run `travis setup npm`, but before we can do this, we need to have the Travis CLI installed locally; just follow the [Travis CLI installation guide](https://github.com/travis-ci/travis.rb#installation). 
 
-__Nb:__ Assuming you've logged into npm on your local machine, you can obtain your api key from `~/.npmrc`
+*Nb:* Assuming you've logged into npm on your local machine, you can obtain your api key from `~/.npmrc`
 
 ```
 $ travis setup npm
@@ -62,8 +62,8 @@ With this configuration in place, Travis will now publish a release to npm each 
 ### Npm Release Channels
 In order to create our desired Continuous Delivery pipeline we need to create two release channels: 
 
-* __latest__: Periodically created by the maintainers of the project, reccomended for production usage
-* __next__: Automatically created on every change made to master, reccomended for testing out new features in a non-production environment or for those who like to live dangerously.
+* *latest*: Periodically created by the maintainers of the project, reccomended for production usage
+* *next*: Automatically created on every change made to master, reccomended for testing out new features in a non-production environment or for those who like to live dangerously.
 
 Npm helps us by providing the concept of [dist-tags](https://docs.npmjs.com/getting-started/using-tags). Dist-tags are used by npm to identify what the latest version of any given package is when a user runs npm install. When publishing a package, npm will automatically populate the `dist-tag` to be `latest` if no value is supplied by the user.
 
@@ -94,11 +94,11 @@ npm install example-pkg@next
 
 Now npm will fetch version `0.0.4` as it was the most recent version to be published to the `latest` release channel.
 
-With this in mind we need a way of determining if a release is destined to be published to either the __latest__ or __next__ release channel, but how can we do this? Fortunately semver has us covered with [pre-release versions](https://semver.org/spec/v2.0.0.html#spec-item-9) where a pre-release version (ie: a release to the __next__ channel) may be denoted by appending a hyphen and a series of dot separated identifies immediately following the patch version. 
+With this in mind we need a way of determining if a release is destined to be published to either the *latest* or *next* release channel, but how can we do this? Fortunately semver has us covered with [pre-release versions](https://semver.org/spec/v2.0.0.html#spec-item-9) where a pre-release version (ie: a release to the *next* channel) may be denoted by appending a hyphen and a series of dot separated identifies immediately following the patch version. 
 
-If we set our `package.json` file's `version` property to `x.y.z-next` in master then we can create a distinction between __stable__ and __next__ releases by checking for the presence of the `-next` prefix before the Travis deploy step. 
+If we set our `package.json` file's `version` property to `x.y.z-next` in master then we can create a distinction between *stable* and *next* releases by checking for the presence of the `-next` prefix before the Travis deploy step. 
 
-However, this simple approach will encounter a problem; npm will fail to publish if we try to publish a pre-existing version, and because each pull request we merge into master isn't going to bump our package version we need a way to create unique versions for releases to our __next__ channel. A simple way to achieve this is to append the short git commit hash to our pre-release version suffix, eg: `x.y.z-next.d34db33f`.
+However, this simple approach will encounter a problem; npm will fail to publish if we try to publish a pre-existing version, and because each pull request we merge into master isn't going to bump our package version we need a way to create unique versions for releases to our *next* channel. A simple way to achieve this is to append the short git commit hash to our pre-release version suffix, eg: `x.y.z-next.d34db33f`.
 
 ## Putting it all together
 To add all of the above logic to our `travis.yml` we add a `before_deploy` block and modify our `deploy` bock to make use of the new variable (`NPM_TAG`) it defines:
@@ -125,6 +125,6 @@ deploy:
     branch: master
 ```
 
-With the above configuration in place we can set our package.json file's `version` property to include the `-next` suffix by default and push a commit that removes it each time we want to create a stable release on __latest__ channel.
+With the above configuration in place we can set our package.json file's `version` property to include the `-next` suffix by default and push a commit that removes it each time we want to create a stable release on *latest* channel.
 
 You can see this pipeline in action over on my [js-logger project]().
