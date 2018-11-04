@@ -59,11 +59,11 @@
 <p>This guide assumes that you have already <a href="https://docs.travis-ci.com/user/languages/javascript-with-nodejs/">configured your JavaScript project to build via Travis</a>.</p>
 <p>TL;DR - jump to the <a href="#putting-it-all-together">final Travis config</a>.</p>
 <h3 id="the-workflow">The Workflow</h3>
-<p>The Continuous Delivery workflow I'm going to configure will give your consumers two release channels: <strong>latest</strong> and <strong>next</strong>. Releases on the <strong>latest</strong> channel will be triggered by a manual release step and provide stability for your consumers whereas the <strong>next</strong> channel will be released with every commit to master (typically when a Pull Request is squashed and merged).</p>
+<p>The Continuous Delivery workflow I'm going to configure will give your consumers two release channels: <em>latest</em> and <em>next</em>. Releases on the <em>latest</em> channel will be triggered by a manual release step and provide stability for your consumers whereas the <em>next</em> channel will be released with every commit to master (typically when a Pull Request is squashed and merged).</p>
 <p><img alt="Diagram of the desired continuous delivery flow" src="/images/2018/continuous-delivery-github-npm-travis/cd-flow.jpg"></p>
 <h3 id="travis-setup">Travis Setup</h3>
 <p>The first step is to configure <a href="https://docs.travis-ci.com/user/deployment/npm/">Travis' npm Publisher</a>. The documentation wants us to run <code>travis setup npm</code>, but before we can do this, we need to have the Travis CLI installed locally; just follow the <a href="https://github.com/travis-ci/travis.rb#installation">Travis CLI installation guide</a>. </p>
-<p><strong>Nb:</strong> Assuming you've logged into npm on your local machine, you can obtain your api key from <code>~/.npmrc</code></p>
+<p><em>Nb:</em> Assuming you've logged into npm on your local machine, you can obtain your api key from <code>~/.npmrc</code></p>
 <div class="highlight"><pre><span></span>$ travis setup npm
 Detected repository as jonnyreeves/js-logger, is this correct? <span class="p">|</span>yes<span class="p">|</span> yes
 NPM email address: ***@jon***ves.co.uk
@@ -104,8 +104,8 @@ Encrypt API key? <span class="p">|</span>yes<span class="p">|</span> yes
 <h3 id="npm-release-channels">Npm Release Channels</h3>
 <p>In order to create our desired Continuous Delivery pipeline we need to create two release channels: </p>
 <ul>
-<li><strong>latest</strong>: Periodically created by the maintainers of the project, reccomended for production usage</li>
-<li><strong>next</strong>: Automatically created on every change made to master, reccomended for testing out new features in a non-production environment or for those who like to live dangerously.</li>
+<li><em>latest</em>: Periodically created by the maintainers of the project, reccomended for production usage</li>
+<li><em>next</em>: Automatically created on every change made to master, reccomended for testing out new features in a non-production environment or for those who like to live dangerously.</li>
 </ul>
 <p>Npm helps us by providing the concept of <a href="https://docs.npmjs.com/getting-started/using-tags">dist-tags</a>. Dist-tags are used by npm to identify what the latest version of any given package is when a user runs npm install. When publishing a package, npm will automatically populate the <code>dist-tag</code> to be <code>latest</code> if no value is supplied by the user.</p>
 <p>Here's an example to explain the concept: let's assume that the <code>example-pkg</code> package has 3 distinct versions that have been published to npm under the 'latest' dist-tag:</p>
@@ -131,9 +131,9 @@ Encrypt API key? <span class="p">|</span>yes<span class="p">|</span> yes
 
 
 <p>Now npm will fetch version <code>0.0.4</code> as it was the most recent version to be published to the <code>latest</code> release channel.</p>
-<p>With this in mind we need a way of determining if a release is destined to be published to either the <strong>latest</strong> or <strong>next</strong> release channel, but how can we do this? Fortunately semver has us covered with <a href="https://semver.org/spec/v2.0.0.html#spec-item-9">pre-release versions</a> where a pre-release version (ie: a release to the <strong>next</strong> channel) may be denoted by appending a hyphen and a series of dot separated identifies immediately following the patch version. </p>
-<p>If we set our <code>package.json</code> file's <code>version</code> property to <code>x.y.z-next</code> in master then we can create a distinction between <strong>stable</strong> and <strong>next</strong> releases by checking for the presence of the <code>-next</code> prefix before the Travis deploy step. </p>
-<p>However, this simple approach will encounter a problem; npm will fail to publish if we try to publish a pre-existing version, and because each pull request we merge into master isn't going to bump our package version we need a way to create unique versions for releases to our <strong>next</strong> channel. A simple way to achieve this is to append the short git commit hash to our pre-release version suffix, eg: <code>x.y.z-next.d34db33f</code>.</p>
+<p>With this in mind we need a way of determining if a release is destined to be published to either the <em>latest</em> or <em>next</em> release channel, but how can we do this? Fortunately semver has us covered with <a href="https://semver.org/spec/v2.0.0.html#spec-item-9">pre-release versions</a> where a pre-release version (ie: a release to the <em>next</em> channel) may be denoted by appending a hyphen and a series of dot separated identifies immediately following the patch version. </p>
+<p>If we set our <code>package.json</code> file's <code>version</code> property to <code>x.y.z-next</code> in master then we can create a distinction between <em>stable</em> and <em>next</em> releases by checking for the presence of the <code>-next</code> prefix before the Travis deploy step. </p>
+<p>However, this simple approach will encounter a problem; npm will fail to publish if we try to publish a pre-existing version, and because each pull request we merge into master isn't going to bump our package version we need a way to create unique versions for releases to our <em>next</em> channel. A simple way to achieve this is to append the short git commit hash to our pre-release version suffix, eg: <code>x.y.z-next.d34db33f</code>.</p>
 <h2 id="putting-it-all-together">Putting it all together</h2>
 <p>To add all of the above logic to our <code>travis.yml</code> we add a <code>before_deploy</code> block and modify our <code>deploy</code> bock to make use of the new variable (<code>NPM_TAG</code>) it defines:</p>
 <div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">before_deploy</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|</span>
@@ -158,7 +158,7 @@ Encrypt API key? <span class="p">|</span>yes<span class="p">|</span> yes
 </pre></div>
 
 
-<p>With the above configuration in place we can set our package.json file's <code>version</code> property to include the <code>-next</code> suffix by default and push a commit that removes it each time we want to create a stable release on <strong>latest</strong> channel.</p>
+<p>With the above configuration in place we can set our package.json file's <code>version</code> property to include the <code>-next</code> suffix by default and push a commit that removes it each time we want to create a stable release on <em>latest</em> channel.</p>
 <p>You can see this pipeline in action over on my <a href="">js-logger project</a>.</p>
   </div>
   <div class="tag-cloud">
