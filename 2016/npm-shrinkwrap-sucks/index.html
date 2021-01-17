@@ -52,7 +52,7 @@
 <article>
   <header>
     <h1 id="npm-shrinkwrap-sucks">npm-shrinkwrap Sucks</h1>
-    <p>Posted on Tue 03 May 2016</p>
+    <p>Posted on Tue 03 May 2016 in <a href="https://jonnyreeves.co.uk/category/javascript.html">JavaScript</a></p>
   </header>
   <div>
     <p>Despite suggesting that you should always <a href="/2016/shrinkwrap-your-npm-dependencies">shrinkwrap your npm dependencies</a>, I've come to the conclusion that npm-shrinkwrap not only sucks, but is fundamentally broken.  It doesn't quite suck as much as having your dependencies update underneath your feet, but it still sucks...</p>
@@ -74,27 +74,24 @@
 <p>So this one is not npm-shrinkwrap's fault, but it caused my team to lose some productivity today: our project makes use of 4 (count em!) package.json files, each of which has their own shrinkwrap file - we use these to lock the dependency graph and have a weekly CI task to update everything using <a href="https://www.npmjs.com/package/npm-check-updates">npm-check-updates</a>.  Somehow one of the <code>npm-shrinkwrap.json</code> files went AWOL; everything carried on working as expected for about two weeks but a chunk of the project's dependencies were being updated with each build.  We only found out when <a href="https://github.com/eslint/eslint/issues/6015">a bug in ESLint</a> caused our Pull Request builds to start failing which triggered the obvious question of "Why the hell did ESLint update automatically?!".</p>
 <h2 id="so-whats-the-solution">So what's the solution?</h2>
 <p>A co-worker of mine suggested the blindingly obvious approach of just using explicit versions in the <code>package.json</code> file, so instead of declaring:</p>
-<div class="highlight"><pre><span></span>dependencies: {
-  &quot;left-pad&quot;: &quot;^1.0.2&quot;
-}
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="c">dependencies: {</span>
+<span class="c">  &quot;left-pad&quot;: &quot;^1.0.2&quot;</span>
+<span class="err">}</span>
+</code></pre></div>
 
 <p>You would instead declare:</p>
-<div class="highlight"><pre><span></span>dependencies: {
-  &quot;left-pad&quot;: &quot;1.0.2&quot;
-}
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="c">dependencies: {</span>
+<span class="c">  &quot;left-pad&quot;: &quot;1.0.2&quot;</span>
+<span class="err">}</span>
+</code></pre></div>
 
 <p>That's it.  npm provides the <code>-E, --save-exact</code> flag to do this for you when installing with <code>--save</code> or <code>--save-dev</code>.  <a href="https://www.npmjs.com/package/npm-check-updates">npm-check-updates</a> works as expected (suggesting newer versions) and your pull request diffs go back to a single line.  To prevent developers accidentally committing a "ranged" dependency we've added the following pre-flight check as part of our CI process:</p>
-<div class="highlight"><pre><span></span>grep <span class="se">\&quot;</span><span class="o">[</span>~^<span class="o">]</span> package.json
+<div class="highlight"><pre><span></span><code>grep <span class="se">\&quot;</span><span class="o">[</span>~^<span class="o">]</span> package.json
 <span class="k">if</span> <span class="o">[[</span> <span class="nv">$?</span> !<span class="o">=</span> <span class="m">1</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
   <span class="nb">echo</span> <span class="s2">&quot;Non-exact dependency version detected, install with --save-exact&quot;</span>
   <span class="nb">exit</span> <span class="m">1</span>
 <span class="k">fi</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Having written this, I'm not sure I see any benefits of using <code>npm shrinkwrap</code> instead of enforcing exact dependency versions in your <code>package.json</code> (and using a tool to manually update them on a controlled cadence).</p>
 <h2 id="update-4th-may-2016">Update (4th May 2016)</h2>

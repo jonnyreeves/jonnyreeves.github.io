@@ -52,36 +52,33 @@
 <article>
   <header>
     <h1 id="using-chai-with-typescript-and-mocha">Using Chai with TypeScript and Mocha</h1>
-    <p>Posted on Fri 14 August 2015</p>
+    <p>Posted on Fri 14 August 2015 in <a href="https://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
   </header>
   <div>
     <p>Continuing my work on <a href="/2015/injecting-into-constructors-with-typescript-decorators/">Decorator-drive dependency injection in Typescript</a> I've overhauled the tests by replacing the manual assertions with <a href="http://chaijs.com/">chai</a>.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the <a href="http://chaijs.com/guide/styles/"><code>expect</code></a> style pairs well with TypeScript as I'm not a fan of extending <code>Object.prototype</code>.</p>
 <p>Installation is straight forward. First install <code>chai</code> as a dev dependency:</p>
-<div class="highlight"><pre><span></span>npm install chai --save-dev
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">npm install chai --save-dev</span>
+</code></pre></div>
 
 <p>Next grab the <code>d.ts</code> file for chai via <a href="http://definitelytyped.org/tsd/"><code>tsd</code></a> to obtain the type definitions.</p>
-<div class="highlight"><pre><span></span>tsd install chai --save
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">tsd install chai --save</span>
+</code></pre></div>
 
 <p>You can now start refactoring your test cases; given the following simple mocha test-case:</p>
-<div class="highlight"><pre><span></span>describe(&#39;Calculator&#39;, () =&gt; {
-  it(&#39;should add two numbers&#39;, () =&gt; {
-    const calc : Calculator = new Calculator();
+<div class="highlight"><pre><span></span><code><span class="k">describe</span><span class="p">(</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="err">{</span>
+  <span class="n">it</span><span class="p">(</span><span class="s1">&#39;should add two numbers&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="err">{</span>
+    <span class="n">const</span> <span class="n">calc</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Calculator</span><span class="p">();</span>
 
-    // Manual assertion.
-    if (calc.add(5, 3) !== 8) {
-      throw new Error(&#39;expected 5 + 3 to equal 8&#39;);
-    }
-  });
-});
-</pre></div>
-
+    <span class="o">//</span> <span class="n">Manual</span> <span class="k">assertion</span><span class="p">.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">calc</span><span class="p">.</span><span class="k">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">!==</span> <span class="mi">8</span><span class="p">)</span> <span class="err">{</span>
+      <span class="n">throw</span> <span class="k">new</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;expected 5 + 3 to equal 8&#39;</span><span class="p">);</span>
+    <span class="err">}</span>
+  <span class="err">}</span><span class="p">);</span>
+<span class="err">}</span><span class="p">);</span>
+</code></pre></div>
 
 <p>We can leverage chai's expect method to perform the assertion:</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="p">{</span> <span class="n">expect</span> <span class="p">}</span> <span class="kn">from</span> <span class="s1">&#39;chai&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="p">{</span> <span class="n">expect</span> <span class="p">}</span> <span class="kn">from</span> <span class="s1">&#39;chai&#39;</span><span class="p">;</span>
 
 <span class="n">describe</span><span class="p">(</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="n">it</span><span class="p">(</span><span class="s1">&#39;should add two numbers&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -91,23 +88,21 @@
     <span class="n">expect</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
   <span class="p">});</span>
 <span class="p">});</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>When running the tests, chai will provide a useful error message should the assertion fail:</p>
-<div class="highlight"><pre><span></span>1 failing
+<div class="highlight"><pre><span></span><code><span class="mi">1</span> <span class="n">failing</span>
 
-  1) Calculator should add two numbers:
+  <span class="mi">1</span><span class="p">)</span> <span class="n">Calculator</span> <span class="n">should</span> <span class="k">add</span> <span class="n">two</span> <span class="n">numbers</span><span class="p">:</span>
 
-      AssertionError: expected 6 to equal 8
-      + expected - actual
+      <span class="n">AssertionError</span><span class="p">:</span> <span class="n">expected</span> <span class="mi">6</span> <span class="k">to</span> <span class="n">equal</span> <span class="mi">8</span>
+      <span class="o">+</span> <span class="n">expected</span> <span class="o">-</span> <span class="n">actual</span>
 
-      -8
-      +6
+      <span class="o">-</span><span class="mi">8</span>
+      <span class="o">+</span><span class="mi">6</span>
 
-      at Context.&lt;anonymous&gt; (test/Calculator.spec.js:26:45)
-</pre></div>
-
+      <span class="k">at</span> <span class="n">Context</span><span class="p">.</span><span class="o">&lt;</span><span class="n">anonymous</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">test</span><span class="o">/</span><span class="n">Calculator</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">js</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">45</span><span class="p">)</span>
+</code></pre></div>
 
 <p>Check out <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3">this pull request</a> which highlights how I integrated chai into the ts-prop-inject project.</p>
   </div>

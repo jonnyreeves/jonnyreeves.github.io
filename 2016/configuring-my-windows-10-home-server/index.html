@@ -52,7 +52,7 @@
 <article>
   <header>
     <h1 id="configuring-my-windows-10-home-server">Configuring my Windows 10 Home Server</h1>
-    <p>Posted on Sun 14 August 2016</p>
+    <p>Posted on Sun 14 August 2016 in <a href="https://jonnyreeves.co.uk/category/sysadmin.html">SysAdmin</a></p>
   </header>
   <div>
     <p>I used to run Linux on various small NAS devices (most recently a <a href="http://www.dlink.com/uk/en/support/product/dns-320-2-bay-sharecenter-network-storage-enclosure">D-Link DNS 320</a> 2 bay device), however I got tired of futzing around with both the hardware and the <a href="https://nas-tweaks.net/371/hdd-installation-of-the-fun_plug-0-7-on-nas-devices/">esoteric flavor of Linux</a> you can side-load onto it.  I now run a small <a href="http://www8.hp.com/uk/en/products/proliant-servers/product-detail.html?oid=5379860">HP Proliant Gen8 Microserver</a> configured with 4GB Ram and 3TB of mirrored storage at home; this system is running Windows 10 Professional (pro is required to use the built-in Remote Desktop server).  Below is a list of software I've found useful.</p>
@@ -64,26 +64,23 @@
 <p><img alt="Freebyte Task Scheduler" src="/images/2016/configuring-windows-10-home-server/fbtasksched.png"></p>
 <p>I've never got my head around Windows Scheduled tasks; it seems needlessly complicated compared to cron on Linux.  <a href="http://www.freebyte.com/fbtaskscheduler/">Freebyte Task Scheduler</a> provides a straight forward GUI for automating tasks under your windows user account and doesn't cost anything.</p>
 <p>To get the most out of it you will want to ensure it automatically starts should your server automatically reboot for updates; although you can simple add a shortcut to your User's startup items, I prefer to use <a href="https://nssm.cc/">NSSM</a> (Non-Sucking Service Manager) which you can use to start Freebyte Task Scheduler on system boot (without having to first login); to do this run NSSM from the command line with:</p>
-<div class="highlight"><pre><span></span>nssm install fbtaskscheduler
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">nssm install fbtaskscheduler</span>
+</code></pre></div>
 
 <p>When the GUI appears, point the application path to your <code>FBTaskScheulder.exe</code> binary and make sure the 'Log on' tab is configured with your user's account.</p>
 <h3 id="fastglacier">FastGlacier</h3>
 <p><img alt="FastGlacier" src="/images/2016/configuring-windows-10-home-server/fastglacier.png"></p>
 <p><a href="https://fastglacier.com/">FastGlacier</a> copies files to <a href="https://en.wikipedia.org/wiki/Amazon_Glacier">Amazon Glacier</a> and provides a drag-and-drop Graphical User Interface and a straight forward command line interface.  I use this to archive my photos and music library, both of which are irreplaceable.</p>
 <p>In order to setup an automated backup, you first need to configure a backup set in the GUI.  Once configured use the following command to automate the archive process in a <code>.bat</code> file and schedule it with Freebyte Task Scheduler:</p>
-<div class="highlight"><pre><span></span>REM &#39;s&#39; =&gt; start sync without confirmation.
-&quot;C:\Program Files\FastGlacier\glacier-sync.exe&quot; my-account-name D:\media\photos eu-west-1 my-backup-set/Pictures s
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">REM &#39;s&#39; =&gt; start sync without confirmation.</span>
+<span class="err">&quot;C:\Program Files\FastGlacier\glacier-sync.exe&quot; my-account-name D:\media\photos eu-west-1 my-backup-set/Pictures s</span>
+</code></pre></div>
 
 <h3 id="gmvault">GMVault</h3>
 <p><img alt="gmvault" src="/images/2016/configuring-windows-10-home-server/gmvault-screenshot.png"></p>
 <p><a href="http://gmvault.org/">GMVault</a> can be used to pull down the contents of your GMail so you have an offline copy should you (or someone else!) accidentally delete everything.  Start GMVault for the first time to configure your oauth credentials and then use the following <code>.bat</code> file to automate your backup and then schedule it with Freebyte Task Scheduler:</p>
-<div class="highlight"><pre><span></span><span class="c">%LOCALAPPDATA%\gmvault\gmvault.bat sync you@gmail.com --type quick --db-dir D:\backup\gmvault\you@gmail.com --emails-only</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="c">%LOCALAPPDATA%\gmvault\gmvault.bat sync you@gmail.com --type quick --db-dir D:\backup\gmvault\you@gmail.com --emails-only</span>
+</code></pre></div>
 
 <h3 id="googlemusicsync">GoogleMusicSync</h3>
 <p><img alt="googlemusicsync" src="https://raw.githubusercontent.com/jonnyreeves/googlemusicsync/master/googlemusicsync-screenshot.png"></p>

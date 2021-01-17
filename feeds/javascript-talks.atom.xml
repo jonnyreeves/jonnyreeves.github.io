@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - JavaScript, Talks</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/javascript-talks.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2016-05-28T20:00:00+01:00</updated><entry><title>Redux Middleware</title><link href="https://jonnyreeves.co.uk/2016/redux-middleware/" rel="alternate"></link><published>2016-05-28T20:00:00+01:00</published><updated>2016-05-28T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-05-28:/2016/redux-middleware/</id><summary type="html">&lt;p&gt;This is a supporting post for the talk I am giving at &lt;a href="http://eventbrite.co.uk/e/the-new-shiny-javascript-development-in-2016-tickets-25196915653"&gt;Moo Tech Tuesday on the 31st May&lt;/a&gt; where I will be presenting an introduction to Redux Middleware &lt;a href="https://docs.google.com/a/jonnyreeves.co.uk/presentation/d/1I0s4uCWo7yEU3pLf4R5UjxiCqC3FhFJSSunWq0WAxZI/edit?usp=sharing"&gt;[slide deck]&lt;/a&gt; with advice on how to test it.  The supporting code can be found over on &lt;a href="https://github.com/jonnyreeves/redux-button-masher-example"&gt;Github&lt;/a&gt;.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - JavaScript, Talks</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/javascript-talks.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2016-05-28T20:00:00+01:00</updated><subtitle>code &amp;&amp; coffee || music</subtitle><entry><title>Redux Middleware</title><link href="https://jonnyreeves.co.uk/2016/redux-middleware/" rel="alternate"></link><published>2016-05-28T20:00:00+01:00</published><updated>2016-05-28T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2016-05-28:/2016/redux-middleware/</id><summary type="html">&lt;p&gt;This is a supporting post for the talk I am giving at &lt;a href="http://eventbrite.co.uk/e/the-new-shiny-javascript-development-in-2016-tickets-25196915653"&gt;Moo Tech Tuesday on the 31st May&lt;/a&gt; where I will be presenting an introduction to Redux Middleware &lt;a href="https://docs.google.com/a/jonnyreeves.co.uk/presentation/d/1I0s4uCWo7yEU3pLf4R5UjxiCqC3FhFJSSunWq0WAxZI/edit?usp=sharing"&gt;[slide deck]&lt;/a&gt; with advice on how to test it.  The supporting code can be found over on &lt;a href="https://github.com/jonnyreeves/redux-button-masher-example"&gt;Github&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Redux describes itself …&lt;/p&gt;</summary><content type="html">&lt;p&gt;This is a supporting post for the talk I am giving at &lt;a href="http://eventbrite.co.uk/e/the-new-shiny-javascript-development-in-2016-tickets-25196915653"&gt;Moo Tech Tuesday on the 31st May&lt;/a&gt; where I will be presenting an introduction to Redux Middleware &lt;a href="https://docs.google.com/a/jonnyreeves.co.uk/presentation/d/1I0s4uCWo7yEU3pLf4R5UjxiCqC3FhFJSSunWq0WAxZI/edit?usp=sharing"&gt;[slide deck]&lt;/a&gt; with advice on how to test it.  The supporting code can be found over on &lt;a href="https://github.com/jonnyreeves/redux-button-masher-example"&gt;Github&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Redux describes itself as a Predictable State Container for JavaScript applications; it's a lightweight (~5kb) framework which has a couple of major benefits:&lt;/p&gt;
 &lt;ol&gt;
@@ -19,7 +19,7 @@
 &lt;p&gt;Note that whilst Redux is typically partnered with React, it does not have a dependency on it and can just as easily be paired with &lt;a href="https://vuejs.org/"&gt;Vue.js&lt;/a&gt; or &lt;a href="https://github.com/reactjs/redux/blob/67f9dcca8b359825f1a89b318d2f879f99221032/examples/counter-vanilla/index.html"&gt;plain old DOM manipulation&lt;/a&gt; methods with no other dependencies.&lt;/p&gt;
 &lt;h3 id="keeping-count"&gt;Keeping Count&lt;/h3&gt;
 &lt;p&gt;The rest of this post will be dedicated to extending a simple application.  The consists of a single React view component that offers a counter and two buttons.  Users are able to manipulate the counter by pressing the increment and decrement buttons.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;Counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;props&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;Counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;props&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;count&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;dispatch&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;props&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;div&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
@@ -30,12 +30,11 @@
   &lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="nx"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;state&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="nx"&gt;Counter&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The Counter component is connected to the Redux framework via the &lt;code&gt;connect&lt;/code&gt; method which wraps the Counter component with a state-mapping function (&lt;code&gt;state =&amp;gt; state&lt;/code&gt;) - in this case we are simple accepting the &lt;code&gt;state&lt;/code&gt; object from the Redux store with no changes.  As a side-effect of being connected, the component also receives the &lt;code&gt;dispatch&lt;/code&gt; function in its properties as well as the properties contained in the store's &lt;code&gt;state&lt;/code&gt; object. (in this case, just &lt;code&gt;count&lt;/code&gt;).&lt;/p&gt;
 &lt;p&gt;Each button invokes &lt;code&gt;dispatch&lt;/code&gt; when clicked which creates a new action object with a type property of either 'INC' or 'DEC' based on how we want the counter's value to be mutated.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;initialState&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;initialState&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
 &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;reducer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;initialState&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;type&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INC&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
@@ -46,23 +45,21 @@
       &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;state&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Next we have the reducer function for the application; here we simply switch on the incoming &lt;code&gt;action&lt;/code&gt; object and return a new &lt;code&gt;state&lt;/code&gt; value.  Redux will automatically invoke your reducer function with the current &lt;code&gt;state&lt;/code&gt; object whenever &lt;code&gt;dispatch&lt;/code&gt; is called.  Returning a new object (as is the case for both &lt;code&gt;INC&lt;/code&gt; and &lt;code&gt;DEC&lt;/code&gt; cases), will cause Redux to re-render the view tier thereby updating the counter's value on screen.&lt;/p&gt;
 &lt;h3 id="bringing-back-the-controller"&gt;Bringing Back the Controller&lt;/h3&gt;
 &lt;p&gt;So far our same application has been very simple and has not introduced side-effects.  &lt;a href="https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29"&gt;Side-effect&lt;/a&gt; is the term used when a function modifies some state elsewhere in the system, or interacts with the outside world (ie: makes an API call).  Managing side-effects effectively is key to ensuring that your application stays both predictable and easy to bring under test as functions with side-effects require the reader to understand knowledge about the wider system's context and the system's state prior to the call.  Redux provides a simple yet powerful mechanism for managing side-effects: Middleware.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="/images/2016/redux-middleware/redux-with-middleware.png"&gt;&lt;/p&gt;
 &lt;p&gt;Redux Middleware sits between the view-tier and the reducers giving you a hook to invoke asynchronous business logic after each action has been dispatched.  Middleware is used to enhance a store when it is created through the &lt;code&gt;applyMiddleware&lt;/code&gt; function provided by Redux:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;reduxStore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;createStore&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;reduxStore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;createStore&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
   &lt;span class="nx"&gt;reducer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
   &lt;span class="nx"&gt;applyMiddleware&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;myMiddleware&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;someOtherMiddleware&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
 &lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The Redux Middleware signature can look a little daunting at first with three nested functions required:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;myMiddleware&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;store&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;myMiddleware&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;store&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
       &lt;span class="cm"&gt;/* middleware logic */&lt;/span&gt;
@@ -70,8 +67,7 @@
     &lt;span class="p"&gt;}&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The three functions are invoked right to left with the inner most function called first.  These three functions each provide an essential role to your middleware:&lt;/p&gt;
 &lt;ol&gt;
@@ -80,27 +76,25 @@
 &lt;li&gt;The outer most function receives a reference to the Redux Store API which can be used to get the current state object and dispatch new actions from your middleware.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;ES6 arrow functions allow us to write this mass of functions slightly more succinctly:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;store&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nx"&gt;store&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="cm"&gt;/* middleware logic */&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Okay, let's start getting a bit more concrete and implement the first piece of code for some custom middleware:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;reportMiddleware&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;store&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;reportMiddleware&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;store&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="c1"&gt;// Pass all actions to the next piece of middleware&lt;/span&gt;
   &lt;span class="c1"&gt;// (or the reducer if there is no other middleware).&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The &lt;code&gt;reportMiddleware&lt;/code&gt; will intercept all actions after they've been dispatched.  As per the user story, we only want to track 'INC' actions.  Regardless of the type of action we must always pass the action through to &lt;code&gt;next&lt;/code&gt; otherwise it will not be reduced and the app will no longer update when the user clicks on the buttons.&lt;/p&gt;
 &lt;h3 id="adding-a-testing-framework"&gt;Adding a Testing Framework&lt;/h3&gt;
 &lt;p&gt;As mentioned at the start of the article, one of the main benefits of redux is the ease of testability - this is especially true for Redux Middleware which can be used to express complex business logic which remaining trivial to test.  In the follow examples I will be using a combination of Mocha, Chai, SinonJS.&lt;/p&gt;
 &lt;p&gt;Let's start by writing a test which ensures that the intercepted action is always passed the the &lt;code&gt;next&lt;/code&gt; function.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should pass the intercepted action to next&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should pass the intercepted action to next&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;nextArgs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[];&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;fakeNext&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;nextArgs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;push&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;args&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;fakeStore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
@@ -110,14 +104,13 @@
 
   &lt;span class="nx"&gt;assert&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;deepEqual&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;fakeNext&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;args&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;action passed to next&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Working backwards, we want to assert that the &lt;code&gt;next&lt;/code&gt; function was called with a given &lt;code&gt;action&lt;/code&gt; object.&lt;/p&gt;
 &lt;p&gt;To implement this we need to instantiate an action and then pass it through to our &lt;code&gt;reportMiddleware&lt;/code&gt; invoking each one of the three methods in order replacing both the store, and next arguments with fake counterparts.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;fakeStore&lt;/code&gt; is nothing but an empty object (as our API doesn't actually interact with the store API) - however the &lt;code&gt;fakeNext&lt;/code&gt; is slightly more complex providing a function which records the arguments it was called with storing them in the &lt;code&gt;args&lt;/code&gt; property on itself.&lt;/p&gt;
 &lt;p&gt;The apparatus in the test-case can be simplified by using Sinon.  Sinon provides a &lt;a href="http://sinonjs.org/docs/#spies"&gt;Spy API&lt;/a&gt; which provides instrumented functions which records how they were called and can be used to write expressive assertions:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should pass the intercepted action to next&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should pass the intercepted action to next&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;fakeStore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;fakeNext&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;sinon&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;spy&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
@@ -127,8 +120,7 @@
   &lt;span class="nx"&gt;assert&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ok&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;withArgs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;calledOnce&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
     &lt;span class="s1"&gt;&amp;#39;action passed to next, once&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If you are new to SinonJS, then you may also be interested to learn of the &lt;a href="http://sinonjs.org/docs/#stubs"&gt;Stub API&lt;/a&gt; which allows you to program the return value of functions, including those attached to existing objects (eg: &lt;code&gt;jQuery.ajax&lt;/code&gt;).&lt;/p&gt;
 &lt;h3 id="its-business-time"&gt;It's Business Time&lt;/h3&gt;
@@ -137,7 +129,7 @@
 &lt;p&gt;As the product manager I would like to know when users have clicked the increment button 5 times for reporting.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;This requirement means that we have to observe the number of times the increment button is clicked.  We could model this state in the view-tier, however that could result in the logic being hard to isolate and test - likewise we could push it into the Store's state, however this will make our core domain model more complex and potentially harder to reason about - I feel Middleware is a good fit for this type of problem.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;newReportMiddleware&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;newReportMiddleware&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;numIncActions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;store&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;type&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INC&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -148,12 +140,11 @@
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We start by wrapping everything in yet another function: &lt;code&gt;newReportMiddleware&lt;/code&gt;.  This function acts as a factory and its closure is used to encapsulate the report middleware's state.  This makes it possible to have multiple instances of the same middleware in use at once, but it also makes unit testing much easier as we can guarantee that all state will be reset between tests.&lt;/p&gt;
 &lt;p&gt;Our business logic is simple, each time we see an &lt;code&gt;INC&lt;/code&gt; action we increment the middleware's internal count of INC actions by one.  Next we introduce the logic for detecting when 5 INC actions have been intercepted:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;newReportMiddleware&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;newReportMiddleware&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;numIncActions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;store&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;type&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INC&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -165,11 +156,10 @@
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Great, now we get an alert dialog after every 5 clicks of the increment button; however this isn't very easy to test (and i doubt the author of the User Story had an alert box in mind...) - instead we can leverage our &lt;code&gt;newReportMiddleware&lt;/code&gt; factory function again and use it to supply a configuration object with both a callback function to invoke and a target count value to mod by.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;newReportMiddleware&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="nx"&gt;callback&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;target&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;newReportMiddleware&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="nx"&gt;callback&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;target&lt;/span&gt; &lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;numIncActions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;store&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nx"&gt;action&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;type&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INC&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -181,11 +171,10 @@
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;action&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;With an arguments object in place we can now write a simple test to ensure that the supplied callback is invoked after a given number of INC actions have been intercepted:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should callback after N INC actions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nx"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should callback after N INC actions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;next&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;sinon&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;spy&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;callback&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;sinon&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;spy&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;middleware&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;newReportMiddleware&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="nx"&gt;callback&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="p"&gt;});&lt;/span&gt;
@@ -197,8 +186,7 @@
   &lt;span class="nx"&gt;middleware&lt;/span&gt;&lt;span class="p"&gt;({})(&lt;/span&gt;&lt;span class="nx"&gt;next&lt;/span&gt;&lt;span class="p"&gt;)({&lt;/span&gt; &lt;span class="nx"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INC&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;});&lt;/span&gt;
   &lt;span class="nx"&gt;assert&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ok&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;callback&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;calledOnce&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;after 2 INC, 1 DEC&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We use sinon to setup spies for both the Redux Middleware API's &lt;code&gt;next&lt;/code&gt; function and our own &lt;code&gt;reportMiddleware&lt;/code&gt;'s &lt;code&gt;callback&lt;/code&gt; function.  It's worth noting that &lt;code&gt;sinon.spy()&lt;/code&gt; returns a normal function which can be used interchangeably.&lt;/p&gt;
 &lt;p&gt;Next we send two actions through our middleware, an &lt;code&gt;INC&lt;/code&gt; and a &lt;code&gt;DEC&lt;/code&gt;.  At this point the middleware's &lt;code&gt;numIncActions&lt;/code&gt; value should be &lt;code&gt;1&lt;/code&gt;, which is not equal to the target value of &lt;code&gt;2&lt;/code&gt;, therefore the callback should not have been invoked yet.  This type of assertion acts as a safety net and can make debugging failing tests much easier.&lt;/p&gt;
@@ -206,7 +194,7 @@
 &lt;h3 id="middleware-everywhere"&gt;Middleware Everywhere!&lt;/h3&gt;
 &lt;p&gt;&lt;img alt="Middleware, Middleware Everywhere" src="/images/2016/redux-middleware/middleware-everywhere-meme.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;This post has hopefully shown how Redux Middleware provides a simple abstraction which makes it possible to write complex logic that is both predictable and easy to test.  In my day-job we make extensive use of middleware to model all of our application's side effects including XHRs, analytics and multi-stage API calls.  If you find yourself getting tired of writing middleware boilerplate you may be interested in taking a look at Redux Saga's which make use of ES7 generator functions to provide a psuedo-blocking API for your side-effect management&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nx"&gt;incrementAsync&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nx"&gt;incrementAsync&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
  &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="nx"&gt;delay&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
  &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="nx"&gt;put&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="nx"&gt;type&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;INC&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
@@ -214,4 +202,4 @@
 &lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nx"&gt;watchIncrementAsync&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
  &lt;span class="k"&gt;yield&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nx"&gt;takeEvery&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;INC_ASYNC&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;incrementAsync&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</content></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="JavaScript, Talks"></category></entry></feed>

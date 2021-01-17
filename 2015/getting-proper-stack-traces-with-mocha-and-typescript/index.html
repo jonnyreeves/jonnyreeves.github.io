@@ -13,11 +13,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="" />
 <meta name="author" content="Jonny Reeves" />
-<meta name="description" content="Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right: $npm test Calculator #add 1) should work 0 passing (21ms) 1 failing 1) Calculator #add should work: AssertionError: expected 6 to equal 7 + expected - actual -6 +7 at Context.<anonymous> (test …" />
+<meta name="description" content="Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right: $npm test Calculator #add 1) should work 0 passing (21ms) 1 failing 1) Calculator #add should work: AssertionError: expected 6 to equal 7 + expected - actual -6 +7 at Context.<anonymous …" />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Jonny Reeves"/>
 <meta property="og:title" content="Getting Proper Stack Traces with Mocha and TypeScript"/>
-<meta property="og:description" content="Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right: $npm test Calculator #add 1) should work 0 passing (21ms) 1 failing 1) Calculator #add should work: AssertionError: expected 6 to equal 7 + expected - actual -6 +7 at Context.<anonymous> (test …"/>
+<meta property="og:description" content="Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right: $npm test Calculator #add 1) should work 0 passing (21ms) 1 failing 1) Calculator #add should work: AssertionError: expected 6 to equal 7 + expected - actual -6 +7 at Context.<anonymous …"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="https://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/"/>
 <meta property="og:type" content="article"/>
@@ -52,55 +52,52 @@
 <article>
   <header>
     <h1 id="getting-proper-stack-traces-with-mocha-and-typescript">Getting Proper Stack Traces with Mocha and TypeScript</h1>
-    <p>Posted on Thu 20 August 2015</p>
+    <p>Posted on Thu 20 August 2015 in <a href="https://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
   </header>
   <div>
     <p>Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:</p>
-<div class="highlight"><pre><span></span>$npm test
+<div class="highlight"><pre><span></span><code><span class="err">$</span><span class="n">npm</span> <span class="n">test</span>
 
-  Calculator
-    #add
-      1) should work
+  <span class="n">Calculator</span>
+    <span class="o">#</span><span class="k">add</span>
+      <span class="mi">1</span><span class="p">)</span> <span class="n">should</span> <span class="k">work</span>
 
 
-  0 passing (21ms)
-  1 failing
+  <span class="mi">0</span> <span class="n">passing</span> <span class="p">(</span><span class="mi">21</span><span class="n">ms</span><span class="p">)</span>
+  <span class="mi">1</span> <span class="n">failing</span>
 
-  1) Calculator #add should work:
+  <span class="mi">1</span><span class="p">)</span> <span class="n">Calculator</span> <span class="o">#</span><span class="k">add</span> <span class="n">should</span> <span class="k">work</span><span class="p">:</span>
 
-      AssertionError: expected 6 to equal 7
-      + expected - actual
+      <span class="n">AssertionError</span><span class="p">:</span> <span class="n">expected</span> <span class="mi">6</span> <span class="k">to</span> <span class="n">equal</span> <span class="mi">7</span>
+      <span class="o">+</span> <span class="n">expected</span> <span class="o">-</span> <span class="n">actual</span>
 
-      -6
-      +7
+      <span class="o">-</span><span class="mi">6</span>
+      <span class="o">+</span><span class="mi">7</span>
 
-      at Context.&lt;anonymous&gt; (test/Calculator.spec.js:12:38)
-</pre></div>
-
+      <span class="k">at</span> <span class="n">Context</span><span class="p">.</span><span class="o">&lt;</span><span class="n">anonymous</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">test</span><span class="o">/</span><span class="n">Calculator</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">js</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">38</span><span class="p">)</span>
+</code></pre></div>
 
 <p>The stacktrace at the end points us to the failing assertion; however the stacktrace is pointing <code>Calculator.spec.js</code> - not our TypeScript test-case.  </p>
 <p>The TypeScript compiler (<code>tsc</code>) will generate <a href="http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/">source maps</a> to enable debugging the TypeScript source rather than the transpiled ES5 javascript which gets written out by the compiler.  We can enable this with the <code>--sourcemap</code> flag.</p>
 <p>Problem is that V8 (the engine that powers Node) doesn't use these sourcemaps when generating stacktraces; <a href="https://github.com/evanw/node-source-map-support">source-map-support</a> to the rescue!  We can enable it by passing <code>--require source-map-support/register</code> to <code>mocha</code>:</p>
-<div class="highlight"><pre><span></span>{
-    &quot;scripts&quot;: {
-      &quot;test&quot;: &quot;mocha --require source-map-support/register test/**/*.spec.js&quot;
-    }
-}
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">{</span>
+<span class="err">    &quot;scripts&quot;: {</span>
+<span class="err">      &quot;test&quot;: &quot;mocha --require source-map-support/register test/**/*.spec.js&quot;</span>
+<span class="err">    }</span>
+<span class="err">}</span>
+</code></pre></div>
 
 <p>Now we get an accurate stacktrace on failure :)</p>
-<div class="highlight"><pre><span></span>  1) Calculator #add should work:
+<div class="highlight"><pre><span></span><code>  <span class="mi">1</span><span class="p">)</span> <span class="n">Calculator</span> <span class="o">#</span><span class="k">add</span> <span class="n">should</span> <span class="k">work</span><span class="p">:</span>
 
-      AssertionError: expected 6 to equal 7
-      + expected - actual
+      <span class="n">AssertionError</span><span class="p">:</span> <span class="n">expected</span> <span class="mi">6</span> <span class="k">to</span> <span class="n">equal</span> <span class="mi">7</span>
+      <span class="o">+</span> <span class="n">expected</span> <span class="o">-</span> <span class="n">actual</span>
 
-      -6
-      +7
+      <span class="o">-</span><span class="mi">6</span>
+      <span class="o">+</span><span class="mi">7</span>
 
-      at Context.&lt;anonymous&gt; (test/Calculator.spec.ts:15:22)
-</pre></div>
-
+      <span class="k">at</span> <span class="n">Context</span><span class="p">.</span><span class="o">&lt;</span><span class="n">anonymous</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">test</span><span class="o">/</span><span class="n">Calculator</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">ts</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span><span class="mi">22</span><span class="p">)</span>
+</code></pre></div>
 
 <p>Thanks to redditor <a href="https://www.reddit.com/user/pieeta">pieeta</a> who tipped me off :)  I've posted the sample project up on <a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces">Github</a>.</p>
   </div>
@@ -148,7 +145,7 @@
   },
   "image": "/images/avatar.jpg",
   "url": "https://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/",
-  "description": "Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right: $npm test Calculator #add 1) should work 0 passing (21ms) 1 failing 1) Calculator #add should work: AssertionError: expected 6 to equal 7 + expected - actual -6 +7 at Context.<anonymous> (test …"
+  "description": "Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right: $npm test Calculator #add 1) should work 0 passing (21ms) 1 failing 1) Calculator #add should work: AssertionError: expected 6 to equal 7 + expected - actual -6 +7 at Context.<anonymous …"
 }
 </script></body>
 </html>

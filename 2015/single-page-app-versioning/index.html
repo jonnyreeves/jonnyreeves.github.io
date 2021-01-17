@@ -52,13 +52,13 @@
 <article>
   <header>
     <h1 id="single-page-app-versioning">Single Page App Versioning</h1>
-    <p>Posted on Sat 26 September 2015</p>
+    <p>Posted on Sat 26 September 2015 in <a href="https://jonnyreeves.co.uk/category/2015.html">2015</a></p>
   </header>
   <div>
     <p>Versioning applications isn't quite as clear cut as <a href="http://semver.org/">versioning libraries</a>; individuals on teams will almost certainly fork the codebase to work on features (sometimes long-lived) but you will still want to provide an easy, and consistent way to refer to each build generated from your Continuous Integration system.</p>
 <p>My preferred approach combines the human managed semantic version number from a project's <code>package.json</code> file with the short commit hash; ie: <code>0.1.6-deff00</code>; you can configure your project's build system to replace the commit hash for local (non-ci) builds.  This also has the nice advantage of making each build traceable back to your project's Git repository should you forget to tag a build :)</p>
 <p>The following example is for <a href="https://webpack.github.io/">webpack</a>, but could easily be modified for any build system:</p>
-<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">webpack</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;webpack&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="kd">var</span> <span class="nx">webpack</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;webpack&#39;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">gitrev</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;git-rev-sync&#39;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">pkg</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./package.json&#39;</span><span class="p">)</span>
 
@@ -74,7 +74,7 @@
     <span class="p">})</span>
   <span class="p">]</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
   </div>
   <div class="tag-cloud">
     <p>

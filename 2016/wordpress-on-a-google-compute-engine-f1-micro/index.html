@@ -52,7 +52,7 @@
 <article>
   <header>
     <h1 id="wordpress-on-a-google-compute-engine-f1-micro">Wordpress on a Google Compute Engine f1-micro</h1>
-    <p>Posted on Tue 04 October 2016</p>
+    <p>Posted on Tue 04 October 2016 in <a href="https://jonnyreeves.co.uk/category/sysadmin.html">SysAdmin</a></p>
   </header>
   <div>
     <p>The cheapest offering on <a href="https://cloud.google.com/">Google's cloud platform</a> is the f1-micro instance.  The f1-micro is a shared core machine which provides access to a single, virtualised CPU core (with burst capability to help with sudden load spikes) and a meagre 0.6GB of memory: these specs don't sound great, but it turns out you can just about cram a moddest-traffic Wordpress instance on it with a little tweaking - and here's the good news, it'll only set you back £50 a year!</p>
@@ -73,26 +73,23 @@
 <p>By default, Compute Engine instances are assigned an ephemeral IP (meaning that it may change should the instance shutdown); for production websites you need to assign a static IP to your instance so you can point your doman at it; this can be done through the Networking <a href="https://console.cloud.google.com/networking/addresses/list">External IP Addresses Control Panel</a> - you can select a the 'Regional' type selecting the same region where your instance is running (eg: <code>europe-west-1</code>).</p>
 <h2 id="base-lemp-setup">Base LEMP Setup</h2>
 <p>The following is based off a stock Debian Jessie install; I make use of Nginx (less CPU and memory intensive then Apache), <a href="https://php-fpm.org/about/">PHP-FPM</a> (connects Nginx and PHP), PHP 5 and MySQL. The following command will install all of the required dependencies:</p>
-<div class="highlight"><pre><span></span>$ sudo apt-get install mysql-server nginx php5-fpm php5-mysql php-apc <span class="se">\</span>
+<div class="highlight"><pre><span></span><code>$ sudo apt-get install mysql-server nginx php5-fpm php5-mysql php-apc <span class="se">\</span>
     pwgen python-setuptools curl git unzip php5-curl php5-gd php5-intl <span class="se">\</span>
     php-pear php5-imagick php5-mcrypt php5-pspell php5-recode <span class="se">\</span>
     php5-sqlite php5-xmlrpc php5-xsl
-</pre></div>
-
+</code></pre></div>
 
 <p>Once installed; you will need to tweak your php-fpm settings, and change the <a href="http://serverfault.com/a/701500/81035"><code>cgi.fix_pathinfo</code></a> setting from <code>1</code> to <code>0</code>:</p>
-<div class="highlight"><pre><span></span>$ sudo sed -i <span class="s2">&quot;s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g&quot;</span> /etc/php5/fpm/php.ini
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>$ sudo sed -i <span class="s2">&quot;s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g&quot;</span> /etc/php5/fpm/php.ini
+</code></pre></div>
 
 <p>You may also want to increase the max upload filesize from the 2MB default:</p>
-<div class="highlight"><pre><span></span>$ sudo sed -i <span class="s2">&quot;s/upload_max_filesize =.*/upload_max_filesize = 20M/g&quot;</span> /etc/php5/fpm/php.ini
+<div class="highlight"><pre><span></span><code>$ sudo sed -i <span class="s2">&quot;s/upload_max_filesize =.*/upload_max_filesize = 20M/g&quot;</span> /etc/php5/fpm/php.ini
 $ sudo sed -i <span class="s2">&quot;s/post_max_size =.*/post_max_size = 20M/g&quot;</span> /etc/php5/fpm/php.ini
-</pre></div>
-
+</code></pre></div>
 
 <p>Now configure Nginx's default site by editing <code>/etc/nginx/sites-available/default</code>:</p>
-<div class="highlight"><pre><span></span>server {
+<div class="highlight"><pre><span></span><code>server {
         listen   80;
         listen   [::]:80 default ipv6only=on;
         root /usr/share/nginx/www;
@@ -110,26 +107,23 @@ $ sudo sed -i <span class="s2">&quot;s/post_max_size =.*/post_max_size = 20M/g&q
                 fastcgi_pass unix:/var/run/php5-fpm.sock;
         }
 }
-</pre></div>
-
+</code></pre></div>
 
 <p>When you make changes to your configuration, you will need to restart the associated services:</p>
-<div class="highlight"><pre><span></span>$ sudo service nginx restart
+<div class="highlight"><pre><span></span><code>$ sudo service nginx restart
 $ sudo service php5-fpm restart
-</pre></div>
-
+</code></pre></div>
 
 <p>This configuration will serve php from <code>/usr/share/nginx/www</code> - drop an <code>index.php</code> file there which invokes <code>phpinfo()</code> and visit your Compute Engine instance's IP address in your browser to confirm that everything has been configured - make sure you delete that file once you're done.</p>
 <h2 id="wordpress-install">Wordpress Install</h2>
 <p>Now the easy bit :)  Start by grabbing wordpress:</p>
-<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> /usr/share/nginx
+<div class="highlight"><pre><span></span><code>$ <span class="nb">cd</span> /usr/share/nginx
 $ wget https://wordpress.org/latest.tar.gz
 $ tar xvf latest.tar.gz <span class="o">&amp;&amp;</span> rm latest.tar.gz
 $ mv wordpress www
 $ chown -R www-data:www-data
 $ chmod -R <span class="m">766</span> ./www/wp-content/uploads
-</pre></div>
-
+</code></pre></div>
 
 <p>You can now visit your Compute Engine instance's IP address in your browser and the Wordpress installation script should start; you may want to consider <a href="https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql">creating a MySQL user</a> for wordpress without GRANT and ALTER permissions.</p>
 <h3 id="enabling-automatic-updates">Enabling Automatic Updates</h3>
@@ -142,38 +136,34 @@ $ chmod -R <span class="m">766</span> ./www/wp-content/uploads
 <h2 id="wordpress-hardening">Wordpress Hardening</h2>
 <p>Because of the limited resources avaliable to your instance, it's possible for qutie meagre Denail of Service (DoS) attacks to peg your server's CPU or even knock it offline (by running out of memory).</p>
 <p>In my case, just minutes after I had got gotten Wordpress configured the nginx access.log (<code>/var/log/nginx/access.log</code>) started filling up with the following entries:</p>
-<div class="highlight"><pre><span></span>192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &quot;POST /xmlrpc.php HTTP/1.1&quot; 499 0 &quot;-&quot; &quot;Googlebot/2.1 (+http://www.go
-ogle.com/bot.html)&quot;
-192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &quot;POST /xmlrpc.php HTTP/1.1&quot; 499 0 &quot;-&quot; &quot;Googlebot/2.1 (+http://www.go
-ogle.com/bot.html)&quot;
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &quot;POST /xmlrpc.php HTTP/1.1&quot; 499 0 &quot;-&quot; &quot;Googlebot/2.1 (+http://www.go</span>
+<span class="err">ogle.com/bot.html)&quot;</span>
+<span class="err">192.69.89.173 - - [02/Oct/2016:21:13:50 +0000] &quot;POST /xmlrpc.php HTTP/1.1&quot; 499 0 &quot;-&quot; &quot;Googlebot/2.1 (+http://www.go</span>
+<span class="err">ogle.com/bot.html)&quot;</span>
+</code></pre></div>
 
 <p>That host was hitting me with ~12 requests per second which was enough to spike my CPU usage and cause significant slow-down.</p>
 <p><img alt="CPU Graph" src="/images/2016/wordpress-google-compute-engine-f1-micro/cpu-graph.png"></p>
 <h3 id="fail2ban">Fail2Ban</h3>
 <p><a href="http://www.fail2ban.org/wiki/index.php/Main_Page">Fail2Ban</a> scans your server's log files and can be configured to ban IP addresses based on filters you define.</p>
 <p>Start by installing and enabling fail2ban with:</p>
-<div class="highlight"><pre><span></span>$ sudo apt-get install fail2ban
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>$ sudo apt-get install fail2ban
+</code></pre></div>
 
 <p>Next create a new filter in <code>/etc/fail2ban/filter.d/wordpress.conf</code></p>
-<div class="highlight"><pre><span></span><span class="k">[Definition]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[Definition]</span>
 <span class="na">failregex</span> <span class="o">=</span> <span class="s">&lt;HOST&gt;.*POST.*(wp-login\.php|xmlrpc\.php).* (403|499|502)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Next copy <code>/etc/fail2ban/jail.conf</code> to <code>jail.local</code> and append a new rule:</p>
-<div class="highlight"><pre><span></span><span class="k">[wordpress]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[wordpress]</span>
 <span class="na">enabled</span>  <span class="o">=</span> <span class="s">true</span>
 <span class="na">port</span>     <span class="o">=</span> <span class="s">http,https</span>
 <span class="na">filter</span>   <span class="o">=</span> <span class="s">wordpress</span>
 <span class="na">logpath</span>  <span class="o">=</span> <span class="s">/var/log/nginx/access.log</span>
 <span class="na">maxretry</span> <span class="o">=</span> <span class="s">3</span>
 <span class="na">bantime</span>  <span class="o">=</span> <span class="s">3600</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This configuration will allow 3 such log entries before banning that IP for 1 hour.</p>
 <h3 id="wp-super-cache">WP Super Cache</h3>

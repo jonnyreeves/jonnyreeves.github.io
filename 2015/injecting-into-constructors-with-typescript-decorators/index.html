@@ -52,31 +52,29 @@
 <article>
   <header>
     <h1 id="injecting-into-constructors-with-typescript-decorators">Injecting into Constructors with TypeScript Decorators</h1>
-    <p>Posted on Thu 06 August 2015</p>
+    <p>Posted on Thu 06 August 2015 in <a href="https://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
   </header>
   <div>
     <p>In the <a href="/2015/injecting-into-methods-with-typescript-decorators/">previous post</a> I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with <a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/">AS3 Metadata</a>, you can't annotate the <code>#constructor()</code> method directly:</p>
-<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">MyClass</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">class</span> <span class="nx">MyClass</span> <span class="p">{</span>
 
   <span class="c1">// Although this would be the preferred syntax it will throw a compiler error,</span>
   <span class="c1">// TS1206: Decorators are not valid here.</span>
   <span class="kd">@inject</span><span class="p">(</span><span class="s1">&#39;firstName&#39;</span><span class="p">)</span>
   <span class="kr">constructor</span><span class="p">(</span><span class="nx">name</span> : <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Instead, we need to add the decorator to the Class, ie:</p>
-<div class="highlight"><pre><span></span><span class="kd">@inject</span><span class="p">(</span><span class="s1">&#39;firstName&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">@inject</span><span class="p">(</span><span class="s1">&#39;firstName&#39;</span><span class="p">)</span>
 <span class="kr">class</span> <span class="nx">MyClass</span> <span class="p">{</span>
   <span class="kr">constructor</span><span class="p">(</span><span class="nx">name</span> : <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This is slightly awkward as it moves our decorator away from the constructor declaration which contains our injection arguments - that's somewhat compounded by the fact constructor injection is the most desirable form of the three (constructor, method and property) as it promotes immutability by ensuring an object has all of its dependencies when constructed - still, at least it works :)</p>
 <p>The first change is to the <code>@inject</code> decorator, previously we expected the first argument to the decoratorFactory (<code>target</code>) to be the instance of the Class being decorated; however because we are decorating the class itself, the decoratorFactory can't be invoked with the instance, instead it receives a reference to the Class' constructor function, likewise it does not receive a <code>decoratedPropertyName</code> argument.:</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="kd">function</span> <span class="nx">decoratorFactory</span><span class="p">(</span><span class="nx">target</span> : <span class="kt">Object</span><span class="o">|</span><span class="nb">Function</span><span class="p">,</span> <span class="nx">decoratedPropertyName?</span> : <span class="kt">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">targetType</span> : <span class="kt">Function</span><span class="p">;</span>
 
@@ -89,8 +87,7 @@
 
     <span class="cm">/* ... */</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Next we need to record the <code>injectionKeys</code> that the user wants to be used to fulfill the constructor's dependencies - our <code>InjectionPoint</code> object is currently used to record dependencies, however it doesn't really fit for recording a constructor's dependencies:</p>
 <ul>
@@ -98,7 +95,7 @@
 <li><code>InjectionPoint#inject()</code> is expected to perform the injection against the target instance, but we need to Construct a new instance (and return it)</li>
 </ul>
 <p>To deal with these special cases I ended up creating the <code>ConstructorInjectionPoint</code> class which specialises <code>InjectionPoint</code> to deal with the issues outlined above:</p>
-<div class="highlight"><pre><span></span><span class="kr">export</span> <span class="kr">class</span> <span class="nx">ConstructorInjectionPoint</span> <span class="kr">extends</span> <span class="nx">InjectionPoint</span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="kr">class</span> <span class="nx">ConstructorInjectionPoint</span> <span class="kr">extends</span> <span class="nx">InjectionPoint</span><span class="p">{</span>
     <span class="kr">constructor</span><span class="p">(</span><span class="nx">injectionKeys</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
         <span class="kr">super</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s1">&#39;constructor&#39;</span><span class="p">,</span> <span class="nx">injectionKeys</span><span class="p">);</span>
     <span class="p">}</span>
@@ -107,12 +104,11 @@
         <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Unsupported operation #inject()&#39;</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This style of specialisation is not ideal; the worst offender is that <code>ConstructorInjectionPoint#inject()</code> throws an unsupported operation error - this design leads to a violation of the Liskov Substitution Principle (all sub-types should be interchangeable with their parent type) so it's something I plan to come back and revisit at a later date. </p>
 <p>The decorator can now create the appropriate <code>InjectionPoint</code> type based on the arguments it receives</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span> <span class="nx">inject</span><span class="p">(...</span><span class="nx">injectionKeys</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="kd">function</span> <span class="nx">decoratorFactory</span><span class="p">(</span><span class="nx">target</span> : <span class="kt">Object</span><span class="o">|</span><span class="nb">Function</span><span class="p">,</span> <span class="nx">decoratedPropertyName?</span> : <span class="kt">string</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">targetType</span> : <span class="kt">Function</span><span class="p">;</span>
     <span class="kd">let</span> <span class="nx">injectionPoint</span> : <span class="kt">InjectionPoint</span><span class="p">;</span>
@@ -131,11 +127,10 @@
 
     <span class="nx">targetType</span><span class="p">.</span><span class="nx">__inject__</span><span class="p">[</span><span class="nx">injectionPoint</span><span class="p">.</span><span class="nx">propertyName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">injectionPoint</span><span class="p">;</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now that the <code>ConstructorInjectionPoint</code> is being recorded, we need to modify <code>Injector#instantiate()</code> to make use of it when creating the resulting instance:</p>
-<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Injector</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">class</span> <span class="nx">Injector</span> <span class="p">{</span>
   <span class="nx">instantiate</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">Class</span> : <span class="kt">Constructable</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">T</span> <span class="p">{</span>
     <span class="c1">// Create an instance of the target Class applying the Constructor InjectionPoint if it has one.</span>
     <span class="kr">const</span> <span class="nx">instance</span> : <span class="kt">T</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createInjecteeInstance</span><span class="p">(</span><span class="nx">Class</span><span class="p">);</span>
@@ -158,11 +153,10 @@
     <span class="k">return</span> <span class="nx">result</span> <span class="o">||</span> <span class="k">new</span> <span class="nx">Class</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The <code>invokeConstructor()</code> is a necessary evil that crops up in a lot of languages where you wish to call a constructor function with the <code>new</code> keyword.  Note that you can't make use of <code>Function.apply</code> here as there is no valid scope to pass (the scope is the new instance!), as a result we end up with this familiar pattern, the pyramid of doom:</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">invokeConstructor</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">Class</span> <span class="o">:</span> <span class="p">{</span> <span class="k">new</span><span class="p">(...</span><span class="nx">args</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">T</span> <span class="p">},</span> <span class="nx">args</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">T</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span> <span class="nx">invokeConstructor</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">Class</span> <span class="o">:</span> <span class="p">{</span> <span class="k">new</span><span class="p">(...</span><span class="nx">args</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">T</span> <span class="p">},</span> <span class="nx">args</span> : <span class="kt">Array</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">T</span> <span class="p">{</span>
     <span class="k">switch</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">case</span> <span class="nx">0</span>: <span class="kt">return</span> <span class="k">new</span> <span class="nx">Class</span><span class="p">();</span>
         <span class="k">case</span> <span class="nx">1</span>: <span class="kt">return</span> <span class="k">new</span> <span class="nx">Class</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
@@ -171,8 +165,7 @@
         <span class="k">default</span><span class="o">:</span>
           <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;I got bored...&quot;</span><span class="p">);</span>
     <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>As before I've pushed the code to <a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection">Github</a> and create a <a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2">Pull Request</a> to highlight changes from the previous post.</p>
   </div>

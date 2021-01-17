@@ -52,12 +52,12 @@
 <article>
   <header>
     <h1 id="listening-for-jquery-mobile-slider-events">Listening for jQuery Mobile Slider Events</h1>
-    <p>Posted on Tue 24 July 2012</p>
+    <p>Posted on Tue 24 July 2012 in <a href="https://jonnyreeves.co.uk/category/javascript.html">JavaScript</a></p>
   </header>
   <div>
     <p>jQuery Mobile provides a neat little slider control; however, the version 1.1 release doesn’t behave very well and fails to dispatch the expected start and stop events triggered by jQuery UI’s slider control. <a href="https://github.com/jquery/jquery-mobile/issues/1589">This issue (#1589)</a> has been raised on jQuery Mobile’s GitHub Issue Tracker but it looks like it won’t be addressed until jQuery Mobile 1.2</p>
 <p>The code below is a patch which you can drop into your application’s startup routine; it adds a couple of event listeners to the DOM which will trigger the start and stop events based on the user’s interaction with the slider’s thumb and track.</p>
-<div class="highlight"><pre><span></span><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">({</span>
+<div class="highlight"><pre><span></span><code><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">on</span><span class="p">({</span>
     <span class="s2">&quot;mousedown touchstart&quot;</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
         <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">siblings</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">);</span>
     <span class="p">},</span>
@@ -65,11 +65,10 @@
         <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">siblings</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">},</span> <span class="s2">&quot;.ui-slider&quot;</span><span class="p">);</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>In a nutshell, it binds an event listener to the document object which listens for both <code>mousedown</code> and <code>touchstart</code> events triggered from <code>.ui-slider</code> elements. Once triggered the handler function will find the input element which sits alongside the <code>.ui-slider</code> control that was interacted with and trigger the corresponding event. You can consume these events like so:</p>
-<div class="highlight"><pre><span></span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#my-slider&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
+<div class="highlight"><pre><span></span><code><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#my-slider&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> 
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;User has started sliding my-slider!&quot;</span><span class="p">);</span>
 <span class="p">});</span>
 
@@ -77,15 +76,14 @@
     <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;User has finished sliding my slider, final value: &quot;</span> <span class="o">+</span> <span class="nx">value</span><span class="p">);</span>
 <span class="p">});</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>As always, you can also subscribe to the slider’s change event if you want to listen for the actual slide.</p>
-<div class="highlight"><pre><span></span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#my-slider&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#my-slider&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Slider is moving, it&#39;s value is now: &quot;</span> <span class="o">+</span> <span class="nx">value</span><span class="p">);</span>
 <span class="p">});</span>
-</pre></div>
+</code></pre></div>
   </div>
   <div class="tag-cloud">
     <p>

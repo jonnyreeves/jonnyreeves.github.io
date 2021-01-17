@@ -52,29 +52,27 @@
 <article>
   <header>
     <h1 id="dont-always-npm-install-g">Don't (always) npm install -g</h1>
-    <p>Posted on Thu 26 November 2015</p>
+    <p>Posted on Thu 26 November 2015 in <a href="https://jonnyreeves.co.uk/category/javascript.html">JavaScript</a></p>
   </header>
   <div>
     <p>Had a chat with a respected hacker friend of mine who did not know about this trick (although to be fair, I'm not sure I knew about it until all that long ago).</p>
 <p>There's almost never any need to use <code>npm install -g</code>, you could argue it's an anti-pattern as it makes your software harder to install for other users and can easily cause conflcits between projects.  The most common candidates for a bit of global installing are test and build utils like mocha, typescript and grunt-cli; instead of reaching for <code>-g</code> you can install them locally in your project and execute them from the symlink created in <code>node_modules/.bin</code>, eg:</p>
-<div class="highlight"><pre><span></span>npm install --save-dev mocha
+<div class="highlight"><pre><span></span><code>npm install --save-dev mocha
 ./node_modules/.bin/mocha --help
-</pre></div>
-
+</code></pre></div>
 
 <p>You can also make use of the <code>npm bin</code> command which will resolve the nearest <code>node_modules/.bin</code> path to the cwd:</p>
-<div class="highlight"><pre><span></span>`npm bin`/mocha --help
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">`npm bin`/mocha --help</span>
+</code></pre></div>
 
 <p>As an added bonus, NPM scripts don't need to add the <code>node_modules/.bin</code> prefix - it's added automatically:</p>
-<div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;my-awesome-pkg&quot;</span><span class="p">,</span>
   <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;test&quot;</span><span class="p">:</span> <span class="s2">&quot;mocha&quot;</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
   </div>
   <div class="tag-cloud">
     <p>

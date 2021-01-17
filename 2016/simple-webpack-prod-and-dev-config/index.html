@@ -52,13 +52,13 @@
 <article>
   <header>
     <h1 id="simple-webpack-prod-and-dev-config">Simple Webpack Prod and Dev Config</h1>
-    <p>Posted on Mon 29 February 2016</p>
+    <p>Posted on Mon 29 February 2016 in <a href="https://jonnyreeves.co.uk/category/2016.html">2016</a></p>
   </header>
   <div>
     <p>Webpack 2 is just around the corner with the <a href="https://gist.github.com/sokra/27b24881210b56bbaff7#configuration">promise of easier command line configuration</a>, however whilst we're stuck with webpack 1, here's an easy way to split you configuration between your development flow (with hot-module-reloading) and production (with minification).</p>
 <p>The trick revolves around the fact that webpack configuration can be a CommonJS module and can pick up on environment variables via Node's <code>process.env</code> object.</p>
 <p>Start by modifying your <code>webpack.config.js</code> file (typically in the root of your project, next to your <code>package.json</code> file) to look something like this:</p>
-<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">webpack</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;webpack&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="kd">var</span> <span class="nx">webpack</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;webpack&quot;</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">isProd</span> <span class="o">=</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">===</span> <span class="s1">&#39;production&#39;</span><span class="p">);</span>
 
@@ -93,20 +93,18 @@
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">plugins</span><span class="o">:</span> <span class="nx">getPlugins</span><span class="p">()</span>
 <span class="p">};</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>With this in place you can now set the <code>NODE_ENV</code> environment variable before invoking webpack's command line tool:</p>
-<div class="highlight"><pre><span></span>NODE_ENV=production webpack
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">NODE_ENV=production webpack</span>
+</code></pre></div>
 
 <p>If you are using <a href="http://blog.keithcirkel.co.uk/why-we-should-stop-using-grunt/">npm scripts for your build process</a>, you can add a <code>start</code> script to spin up your hot-loading development server and a <code>dist</code> script for creating your distribution assets for production. (note there's no need to set the <code>NODE_ENV</code> environment variable outside of production as an empty (<code>undefined</code>) value will default to false in your webpack config):</p>
-<div class="highlight"><pre><span></span>&quot;scripts&quot;: {
-  &quot;dist&quot;: &quot;NODE_ENV=production webpack&quot;,
-  &quot;start&quot;: &quot;webpack&quot;,
-}
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">&quot;scripts&quot;: {</span>
+<span class="err">  &quot;dist&quot;: &quot;NODE_ENV=production webpack&quot;,</span>
+<span class="err">  &quot;start&quot;: &quot;webpack&quot;,</span>
+<span class="err">}</span>
+</code></pre></div>
   </div>
   <div class="tag-cloud">
     <p>

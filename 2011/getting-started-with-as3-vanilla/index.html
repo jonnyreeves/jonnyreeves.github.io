@@ -52,13 +52,13 @@
 <article>
   <header>
     <h1 id="getting-started-with-as3-vanilla">Getting Started with AS3 Vanilla</h1>
-    <p>Posted on Sun 14 August 2011</p>
+    <p>Posted on Sun 14 August 2011 in <a href="https://jonnyreeves.co.uk/category/actionscript.html">ActionScript</a></p>
   </header>
   <div>
     <p>A lot of people are excited about the news that Native JSON support is coming with <a href="https://web.archive.org/web/20120104112810/http://www.bytearray.org/?p=3066">Flash Player 11</a>; however, I’ve also seen a lot of people get a bit confused by what this actually means – if you were hoping that Flash would be able to magically convert your parsed JSON Strings into your own Model objects then you’re going to be left a touch disappointed – until now!</p>
 <h3 id="thats-just-weak">That’s Just Weak...</h3>
 <p>Let’s start by using the new native JSON methods to parse some JSON and see what we get back, for this example I will be making use of the Yahoo! Weather API to get the forcast for London.</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Main</span> <span class="kd">extends</span> <span class="nb">Sprite</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Main</span> <span class="kd">extends</span> <span class="nb">Sprite</span> <span class="p">{</span>
     <span class="kd">private</span> <span class="k">var</span> <span class="nx">loader</span> <span class="o">:</span> <span class="nb">URLLoader</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">URLLoader</span><span class="p">();</span>
 
     <span class="kd">public</span> <span class="kd">function</span> <span class="nx">Main</span><span class="p">()</span> <span class="p">{</span>
@@ -75,17 +75,15 @@
         <span class="kd">const</span> <span class="nx">jsonObject</span> <span class="o">:</span> <span class="nb">Object</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">rawJson</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The above code given provides me with a <code>jsonObject</code> property, however, it’s completely dynmaic; this means I won’t gain any of the benefits of Strong Typing such as code hinting – if I want to access the properties, I have to know their names, eg:</p>
-<div class="highlight"><pre><span></span><span class="nf">trace</span><span class="p">(</span><span class="s2">&quot;The weather in &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">condition</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">day</span><span class="p">);</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="nf">trace</span><span class="p">(</span><span class="s2">&quot;The weather in &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">condition</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">jsonObject</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">day</span><span class="p">);</span>
+</code></pre></div>
 
 <h3 id="getting-harder">Getting Harder...</h3>
 <p>If you plan on passing the forecast data around in your application then you are going to start wishing you were making use of Strongly typed Model objects (for example, if you rely on using dyanmic objects then a simple typo in another class may cause you a headache) – ok, not a problem, the first step is to create a couple: (note I am not representing the entire Object Graph here to save space.</p>
-<div class="highlight"><pre><span></span><span class="c1">// Use a JSON decoder to convert the rawJson String into an Object.</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Use a JSON decoder to convert the rawJson String into an Object.</span>
 <span class="kd">const</span> <span class="nx">jsonObject</span> <span class="o">:</span> <span class="nb">Object</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">rawJson</span><span class="p">);</span>
 
 <span class="c1">// Copy of the fields from the jsonObject into our strongly typed Model.</span>
@@ -113,34 +111,31 @@
 <span class="p">}</span>
 
 <span class="nf">trace</span><span class="p">(</span><span class="s2">&quot;The weather in &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">condition</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">day</span><span class="p">);</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Crikey, that’s an awful lot of a lot of code; well – at least now if we’ve made a typo anywhere, or if Yahoo decide to change their API at least we only have to make our changes in a single place – there must be an easier way of doing this?!</p>
 <h2 id="adding-some-vanilla-extract">Adding some Vanilla Extract</h2>
 <p>Enter <a href="https://github.com/jonnyreeves/as3-vanilla">AS3 Vanilla</a>. Vanilla is an open source AS3 library whose sole purpose it to make converting untyped objects (such as the result of calling JSON.decode) into strongly typed Model objects a breeze, let’s see it in action:</p>
-<div class="highlight"><pre><span></span><span class="c1">// Use a JSON decoder to convert the rawJson String into an Object.</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Use a JSON decoder to convert the rawJson String into an Object.</span>
 <span class="kd">const</span> <span class="nx">jsonObject</span> <span class="o">:</span> <span class="nb">Object</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">rawJson</span><span class="p">);</span>
 
 <span class="c1">// Use Vanilla to extract the properties into our model objects.</span>
 <span class="kd">const</span> <span class="nx">weatherResult</span> <span class="o">:</span> <span class="nx">WeatherResult</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vanilla</span><span class="p">().</span><span class="nx">extract</span><span class="p">(</span><span class="nx">jsonObject</span><span class="o">,</span> <span class="nx">WeatherResult</span><span class="p">);</span>
 
 <span class="nf">trace</span><span class="p">(</span><span class="s2">&quot;The weather in &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">city</span> <span class="o">+</span> <span class="s2">&quot; is &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">condition</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">weatherResult</span><span class="p">.</span><span class="nx">forecast</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">day</span><span class="p">);</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Yep, that’s it; 20 lines of tedious, error prone code replaced with a single call to Vanilla’s <code>extract()</code> method; pretty neat eh? So, let’s have a look at how it works.</p>
 <p>The main design goal of Vanilla was to make the extraction process as simple as possible – infact, if your JSON object matches up perfectly to your Model object then you don’t need to do a thing, for example, here’s our WeatherResult model object’s class definition:</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nx">WeatherResult</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nx">WeatherResult</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">url</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">location</span> <span class="o">:</span> <span class="nx">Location</span><span class="o">;</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">forecast</span> <span class="o">:</span> <span class="nx">Vector</span><span class="p">.</span><span class="o">&lt;</span><span class="nx">Forecast</span><span class="o">&gt;;</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Let’s compare that to a cross section of the JSON object we get back from the Yahoo weather api:</p>
-<div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
    <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
       <span class="s2">&quot;location_id&quot;</span><span class="o">:</span><span class="s2">&quot;UKXX0085&quot;</span><span class="p">,</span>
       <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;London&quot;</span><span class="p">,</span>
@@ -166,11 +161,10 @@
       <span class="p">}</span>
    <span class="p">]</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>As you can see, the three fields in the WeatherResult model object, <em>location</em>, <em>url</em> and <em>forecast</em> all map exactly to those fields in the JSON object – Vanilla exploits this and guesses that you probably want to map to those fields; however, not everything is always so clear – what if your model object doesn’t map up exactly to the JSON result? Let’s have a look at our Location model:</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Location</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Location</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">locationId</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">city</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">stateAbbreviation</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
@@ -179,13 +173,12 @@
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">latitude</span> <span class="o">:</span> <span class="nb">Number</span><span class="o">;</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">longitude</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>If you look closely you will notice how some of the field names do not map to the JSON, for example, the field “country_abbreviation” in the JSON is not present in the Model (I’ve named the field countryAbbreviation, as per the AS3 camelCase convention), so how does Vanilla know what to do? Simple answer, it doesn’t – nothing will be mapped and Location.country Abbreviation will be null. </p>
 <h3 id="using-metadata-to-define-marshalling-rules">Using Metadata to define Marshalling Rules</h3>
 <p>In the above example the JSON field <code>country_abbreviation</code> was not being mapped to our model’s “countryAbbreviation” property because Vanilla didn’t know that these two were related – so how can we tell Vanilla about that relationship? Like this:</p>
-<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Location</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nx">Location</span> <span class="p">{</span>
     <span class="p">[</span><span class="nx">Marshall</span> <span class="p">(</span><span class="nx">field</span><span class="o">=</span><span class="s2">&quot;location_id&quot;</span><span class="p">)]</span> <span class="kd">public</span> <span class="k">var</span> <span class="nx">locationId</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">city</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
     <span class="p">[</span><span class="nx">Marshall</span> <span class="p">(</span><span class="nx">field</span><span class="o">=</span><span class="s2">&quot;state_abbreviation&quot;</span><span class="p">)]</span> <span class="kd">public</span> <span class="k">var</span> <span class="nx">stateAbbreviation</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
@@ -194,8 +187,7 @@
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">latitude</span> <span class="o">:</span> <span class="nb">Number</span><span class="o">;</span>
     <span class="kd">public</span> <span class="k">var</span> <span class="nx">longitude</span> <span class="o">:</span> <span class="nb">String</span><span class="o">;</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Here we have annotated the public fields of the Location model object with the [Marshall] Metadata tag – this tells Vanilla that if we see a field named ‘country_abbreviation’ on the source (JSON) object, then we should copy that value to the annotated filed.</p>
 <h3 id="have-it-your-way">Have It Your Way</h3>

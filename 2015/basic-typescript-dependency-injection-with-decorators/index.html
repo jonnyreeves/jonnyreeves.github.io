@@ -52,40 +52,37 @@
 <article>
   <header>
     <h1 id="basic-typescript-dependency-injection-with-decorators">Basic Typescript Dependency Injection with Decorators</h1>
-    <p>Posted on Sat 01 August 2015</p>
+    <p>Posted on Sat 01 August 2015 in <a href="https://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
   </header>
   <div>
     <p>Typescript 1.5 <a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators">introduced decorators</a> to the language which lets us experiment with <a href="https://en.wikipedia.org/wiki/Metaprogramming">meta-programming</a>. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.</p>
 <p>Let's start with an example of what we want to achieve:</p>
-<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">LoginService</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">class</span> <span class="nx">LoginService</span> <span class="p">{</span>
   <span class="nx">userModel</span> : <span class="kt">UserModel</span><span class="p">;</span>
   <span class="nx">performLogin</span><span class="p">()</span> <span class="o">:</span> <span class="k">void</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">userModel</span><span class="p">.</span><span class="nx">isLoggedIn</span><span class="p">())</span> <span class="p">{</span>
       <span class="c1">// ... implementation omitted...</span>
     <span class="p">}</span>
   <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Here our <code>LoginService</code> wants to check if our user is logged in before doing anything; as a result we need to provide a reference to the <code>UserModel</code> before invoking <code>LoginService#performLogin()</code>, we can do this manually:</p>
-<div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">myUserModel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserModel</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span class="kr">const</span> <span class="nx">myUserModel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserModel</span><span class="p">();</span>
 <span class="kr">const</span> <span class="nx">myLoginService</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LoginService</span><span class="p">();</span>
 
 <span class="c1">// Manually inject the dependency before using the Service.</span>
 <span class="nx">myLoginService</span><span class="p">.</span><span class="nx">userModel</span> <span class="o">=</span> <span class="nx">myUserModel</span><span class="p">;</span>
 <span class="nx">myLoginService</span><span class="p">.</span><span class="nx">performLogin</span><span class="p">();</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>We can use a decorator to record the fact that <code>LoginService</code> has a dependency on <code>UserModel</code>:</p>
-<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">LoginService</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">class</span> <span class="nx">LoginService</span> <span class="p">{</span>
   <span class="kd">@inject</span><span class="p">(</span><span class="s1">&#39;UserModel&#39;</span><span class="p">)</span>
   <span class="nx">userModel</span> : <span class="kt">UserModel</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now we need to implement our <code>@inject</code> decorator, the contract requires us to export a factory function (ie: a function which returns a function) - this factory function will be invoked each time a new instance of the supplied Class is constructed giving us a chance to modify the behavior of the program at run-time.</p>
-<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">inject</span><span class="p">(</span><span class="nx">injectionKey</span> : <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span> <span class="nx">inject</span><span class="p">(</span><span class="nx">injectionKey</span> : <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// Our decorator provides a factory function which will be invoked with an</span>
     <span class="c1">// instance of the decorated Class and the name of the decorated property.</span>
@@ -104,11 +101,10 @@
         <span class="nx">targetType</span><span class="p">.</span><span class="nx">__inject__</span><span class="p">[</span><span class="nx">decoratedPropertyName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">injectionKey</span><span class="p">;</span>
     <span class="p">};</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Now we need somewhere to record injection mappings so we have values to inject into decorated properties:</p>
-<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Injector</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">class</span> <span class="nx">Injector</span> <span class="p">{</span>
     <span class="kr">private</span> <span class="nx">valuesByInjectionKey</span> <span class="o">:</span> <span class="p">{</span> <span class="p">[</span> <span class="nx">injectionKey</span> : <span class="kt">string</span> <span class="p">]</span> <span class="o">:</span> <span class="nx">any</span> <span class="p">}</span> <span class="o">=</span> <span class="p">{};</span>
 
     <span class="cm">/**</span>
@@ -123,17 +119,15 @@
         <span class="k">this</span><span class="p">.</span><span class="nx">valuesByInjectionKey</span><span class="p">[</span><span class="nx">injectionKey</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Continuing our original example we would map the injectionKey <code>UserModel</code> to the instance of <code>UserModel</code> that we want injected, eg:</p>
-<div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">injector</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Injector</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span class="kr">const</span> <span class="nx">injector</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Injector</span><span class="p">();</span>
 <span class="nx">injector</span><span class="p">.</span><span class="nx">mapValue</span><span class="p">(</span><span class="s1">&#39;UserModel&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">UserModel</span><span class="p">());</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Finally we need to introduce a factory function which will instantiate a class but also fulfill injections based on mappings in the Injector - to enable this we add an <code>#instantiate()</code> method to <code>Injector</code>.</p>
-<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Injector</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">class</span> <span class="nx">Injector</span> <span class="p">{</span>
     <span class="cm">/**</span>
 <span class="cm">     * Create a new instance of the supplied Class fulfilling any property </span>
 <span class="cm">     * injections which are present in the injectionRules map.</span>
@@ -144,7 +138,7 @@
 
         <span class="c1">// Loop through all properties decorated with `@inject()` in this Class and</span>
         <span class="c1">// try to satisfy them if there is a mapped value.</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">injectionPoint</span> <span class="nx">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">getInjectionPoints</span><span class="p">(</span><span class="nx">Class</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">injectionPoint</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">getInjectionPoints</span><span class="p">(</span><span class="nx">Class</span><span class="p">))</span> <span class="p">{</span>
             <span class="kr">const</span> <span class="nx">injectionValue</span> : <span class="kt">any</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">valuesByInjectionKey</span><span class="p">[</span><span class="nx">injectionPoint</span><span class="p">.</span><span class="nx">injectionKey</span><span class="p">];</span>
 
             <span class="c1">// Perform the injection if we have a value assigned to this injectionKey.</span>
@@ -179,18 +173,16 @@
     <span class="nx">propertyName</span> : <span class="kt">string</span><span class="p">;</span>
     <span class="nx">injectionKey</span> : <span class="kt">string</span><span class="p">;</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The <code>Injector#intantiate()</code> method looks for the <code>#__inject__</code> property added to a Class' constructor function by the <code>@inject</code> decorator and then uses the values that hash contains to fulfil the decorated dependencies of the target Class - ie:</p>
-<div class="highlight"><pre><span></span><span class="kr">const</span> <span class="nx">myUserModel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserModel</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span class="kr">const</span> <span class="nx">myUserModel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserModel</span><span class="p">();</span>
 <span class="nx">injector</span><span class="p">.</span><span class="nx">mapValue</span><span class="p">(</span><span class="s1">&#39;UserModel&#39;</span><span class="p">,</span> <span class="nx">myUserModel</span><span class="p">);</span>
 
 <span class="c1">// `#userModel` will be injected automatically by by injector</span>
 <span class="kd">var</span> <span class="nx">myLoginService</span> <span class="o">=</span> <span class="nx">injector</span><span class="p">.</span><span class="nx">instantiate</span><span class="p">(</span><span class="nx">LoginService</span><span class="p">)</span>
 <span class="nx">myLoginService</span><span class="p">.</span><span class="nx">performLogin</span><span class="p">();</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>A complete example with Mocha Tests provided over at <a href="https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection">github.com/jonnyreeves/ts-prop-injection</a>.  </p>
 <p>Part 2: <a href="/2015/injecting-into-methods-with-typescript-decorators/">Adding support of method injection</a>.</p>

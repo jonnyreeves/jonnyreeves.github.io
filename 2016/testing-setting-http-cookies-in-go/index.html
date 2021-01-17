@@ -52,12 +52,12 @@
 <article>
   <header>
     <h1 id="testing-setting-http-cookies-in-go">Testing Setting HTTP Cookies in Go</h1>
-    <p>Posted on Thu 04 February 2016</p>
+    <p>Posted on Thu 04 February 2016 in <a href="https://jonnyreeves.co.uk/category/golang.html">Golang</a></p>
   </header>
   <div>
     <p>I found myself writing code that drops HTTP Cookies on a HTTP ResponseWriter
 and had trouble figuring out how to test it:</p>
-<div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Preferences</span> <span class="kd">struct</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">Preferences</span> <span class="kd">struct</span> <span class="p">{</span>
     <span class="nx">Colour</span> <span class="kt">string</span>
 <span class="p">}</span>
 
@@ -72,12 +72,11 @@ and had trouble figuring out how to test it:</p>
     <span class="p">})</span>
     <span class="k">return</span> <span class="kc">nil</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The answer comes in the form of copying the Headers from an <code>http.Recorder</code>
 into an <code>http.Response</code> object.</p>
-<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">TestSetPreferencesCookie</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">func</span> <span class="nx">TestSetPreferencesCookie</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// Create a new HTTP Recorder (implements http.ResponseWriter)</span>
   <span class="nx">recorder</span> <span class="o">:=</span> <span class="nx">httptest</span><span class="p">.</span><span class="nx">NewRecorder</span><span class="p">()</span>
 
@@ -103,8 +102,7 @@ into an <code>http.Response</code> object.</p>
   <span class="c1">// Check the contents.</span>
   <span class="nx">require</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;Blue&quot;</span><span class="p">,</span> <span class="nx">prefs</span><span class="p">.</span><span class="nx">Colour</span><span class="p">)</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Have a play with this code on the Go Playground: <a href="http://play.golang.org/p/r7aGdX9YEn">http://play.golang.org/p/r7aGdX9YEn</a>.</p>
   </div>

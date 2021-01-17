@@ -52,7 +52,7 @@
 <article>
   <header>
     <h1 id="integration-testing-with-golden-masters">Integration Testing with Golden Masters</h1>
-    <p>Posted on Mon 18 April 2016</p>
+    <p>Posted on Mon 18 April 2016 in <a href="https://jonnyreeves.co.uk/category/golang.html">Golang</a></p>
   </header>
   <div>
     <p>After watching <a href="https://www.youtube.com/watch?v=yszygk1cpEc">Mitchell Hashimoto's talk on Advanced Testing with Go</a> I was inspired to re-write one of my integration tests to use a golden master.  <a href="http://blog.codeclimate.com/blog/2014/02/20/gold-master-testing/">Testing with golden masters</a> is a simple concept which can be used to reduce the complexity of integration test cases whilst still ensuring that the output of the program is valid.</p>
@@ -62,16 +62,15 @@
 <img alt="Alt" src="https://www.websequencediagrams.com/cgi-bin/cdraw?lz=TWFpbi0-TGludGVyOiBsAAMFLkxpbnQoJy9wYXRoL3RvL3NyYycpCgAeBi0-RGlyU2Nhbm5lcjogc2Nhbigkc3JjRGlyKQoAEAoASApbXUZpbGUKCmxvb3AgZm9yICRmaWxlIGluABIIICAAUQhQYXJzZXI6IAADBSgAIwUpCiAACQYARwsAIgVSZXN1bHQKZW5kCgCBEAkAgT0IY3JlYXRlUmVwb3J0KCRwACUKcwCBOwpNYWluOiAkcgAgBQoKAIIABkZvcm1hdACCBAVmAAMILgAPBigAJAcpAIE-C2Vycm9yIGluAD4JICAAOQkAQA1zdGRvdXQuV3JpdGUoKQplbmQ&amp;s=vs2010">
 </center></p>
 <p>The Formatter is responsible for the final output generating something along these lines:</p>
-<div class="highlight"><pre><span></span>./example.md
-  L12 Invalid link: Resource not found: ./missing.png
-  L22 Invalid link: Invalid filename: Mixed case: ./BadCase.png
+<div class="highlight"><pre><span></span><code><span class="p">.</span><span class="o">/</span><span class="n">example</span><span class="p">.</span><span class="n">md</span>
+  <span class="n">L12</span> <span class="n">Invalid</span> <span class="n">link</span><span class="p">:</span> <span class="n">Resource</span> <span class="k">not</span> <span class="k">found</span><span class="p">:</span> <span class="p">.</span><span class="o">/</span><span class="n">missing</span><span class="p">.</span><span class="n">png</span>
+  <span class="n">L22</span> <span class="n">Invalid</span> <span class="n">link</span><span class="p">:</span> <span class="n">Invalid</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Mixed</span> <span class="k">case</span><span class="p">:</span> <span class="p">.</span><span class="o">/</span><span class="n">BadCase</span><span class="p">.</span><span class="n">png</span>
 
-✖ 2 Errors detected in 1 file.  
-</pre></div>
-
+<span class="err">✖</span> <span class="mi">2</span> <span class="n">Errors</span> <span class="n">detected</span> <span class="k">in</span> <span class="mi">1</span> <span class="n">file</span><span class="p">.</span>  
+</code></pre></div>
 
 <p>Before switching to using a Golden Master, the original integration test would supply a fixture to the linter and then iterate over the report returned by <code>Linter#Lint()</code>.</p>
-<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">TestLinter</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">func</span> <span class="nx">TestLinter</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">p</span> <span class="o">:=</span> <span class="nx">fixtureDir</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;with_errors&quot;</span><span class="p">)</span>
     <span class="nx">linter</span> <span class="o">:=</span> <span class="nx">lint</span><span class="p">.</span><span class="nx">NewLinter</span><span class="p">()</span>
     <span class="nx">actual</span> <span class="o">:=</span> <span class="nx">linter</span><span class="p">.</span><span class="nx">Lint</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
@@ -89,15 +88,14 @@
     <span class="p">}</span>
     <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">actual</span><span class="p">,</span> <span class="nx">expected</span><span class="p">)</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This approach, whilst valid, was pretty verbose and was not scaling well as my integration test became more thorough (as it stands I current assert 50 individual error cases over 6 test fixture files) - this feels like a great candidate for using a golden master.</p>
 <h2 id="going-for-gold">Going for Gold</h2>
 <p>My approach would be simple; I would still pass a fixture to <code>linter.Lint()</code>, but instead of comparing the <code>result</code> object, I would pass it directly to the <code>Formatter</code> and have it written out to a file on disk which could then be loaded and compared in future test-iterations.</p>
 <p>To start I copy and pasted the command line output into a new 'golden' file which mated the name of the fixture - the integration test will be modified to read in the contents of this file and use it for comparison.</p>
 <p>Next I needed to capture the output of the Formatter, this was not straight forward as the <code>Formatter</code> wrote directly to <code>os.Stdout</code>.  I could have used an Interface to provide an alternative implementation of the <code>Formatter</code> which wrote to a file; but this would have resulted in a lot of duplicated logic; essentially there was nothing wrong with the current output; I just didn't want it to to go to <code>stdout</code>.  Instead I modified the <code>formatter</code> object's signature from <code>Format(r Report)</code> to <code>Format(r Report, out io.Writer)</code>:</p>
-<div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Formatter</span> <span class="kd">struct</span><span class="p">{}</span>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">Formatter</span> <span class="kd">struct</span><span class="p">{}</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">f</span> <span class="o">*</span><span class="nx">Formatter</span><span class="p">)</span> <span class="nx">Format</span><span class="p">(</span><span class="nx">r</span> <span class="nx">Report</span><span class="p">,</span> <span class="nx">out</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Writer</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="nx">report</span><span class="p">.</span><span class="nx">Len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
@@ -106,11 +104,10 @@
     <span class="p">}</span>
     <span class="c1">// ...</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The default implementation can pass <code>os.Stdout</code> as the writer (as <code>os.Stdout</code> implements the <code>Write(p []byte) (n int, err error)</code> signature); and our integration test can pass a <code>bytes.Buffer</code> to capture the output.</p>
-<div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">TestLinter</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">func</span> <span class="nx">TestLinter</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">p</span> <span class="o">:=</span> <span class="nx">fixtureDir</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;with_errors&quot;</span><span class="p">)</span>
     <span class="nx">linter</span> <span class="o">:=</span> <span class="nx">lint</span><span class="p">.</span><span class="nx">NewLinter</span><span class="p">()</span>
     <span class="nx">formatter</span> <span class="o">:=</span> <span class="nx">lint</span><span class="p">.</span><span class="nx">NewFormatter</span><span class="p">()</span>
@@ -123,11 +120,10 @@
     <span class="nx">expected</span> <span class="o">:=</span> <span class="nx">readGoldenMaster</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;with_errors&quot;</span><span class="p">)</span>
     <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">buff</span><span class="p">.</span><span class="nx">Bytes</span><span class="p">(),</span> <span class="nx">expected</span><span class="p">)</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>This passes, but updating the "with_errors" golden master file is a chore.  To address this I added a <a href="https://golang.org/pkg/flag/">flag</a> to my integration test which made it simple to flip the test-case into an 'update the golden master' mode:</p>
-<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">flagUpdate</span> <span class="p">=</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">Bool</span><span class="p">(</span><span class="s">&quot;update&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="s">&quot;Update golden master files&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">var</span> <span class="nx">flagUpdate</span> <span class="p">=</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">Bool</span><span class="p">(</span><span class="s">&quot;update&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="s">&quot;Update golden master files&quot;</span><span class="p">)</span>
 
 <span class="kd">func</span> <span class="nx">TestLinter</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">p</span> <span class="o">:=</span> <span class="nx">fixtureDir</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;with_errors&quot;</span><span class="p">)</span>
@@ -145,8 +141,7 @@
     <span class="nx">expected</span> <span class="o">:=</span> <span class="nx">readGoldenMaster</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s">&quot;with_errors&quot;</span><span class="p">)</span>
     <span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">buff</span><span class="p">.</span><span class="nx">Bytes</span><span class="p">(),</span> <span class="nx">expected</span><span class="p">)</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>My workflow is now:</p>
 <ol>

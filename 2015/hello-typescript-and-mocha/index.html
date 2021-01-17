@@ -52,11 +52,11 @@
 <article>
   <header>
     <h1 id="hello-typescript-and-mocha">Hello Typescript and Mocha!</h1>
-    <p>Posted on Mon 27 July 2015</p>
+    <p>Posted on Mon 27 July 2015 in <a href="https://jonnyreeves.co.uk/category/typescript.html">TypeScript</a></p>
   </header>
   <div>
     <p>Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:</p>
-<div class="highlight"><pre><span></span>$ npm init
+<div class="highlight"><pre><span></span><code>$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
 description: Getting started with TypeScript and mocha
@@ -65,61 +65,53 @@ test command: mocha
 git repository:
 keywords:
 license: (ISC)
-</pre></div>
-
+</code></pre></div>
 
 <p>Now let's grab the TypeScript compiler so we can build the project:</p>
-<div class="highlight"><pre><span></span>npm install typescript --save
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">npm install typescript --save</span>
+</code></pre></div>
 
 <p>Now let's grab Mocha for our tests</p>
-<div class="highlight"><pre><span></span>npm install mocha --save-dev
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">npm install mocha --save-dev</span>
+</code></pre></div>
 
 <h2 id="create-a-subject-to-test">Create a Subject to Test</h2>
 <p>Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, <code>index.ts</code> in the project root</p>
-<div class="highlight"><pre><span></span><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">Calculator</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">Calculator</span> <span class="p">{</span>
     <span class="nx">add</span><span class="p">(</span><span class="nx">x</span> : <span class="kt">number</span><span class="p">,</span> <span class="nx">y</span> : <span class="kt">number</span><span class="p">)</span> <span class="o">:</span> <span class="kt">number</span> <span class="p">{</span>
         <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>And now to compile this down to ES5 so we can execute it under node:</p>
-<div class="highlight"><pre><span></span>./node_modules/typescript/bin/tsc index.ts --module commonjs
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">./node_modules/typescript/bin/tsc index.ts --module commonjs</span>
+</code></pre></div>
 
 <p>We can simplify the compilation step by adding a prepublish <a href="https://docs.npmjs.com/misc/scripts">npm script</a> to the <code>package.json</code> file:</p>
-<div class="highlight"><pre><span></span>{
-    ...
-    &quot;scripts&quot;: {
-        &quot;prepublish&quot;: &quot;tsc index.ts --module commonjs &quot;,
-        &quot;test&quot;: &quot;mocha&quot;
-    }
-    ...
-}
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">{</span>
+<span class="err">    ...</span>
+<span class="err">    &quot;scripts&quot;: {</span>
+<span class="err">        &quot;prepublish&quot;: &quot;tsc index.ts --module commonjs &quot;,</span>
+<span class="err">        &quot;test&quot;: &quot;mocha&quot;</span>
+<span class="err">    }</span>
+<span class="err">    ...</span>
+<span class="err">}</span>
+</code></pre></div>
 
 <p>We can now compile with <code>npm install</code>.</p>
 <h2 id="adding-a-test">Adding a Test</h2>
 <p>Let's create our first test; following convention lets create our test-case in <code>test/CalculatorTest</code>.</p>
 <p>Before writing the test-case we need to grab the Mocha Type Definitions (requried for the TypeScript compiler (<code>tsc</code>) to work).  Easiest way to get these it to use the DefinitelyTyped TypeScript Definition manager (<code>tsd</code>).</p>
-<div class="highlight"><pre><span></span>npm install tsd -g
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">npm install tsd -g</span>
+</code></pre></div>
 
 <p>Once installed we can use it to grab mocha's type definitions:</p>
-<div class="highlight"><pre><span></span>tsd install mocha --save
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">tsd install mocha --save</span>
+</code></pre></div>
 
 <p>This will add a <code>typings/</code> folder to our project.  Here's what our source tree looks like so far:</p>
-<div class="highlight"><pre><span></span>hello-ts-mocha
+<div class="highlight"><pre><span></span><code>hello-ts-mocha
 ├── index.ts
 ├── node_modules
 │   └── typescript
@@ -130,11 +122,10 @@ license: (ISC)
 └── typings
     ├── mocha
     └── tsd.d.ts
-</pre></div>
-
+</code></pre></div>
 
 <p>Now we can reference the mocha type definition using a <code>/// &lt;reference /&gt;</code> comment:</p>
-<div class="highlight"><pre><span></span><span class="c1">/// &lt;reference path=&quot;../typings/mocha/mocha.d.ts&quot; /&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">/// &lt;reference path=&quot;../typings/mocha/mocha.d.ts&quot; /&gt;</span>
 <span class="kr">import</span> <span class="nx">Calculator</span> <span class="nx">from</span> <span class="s1">&#39;../index&#39;</span><span class="p">;</span>
 
 <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Calculator&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -153,22 +144,20 @@ license: (ISC)
         <span class="p">});</span>
     <span class="p">});</span>
 <span class="p">});</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Before we can run the tests we need to compile them, best way to do this is to add a <code>preTest</code> NPM script to invoke the typscript compiler before running mocha. Open up the <code>package.json</code> file again:</p>
-<div class="highlight"><pre><span></span>{
-    ...
-    &quot;scripts&quot;: {
-        &quot;pretest&quot;: &quot;tsc test/*Test.ts --module commonjs&quot;,
-        &quot;test&quot;: &quot;mocha&quot;
-    }
-}
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">{</span>
+<span class="err">    ...</span>
+<span class="err">    &quot;scripts&quot;: {</span>
+<span class="err">        &quot;pretest&quot;: &quot;tsc test/*Test.ts --module commonjs&quot;,</span>
+<span class="err">        &quot;test&quot;: &quot;mocha&quot;</span>
+<span class="err">    }</span>
+<span class="err">}</span>
+</code></pre></div>
 
 <p>We can now run our test-case with <code>npm test</code>:</p>
-<div class="highlight"><pre><span></span>$ npm test
+<div class="highlight"><pre><span></span><code>$ npm test
 &gt; ts-mocha@1.0.0 pretest /private/tmp/foo
 &gt; tsc test/*Test.ts --module commonjs
 
@@ -186,8 +175,7 @@ license: (ISC)
   1) Calculator #add should add two numbers together:
      Error: Expected 2 + 3 = 5 but was 0
       at Context.&lt;anonymous&gt; (test/CalculatorTest.js:12:23)
-</pre></div>
-
+</code></pre></div>
 
 <p>Have fun fixing the test-case :)  Full source over over at <a href="https://github.com/jonnyreeves/hello-ts-mocha">github.com/jonnyreeves/hello-ts-mocha</a></p>
   </div>

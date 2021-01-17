@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - 2018</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/2018.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2018-11-04T18:00:00+00:00</updated><entry><title>Continuous Delivery on Github Projects to NPM using Travis</title><link href="https://jonnyreeves.co.uk/2018/continuous-delivery-on-github-projects-to-npm-using-travis/" rel="alternate"></link><published>2018-11-04T18:00:00+00:00</published><updated>2018-11-04T18:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2018-11-04:/2018/continuous-delivery-on-github-projects-to-npm-using-travis/</id><summary type="html">&lt;p&gt;Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next official release.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - 2018</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/2018.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2018-11-04T18:00:00+00:00</updated><subtitle>code &amp;&amp; coffee || music</subtitle><entry><title>Continuous Delivery on Github Projects to NPM using Travis</title><link href="https://jonnyreeves.co.uk/2018/continuous-delivery-on-github-projects-to-npm-using-travis/" rel="alternate"></link><published>2018-11-04T18:00:00+00:00</published><updated>2018-11-04T18:00:00+00:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2018-11-04:/2018/continuous-delivery-on-github-projects-to-npm-using-travis/</id><summary type="html">&lt;p&gt;Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Continuous Delivery workflows allow you to get changes out to your end users faster. Enabling Continuous Delivery for JavaScript projects hosted on Github will result in others being able to try out changes as soon as a pull request is merged into master without having to wait for the next official release.&lt;/p&gt;
 &lt;p&gt;This guide assumes that you have already &lt;a href="https://docs.travis-ci.com/user/languages/javascript-with-nodejs/"&gt;configured your JavaScript project to build via Travis&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;TL;DR - jump to the &lt;a href="#putting-it-all-together"&gt;final Travis config&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="the-workflow"&gt;The Workflow&lt;/h3&gt;
@@ -8,40 +8,36 @@
 &lt;h3 id="travis-setup"&gt;Travis Setup&lt;/h3&gt;
 &lt;p&gt;The first step is to configure &lt;a href="https://docs.travis-ci.com/user/deployment/npm/"&gt;Travis' npm Publisher&lt;/a&gt;. The documentation wants us to run &lt;code&gt;travis setup npm&lt;/code&gt;, but before we can do this, we need to have the Travis CLI installed locally; just follow the &lt;a href="https://github.com/travis-ci/travis.rb#installation"&gt;Travis CLI installation guide&lt;/a&gt;. &lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Nb:&lt;/em&gt; Assuming you've logged into npm on your local machine, you can obtain your api key from &lt;code&gt;~/.npmrc&lt;/code&gt;&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ travis setup npm
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ travis setup npm
 Detected repository as jonnyreeves/js-logger, is this correct? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; yes
 NPM email address: ***@jon***ves.co.uk
 NPM api key: ************************************
 release only tagged commits? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; no
 Release only from jonnyreeves/js-logger? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; no
 Encrypt API key? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&lt;/span&gt; yes
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Once complete your &lt;code&gt;.travis.yml&lt;/code&gt; file will have been modified and the following configuration added:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;deploy&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;provider&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;npm&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;email&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="err"&gt;***@&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;jon***ves.co.uk&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;api_key&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secure&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]e=&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;deploy&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;provider&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;npm&lt;/span&gt;
+  &lt;span class="nt"&gt;email&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="err"&gt;***@&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;jon***ves.co.uk&lt;/span&gt;
+  &lt;span class="nt"&gt;api_key&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;secure&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]e=&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;For additional privacy from automated scapers, I would suggest you also encrypt your npm email address; again you can use the Travis CLI to perform this action and update your local travis configuration:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;travis encrypt foo@example.com --add deploy.email
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;travis encrypt foo@example.com --add deploy.email&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Finally, we need to configure Travis to &lt;code&gt;skip_cleanup&lt;/code&gt; to ensure that any artifacts generated during the build process are not removed before the publishing step (refer to the docs &lt;a href="https://docs.travis-ci.com/user/deployment/npm/#releasing-build-artifacts"&gt;here&lt;/a&gt;). To do this, modify the &lt;code&gt;deploy&lt;/code&gt; block inside your &lt;code&gt;.travis.yml&lt;/code&gt; so it includes the &lt;code&gt;skip_cleanup&lt;/code&gt; property:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;deploy&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;deploy&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
   &lt;span class="n"&gt;provider&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;npm&lt;/span&gt;
   &lt;span class="n"&gt;skip_cleanup&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;    &lt;span class="err"&gt;#&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;--&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;
   &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;secure&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;[...]&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
   &lt;span class="n"&gt;api_key&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;secure&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;[...]&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Finally, we need to tell travis to only run the deploy step when a commit is made in the &lt;code&gt;master&lt;/code&gt; branch. To do this, modify the &lt;code&gt;deploy&lt;/code&gt; block to make it &lt;a href="https://docs.travis-ci.com/user/deployment/#conditional-releases-with-on"&gt;conditional based on the target branch&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;With this configuration in place, Travis will now publish a release to npm each time you create a new tag; however this does not match our desired Continuous Delivery pipeline where each commit to master results in a new release.&lt;/p&gt;
@@ -53,26 +49,23 @@ Encrypt API key? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&
 &lt;/ul&gt;
 &lt;p&gt;Npm helps us by providing the concept of &lt;a href="https://docs.npmjs.com/getting-started/using-tags"&gt;dist-tags&lt;/a&gt;. Dist-tags are used by npm to identify what the latest version of any given package is when a user runs npm install. When publishing a package, npm will automatically populate the &lt;code&gt;dist-tag&lt;/code&gt; to be &lt;code&gt;latest&lt;/code&gt; if no value is supplied by the user.&lt;/p&gt;
 &lt;p&gt;Here's an example to explain the concept: let's assume that the &lt;code&gt;example-pkg&lt;/code&gt; package has 3 distinct versions that have been published to npm under the 'latest' dist-tag:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;example-pkg
-- 0.0.1 [dist-tag=latest] &amp;lt;-- published 01/01/2018
-- 0.0.2 [dist-tag=latest] &amp;lt;-- published 02/01/2018
-- 0.0.3 [dist-tag=latest] &amp;lt;-- published 03/01/2018
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;example-pkg&lt;/span&gt;
+&lt;span class="err"&gt;- 0.0.1 [dist-tag=latest] &amp;lt;-- published 01/01/2018&lt;/span&gt;
+&lt;span class="err"&gt;- 0.0.2 [dist-tag=latest] &amp;lt;-- published 02/01/2018&lt;/span&gt;
+&lt;span class="err"&gt;- 0.0.3 [dist-tag=latest] &amp;lt;-- published 03/01/2018&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now when you run &lt;code&gt;npm install example-pkg&lt;/code&gt; npm will fetch 0.0.3 as that was the most recent version to be published. Now let's publish another release but this time we will specify the dist-tag as 'next', now the release history of &lt;code&gt;example-pkg&lt;/code&gt; looks like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;example-pkg
-- 0.0.1 [dist-tag=latest] &amp;lt;-- published 01/01/2018
-- 0.0.2 [dist-tag=latest] &amp;lt;-- published 02/01/2018
-- 0.0.3 [dist-tag=latest] &amp;lt;-- published 03/01/2018
-- 0.0.4 [dist-tag=next]   &amp;lt;-- published 04/01/2018
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;example-pkg&lt;/span&gt;
+&lt;span class="err"&gt;- 0.0.1 [dist-tag=latest] &amp;lt;-- published 01/01/2018&lt;/span&gt;
+&lt;span class="err"&gt;- 0.0.2 [dist-tag=latest] &amp;lt;-- published 02/01/2018&lt;/span&gt;
+&lt;span class="err"&gt;- 0.0.3 [dist-tag=latest] &amp;lt;-- published 03/01/2018&lt;/span&gt;
+&lt;span class="err"&gt;- 0.0.4 [dist-tag=next]   &amp;lt;-- published 04/01/2018&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Should you run &lt;code&gt;npm install example-pkg&lt;/code&gt; now, npm will still fetch version &lt;code&gt;0.0.3&lt;/code&gt;, even tho it was not the most recent version to be published. This is because &lt;code&gt;npm install&lt;/code&gt; defaults to fetching releases from the &lt;code&gt;latest&lt;/code&gt; dist-tag. When running npm-install we can specify an alternative release channel using the &lt;code&gt;@&lt;/code&gt; syntax and specifying a dist-tag, ie:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install example-pkg@next
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;npm install example-pkg@next&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now npm will fetch version &lt;code&gt;0.0.4&lt;/code&gt; as it was the most recent version to be published to the &lt;code&gt;latest&lt;/code&gt; release channel.&lt;/p&gt;
 &lt;p&gt;With this in mind we need a way of determining if a release is destined to be published to either the &lt;em&gt;latest&lt;/em&gt; or &lt;em&gt;next&lt;/em&gt; release channel, but how can we do this? Fortunately semver has us covered with &lt;a href="https://semver.org/spec/v2.0.0.html#spec-item-9"&gt;pre-release versions&lt;/a&gt; where a pre-release version (ie: a release to the &lt;em&gt;next&lt;/em&gt; channel) may be denoted by appending a hyphen and a series of dot separated identifies immediately following the patch version. &lt;/p&gt;
@@ -80,7 +73,7 @@ Encrypt API key? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&
 &lt;p&gt;However, this simple approach will encounter a problem; npm will fail to publish if we try to publish a pre-existing version, and because each pull request we merge into master isn't going to bump our package version we need a way to create unique versions for releases to our &lt;em&gt;next&lt;/em&gt; channel. A simple way to achieve this is to append the short git commit hash to our pre-release version suffix, eg: &lt;code&gt;x.y.z-next.d34db33f&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id="putting-it-all-together"&gt;Putting it all together&lt;/h2&gt;
 &lt;p&gt;To add all of the above logic to our &lt;code&gt;travis.yml&lt;/code&gt; we add a &lt;code&gt;before_deploy&lt;/code&gt; block and modify our &lt;code&gt;deploy&lt;/code&gt; bock to make use of the new variable (&lt;code&gt;NPM_TAG&lt;/code&gt;) it defines:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="l l-Scalar l-Scalar-Plain"&gt;before_deploy&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;|&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;before_deploy&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p p-Indicator"&gt;|&lt;/span&gt;
   &lt;span class="no"&gt;PKG_VERSION=$(node -p &amp;quot;require(&amp;#39;./package.json&amp;#39;).version&amp;quot;)&lt;/span&gt;
   &lt;span class="no"&gt;NPM_TAG=&amp;quot;latest&amp;quot;&lt;/span&gt;
   &lt;span class="no"&gt;if [[ ${PKG_VERSION} =~ -next$ ]]; then&lt;/span&gt;
@@ -89,18 +82,17 @@ Encrypt API key? &lt;span class="p"&gt;|&lt;/span&gt;yes&lt;span class="p"&gt;|&
     &lt;span class="no"&gt;UNIQ_PKG_VERSION=&amp;quot;${PKG_VERSION}.${SHORT_COMMIT_HASH}&amp;quot;&lt;/span&gt;
     &lt;span class="no"&gt;npm --no-git-tag-version version ${UNIQ_PKG_VERSION}&lt;/span&gt;
   &lt;span class="no"&gt;fi&lt;/span&gt;
-&lt;span class="l l-Scalar l-Scalar-Plain"&gt;deploy&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;skip_cleanup&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;provider&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;npm&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;tag&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$NPM_TAG&amp;quot;&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;email&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secure&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]2=&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;api_key&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;secure&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]e=&lt;/span&gt;
-  &lt;span class="l l-Scalar l-Scalar-Plain"&gt;on&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt;
-    &lt;span class="l l-Scalar l-Scalar-Plain"&gt;branch&lt;/span&gt;&lt;span class="p p-Indicator"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;master&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;span class="nt"&gt;deploy&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="nt"&gt;skip_cleanup&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;true&lt;/span&gt;
+  &lt;span class="nt"&gt;provider&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;npm&lt;/span&gt;
+  &lt;span class="nt"&gt;tag&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$NPM_TAG&amp;quot;&lt;/span&gt;
+  &lt;span class="nt"&gt;email&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;secure&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]2=&lt;/span&gt;
+  &lt;span class="nt"&gt;api_key&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;secure&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;0f[...]e=&lt;/span&gt;
+  &lt;span class="nt"&gt;on&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="nt"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="l l-Scalar l-Scalar-Plain"&gt;master&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;With the above configuration in place we can set our package.json file's &lt;code&gt;version&lt;/code&gt; property to include the &lt;code&gt;-next&lt;/code&gt; suffix by default and push a commit that removes it each time we want to create a stable release on &lt;em&gt;latest&lt;/em&gt; channel.&lt;/p&gt;
-&lt;p&gt;You can see this pipeline in action over on my &lt;a href=""&gt;js-logger project&lt;/a&gt;.&lt;/p&gt;</content></entry></feed>
+&lt;p&gt;You can see this pipeline in action over on my &lt;a href=""&gt;js-logger project&lt;/a&gt;.&lt;/p&gt;</content><category term="2018"></category></entry></feed>

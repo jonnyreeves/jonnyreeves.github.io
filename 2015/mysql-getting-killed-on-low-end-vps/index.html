@@ -52,44 +52,40 @@
 <article>
   <header>
     <h1 id="mysql-getting-killed-on-low-end-vps">MySQL Getting Killed on Low-end VPS</h1>
-    <p>Posted on Fri 11 December 2015</p>
+    <p>Posted on Fri 11 December 2015 in <a href="https://jonnyreeves.co.uk/category/devops.html">DevOps</a></p>
   </header>
   <div>
     <p>My wife's blog is powered by Wordpress running on a <a href="https://www.bhost.net/">bHost Tiny VPS</a> instance (1GB RAM) using a combination of MariaDB, Nginx and php-fpm.  Thanks to <a href="https://en-gb.wordpress.org/plugins/wp-super-cache/">WP Super Cache</a>; the site is pretty responsive.</p>
 <p>Things had been going pretty well for the last couple of months until she told me that the site was broken; turns out the the MariaDB instance (mysqld) had stopped... odd.</p>
 <p>First port of call was the logs, tailing <code>/var/log/mariadb/mariadb.log</code> showed that the process was being periodically killed and restarted - however there was no mention of why it died, the last log entry was:</p>
-<div class="highlight"><pre><span></span>$ tail -n <span class="m">1</span> /var/log/mariadb/mariadb.log
+<div class="highlight"><pre><span></span><code>$ tail -n <span class="m">1</span> /var/log/mariadb/mariadb.log
 <span class="m">151211</span> <span class="m">19</span>:01:18 mysqld_safe mysqld from pid file /var/run/mariadb/mariadb.pid e$
-</pre></div>
-
+</code></pre></div>
 
 <p>Upon restarting it (via <code>service mariadb start</code>), the logs were appended with the following:</p>
-<div class="highlight"><pre><span></span>$ tail /var/log/mariadb/mariadb.log
-<span class="m">151211</span> <span class="m">20</span>:33:33 mysqld_safe Starting mysqld daemon with databases from /var/lib$
-<span class="m">151211</span> <span class="m">20</span>:33:33 <span class="o">[</span>Note<span class="o">]</span> /usr/libexec/mysqld <span class="o">(</span>mysqld <span class="m">5</span>.5.44-MariaDB<span class="o">)</span> starting as $
-InnoDB: Log scan progressed past the checkpoint lsn <span class="m">55316603</span>
-<span class="m">151211</span> <span class="m">20</span>:33:34  InnoDB: Database was not shut down normally!
-InnoDB: Starting crash recovery.
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">$</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">/</span><span class="nf">var</span><span class="o">/</span><span class="nf">log</span><span class="o">/</span><span class="n">mariadb</span><span class="o">/</span><span class="n">mariadb</span><span class="p">.</span><span class="nf">log</span><span class="w"></span>
+<span class="mi">151211</span><span class="w"> </span><span class="mi">20</span><span class="err">:</span><span class="mi">33</span><span class="err">:</span><span class="mi">33</span><span class="w"> </span><span class="n">mysqld_safe</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="n">mysqld</span><span class="w"> </span><span class="n">daemon</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">databases</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="o">/</span><span class="nf">var</span><span class="o">/</span><span class="n">lib</span><span class="err">$</span><span class="w"></span>
+<span class="mi">151211</span><span class="w"> </span><span class="mi">20</span><span class="err">:</span><span class="mi">33</span><span class="err">:</span><span class="mi">33</span><span class="w"> </span><span class="o">[</span><span class="n">Note</span><span class="o">]</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">libexec</span><span class="o">/</span><span class="n">mysqld</span><span class="w"> </span><span class="p">(</span><span class="n">mysqld</span><span class="w"> </span><span class="mf">5.5.44</span><span class="o">-</span><span class="n">MariaDB</span><span class="p">)</span><span class="w"> </span><span class="n">starting</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">$</span><span class="w"></span>
+<span class="nl">InnoDB</span><span class="p">:</span><span class="w"> </span><span class="nf">Log</span><span class="w"> </span><span class="n">scan</span><span class="w"> </span><span class="n">progressed</span><span class="w"> </span><span class="n">past</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">checkpoint</span><span class="w"> </span><span class="n">lsn</span><span class="w"> </span><span class="mi">55316603</span><span class="w"></span>
+<span class="mi">151211</span><span class="w"> </span><span class="mi">20</span><span class="err">:</span><span class="mi">33</span><span class="err">:</span><span class="mi">34</span><span class="w">  </span><span class="nl">InnoDB</span><span class="p">:</span><span class="w"> </span><span class="k">Database</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">shut</span><span class="w"> </span><span class="n">down</span><span class="w"> </span><span class="n">normally</span><span class="err">!</span><span class="w"></span>
+<span class="nl">InnoDB</span><span class="p">:</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="n">crash</span><span class="w"> </span><span class="n">recovery</span><span class="p">.</span><span class="w"></span>
+</code></pre></div>
 
 <p>It's clear that whatever is killing the database is not doing so cleanly.  <code>dmesg</code> can be used to search all logs and try to shed some light:</p>
-<div class="highlight"><pre><span></span>$ dmesg <span class="p">|</span> egrep -i <span class="s1">&#39;killed process&#39;</span>
+<div class="highlight"><pre><span></span><code>$ dmesg <span class="p">|</span> egrep -i <span class="s1">&#39;killed process&#39;</span>
 <span class="o">[</span><span class="m">4038014</span>.625029<span class="o">]</span> Out of memory in UB XXXX: OOM killed process <span class="m">601</span> <span class="o">(</span>mysqld<span class="o">)</span> score <span class="m">0</span> vm:1212112kB, rss:84964kB, swap:748kB
-</pre></div>
-
+</code></pre></div>
 
 <p>Ah, that's not good.  The <a href="http://linux-mm.org/OOM_Killer">OOM Killer</a> is choosing to sacrifice mysqld; although not the best choice it's clear that there's something bigger going on that needs to be addressed.</p>
 <p>Now I know the problem is related to low memory, let's see how much free memory we currently have available:</p>
-<div class="highlight"><pre><span></span>$ free -m
+<div class="highlight"><pre><span></span><code>$ free -m
             total        used        free      shared  buff/cache   available
 Mem:         <span class="m">1024</span>         <span class="m">764</span>           <span class="m">7</span>          <span class="m">10</span>         <span class="m">251</span>         <span class="m">11</span>
 Swap:           <span class="m">0</span>           <span class="m">0</span>           <span class="m">0</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>7MB free... oh dear.  So what's using up all the memory? We can find out using <code>ps</code></p>
-<div class="highlight"><pre><span></span>$ ps aux --sort<span class="o">=</span>-%mem <span class="p">|</span> awk <span class="s1">&#39;NR&lt;=10{print $0}&#39;</span>
+<div class="highlight"><pre><span></span><code>$ ps aux --sort<span class="o">=</span>-%mem <span class="p">|</span> awk <span class="s1">&#39;NR&lt;=10{print $0}&#39;</span>
 USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root       <span class="m">980</span>  <span class="m">1</span>.5  <span class="m">1</span>.8 <span class="m">781612</span> <span class="m">19128</span> ?        Ssl  Dec10  <span class="m">21</span>:22 /usr/sbin/rsyslogd -n
 root     <span class="m">17069</span>  <span class="m">0</span>.0  <span class="m">1</span>.1 <span class="m">307316</span> <span class="m">11804</span> ?        Ss   <span class="m">19</span>:37   <span class="m">0</span>:00 php-fpm: master process <span class="o">(</span>/etc/php-fpm.conf<span class="o">)</span>
@@ -99,22 +95,20 @@ nginx    <span class="m">22551</span>  <span class="m">1</span>.0  <span class="
 nginx    <span class="m">22445</span>  <span class="m">1</span>.0  <span class="m">4</span>.7 <span class="m">307448</span>  <span class="m">5671</span> ?        S    <span class="m">20</span>:20   <span class="m">0</span>:00 php-fpm: pool www
 nginx    <span class="m">22041</span>  <span class="m">1</span>.0  <span class="m">4</span>.3 <span class="m">307448</span>  <span class="m">7511</span> ?        S    <span class="m">20</span>:12   <span class="m">0</span>:00 php-fpm: pool www
 nginx    <span class="m">17190</span>  <span class="m">0</span>.0  <span class="m">0</span>.3 <span class="m">109980</span>  <span class="m">3524</span> ?        S    <span class="m">20</span>:38   <span class="m">0</span>:00 nginx: worker process
-</pre></div>
-
+</code></pre></div>
 
 <p>And the culprit is <code>php-fpm</code>! A quick google found another Wordpress customer <a href="https://wordpress.org/support/topic/php-fpm-for-wordpress-gobbling-up-memory">suffering from similar symptoms</a>; the advice was to tweak the php-fpm pool configuration (<code>/etc/php-fpm.d/www.conf</code>) and tweak the <code>pm</code> configuration.  The main change was to move from <code>pm = dynamic</code> to <code>pm = ondemand</code> with a <code>pm.max_children</code> value of <code>5</code> (based on observing ~5% memory usage per worker).  After changing the configuration I restarted all services and checked the memory usage.</p>
-<div class="highlight"><pre><span></span>$ service php-fpm restart
+<div class="highlight"><pre><span></span><code>$ service php-fpm restart
 $ service nginx restart
 $ service mariadb restart
-</pre></div>
-
+</code></pre></div>
 
 <p>After restarting the memory usage was dramatically lower:</p>
-<div class="highlight"><pre><span></span>$ free -m
+<div class="highlight"><pre><span></span><code>$ free -m
               total        used        free      shared  buff/cache   available
 Mem:           <span class="m">1024</span>          <span class="m">96</span>         <span class="m">677</span>           <span class="m">7</span>         <span class="m">250</span>         <span class="m">830</span>
 Swap:             <span class="m">0</span>           <span class="m">0</span>           <span class="m">0</span>
-</pre></div>
+</code></pre></div>
   </div>
   <div class="tag-cloud">
     <p>

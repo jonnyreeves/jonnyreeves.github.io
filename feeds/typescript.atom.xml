@@ -1,97 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - TypeScript</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2015-08-20T21:00:00+01:00</updated><entry><title>Getting Proper Stack Traces with Mocha and TypeScript</title><link href="https://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/" rel="alternate"></link><published>2015-08-20T21:00:00+01:00</published><updated>2015-08-20T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-20:/2015/getting-proper-stack-traces-with-mocha-and-typescript/</id><summary type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$npm test
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jonny Reeves - TypeScript</title><link href="https://jonnyreeves.co.uk/" rel="alternate"></link><link href="https://jonnyreeves.co.uk/feeds/typescript.atom.xml" rel="self"></link><id>https://jonnyreeves.co.uk/</id><updated>2015-08-20T21:00:00+01:00</updated><subtitle>code &amp;&amp; coffee || music</subtitle><entry><title>Getting Proper Stack Traces with Mocha and TypeScript</title><link href="https://jonnyreeves.co.uk/2015/getting-proper-stack-traces-with-mocha-and-typescript/" rel="alternate"></link><published>2015-08-20T21:00:00+01:00</published><updated>2015-08-20T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-20:/2015/getting-proper-stack-traces-with-mocha-and-typescript/</id><summary type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;npm&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;
 
-  Calculator
-    #add
-      1) should work
-
-
-  0 passing (21ms)
-  1 failing
-
-  1) Calculator #add should work:
-
-      AssertionError: expected 6 to equal 7
-      + expected - actual
-
-      -6
-      +7
-
-      at Context.&amp;lt;anonymous&amp;gt; (test …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$npm test
-
-  Calculator
-    #add
-      1) should work
+  &lt;span class="n"&gt;Calculator&lt;/span&gt;
+    &lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt;
+      &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;work&lt;/span&gt;
 
 
-  0 passing (21ms)
-  1 failing
+  &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;passing&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="n"&gt;ms&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;failing&lt;/span&gt;
 
-  1) Calculator #add should work:
+  &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; &lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;work&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 
-      AssertionError: expected 6 to equal 7
-      + expected - actual
+      &lt;span class="n"&gt;AssertionError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;equal&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;actual&lt;/span&gt;
 
-      -6
-      +7
+      &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;
 
-      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.js:12:38)
-&lt;/pre&gt;&lt;/div&gt;
+      &lt;span class="k"&gt;at&lt;/span&gt; &lt;span class="n"&gt;Context&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;anonymous …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Mocha and TypeScript are awesome when everything's working, but when you have a failing test something's not quite right:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;npm&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;
 
+  &lt;span class="n"&gt;Calculator&lt;/span&gt;
+    &lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt;
+      &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;work&lt;/span&gt;
+
+
+  &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;passing&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="n"&gt;ms&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;failing&lt;/span&gt;
+
+  &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; &lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;work&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+
+      &lt;span class="n"&gt;AssertionError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;equal&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;actual&lt;/span&gt;
+
+      &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;
+
+      &lt;span class="k"&gt;at&lt;/span&gt; &lt;span class="n"&gt;Context&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;anonymous&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spec&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;38&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The stacktrace at the end points us to the failing assertion; however the stacktrace is pointing &lt;code&gt;Calculator.spec.js&lt;/code&gt; - not our TypeScript test-case.  &lt;/p&gt;
 &lt;p&gt;The TypeScript compiler (&lt;code&gt;tsc&lt;/code&gt;) will generate &lt;a href="http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/"&gt;source maps&lt;/a&gt; to enable debugging the TypeScript source rather than the transpiled ES5 javascript which gets written out by the compiler.  We can enable this with the &lt;code&gt;--sourcemap&lt;/code&gt; flag.&lt;/p&gt;
 &lt;p&gt;Problem is that V8 (the engine that powers Node) doesn't use these sourcemaps when generating stacktraces; &lt;a href="https://github.com/evanw/node-source-map-support"&gt;source-map-support&lt;/a&gt; to the rescue!  We can enable it by passing &lt;code&gt;--require source-map-support/register&lt;/code&gt; to &lt;code&gt;mocha&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
-    &amp;quot;scripts&amp;quot;: {
-      &amp;quot;test&amp;quot;: &amp;quot;mocha --require source-map-support/register test/**/*.spec.js&amp;quot;
-    }
-}
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;{&lt;/span&gt;
+&lt;span class="err"&gt;    &amp;quot;scripts&amp;quot;: {&lt;/span&gt;
+&lt;span class="err"&gt;      &amp;quot;test&amp;quot;: &amp;quot;mocha --require source-map-support/register test/**/*.spec.js&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;    }&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we get an accurate stacktrace on failure :)&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;  1) Calculator #add should work:
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; &lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;work&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 
-      AssertionError: expected 6 to equal 7
-      + expected - actual
+      &lt;span class="n"&gt;AssertionError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;equal&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;actual&lt;/span&gt;
 
-      -6
-      +7
+      &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;
 
-      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.ts:15:22)
-&lt;/pre&gt;&lt;/div&gt;
+      &lt;span class="k"&gt;at&lt;/span&gt; &lt;span class="n"&gt;Context&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;anonymous&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spec&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;22&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;p&gt;Thanks to redditor &lt;a href="https://www.reddit.com/user/pieeta"&gt;pieeta&lt;/a&gt; who tipped me off :)  I've posted the sample project up on &lt;a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces"&gt;Github&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Using Chai with TypeScript and Mocha</title><link href="https://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/" rel="alternate"></link><published>2015-08-14T07:00:00+01:00</published><updated>2015-08-14T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-14:/2015/using-chai-with-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a fan of extending &lt;code&gt;Object.prototype&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Thanks to redditor &lt;a href="https://www.reddit.com/user/pieeta"&gt;pieeta&lt;/a&gt; who tipped me off :)  I've posted the sample project up on &lt;a href="https://github.com/jonnyreeves/mocha-typescript-stacktraces"&gt;Github&lt;/a&gt;.&lt;/p&gt;</content><category term="TypeScript"></category></entry><entry><title>Using Chai with TypeScript and Mocha</title><link href="https://jonnyreeves.co.uk/2015/using-chai-with-typescript-and-mocha/" rel="alternate"></link><published>2015-08-14T07:00:00+01:00</published><updated>2015-08-14T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-14:/2015/using-chai-with-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Continuing my work on &lt;a href="/2015/injecting-into-constructors-with-typescript-decorators/"&gt;Decorator-drive dependency injection in Typescript&lt;/a&gt; I've overhauled the tests by replacing the manual assertions with &lt;a href="http://chaijs.com/"&gt;chai&lt;/a&gt;.  Chai provides a fluent api for writing descriptive assertions - there are a couple of different flavours, personally I feel the &lt;a href="http://chaijs.com/guide/styles/"&gt;&lt;code&gt;expect&lt;/code&gt;&lt;/a&gt; style pairs well with TypeScript as I'm not a fan of extending &lt;code&gt;Object.prototype&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Installation is straight forward. First install &lt;code&gt;chai&lt;/code&gt; as a dev dependency:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install chai --save-dev
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;npm install chai --save-dev&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Next grab the &lt;code&gt;d.ts&lt;/code&gt; file for chai via &lt;a href="http://definitelytyped.org/tsd/"&gt;&lt;code&gt;tsd&lt;/code&gt;&lt;/a&gt; to obtain the type definitions.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;tsd install chai --save
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;tsd install chai --save&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;You can now start refactoring your test cases; given the following simple mocha test-case:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;describe(&amp;#39;Calculator&amp;#39;, () =&amp;gt; {
-  it(&amp;#39;should add two numbers&amp;#39;, () =&amp;gt; {
-    const calc : Calculator = new Calculator();
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Calculator&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should add two numbers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;const&lt;/span&gt; &lt;span class="n"&gt;calc&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
-    // Manual assertion.
-    if (calc.add(5, 3) !== 8) {
-      throw new Error(&amp;#39;expected 5 + 3 to equal 8&amp;#39;);
-    }
-  });
-});
-&lt;/pre&gt;&lt;/div&gt;
-
+    &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Manual&lt;/span&gt; &lt;span class="k"&gt;assertion&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;calc&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!==&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;expected 5 + 3 to equal 8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="err"&gt;}&lt;/span&gt;
+  &lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We can leverage chai's expect method to perform the assertion:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;expect&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;chai&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;expect&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;chai&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="n"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Calculator&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;should add two numbers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -101,50 +95,46 @@
     &lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;calc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;equal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;When running the tests, chai will provide a useful error message should the assertion fail:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1 failing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;failing&lt;/span&gt;
 
-  1) Calculator should add two numbers:
+  &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;Calculator&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;two&lt;/span&gt; &lt;span class="n"&gt;numbers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 
-      AssertionError: expected 6 to equal 8
-      + expected - actual
+      &lt;span class="n"&gt;AssertionError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;equal&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;expected&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;actual&lt;/span&gt;
 
-      -8
-      +6
+      &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;
+      &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;
 
-      at Context.&amp;lt;anonymous&amp;gt; (test/Calculator.spec.js:26:45)
-&lt;/pre&gt;&lt;/div&gt;
+      &lt;span class="k"&gt;at&lt;/span&gt; &lt;span class="n"&gt;Context&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;anonymous&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Calculator&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;spec&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;26&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;45&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;p&gt;Check out &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3"&gt;this pull request&lt;/a&gt; which highlights how I integrated chai into the ts-prop-inject project.&lt;/p&gt;</content></entry><entry><title>Injecting into Constructors with TypeScript Decorators</title><link href="https://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/" rel="alternate"></link><published>2015-08-06T07:00:00+01:00</published><updated>2015-08-06T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-06:/2015/injecting-into-constructors-with-typescript-decorators/</id><summary type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;p&gt;Check out &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/3"&gt;this pull request&lt;/a&gt; which highlights how I integrated chai into the ts-prop-inject project.&lt;/p&gt;</content><category term="TypeScript"></category></entry><entry><title>Injecting into Constructors with TypeScript Decorators</title><link href="https://jonnyreeves.co.uk/2015/injecting-into-constructors-with-typescript-decorators/" rel="alternate"></link><published>2015-08-06T07:00:00+01:00</published><updated>2015-08-06T07:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-06:/2015/injecting-into-constructors-with-typescript-decorators/</id><summary type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
 
   &lt;span class="c1"&gt;// Although this would be the preferred syntax it will throw a compiler error,&lt;/span&gt;
-  &lt;span class="c1"&gt;// TS1206: Decorators are not …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="c1"&gt;// TS1206: Decorators are not …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;In the &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;previous post&lt;/a&gt; I added support for injecting into methods; this post provides the last missing InjectionPoint, constructor injection.  As with &lt;a href="http://pierrechamberlain.ca/blog/2011/04/custom_metadata/"&gt;AS3 Metadata&lt;/a&gt;, you can't annotate the &lt;code&gt;#constructor()&lt;/code&gt; method directly:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
 
   &lt;span class="c1"&gt;// Although this would be the preferred syntax it will throw a compiler error,&lt;/span&gt;
   &lt;span class="c1"&gt;// TS1206: Decorators are not valid here.&lt;/span&gt;
   &lt;span class="kd"&gt;@inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;firstName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="kr"&gt;constructor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Instead, we need to add the decorator to the Class, ie:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;@inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;firstName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;@inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;firstName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;MyClass&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;constructor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This is slightly awkward as it moves our decorator away from the constructor declaration which contains our injection arguments - that's somewhat compounded by the fact constructor injection is the most desirable form of the three (constructor, method and property) as it promotes immutability by ensuring an object has all of its dependencies when constructed - still, at least it works :)&lt;/p&gt;
 &lt;p&gt;The first change is to the &lt;code&gt;@inject&lt;/code&gt; decorator, previously we expected the first argument to the decoratorFactory (&lt;code&gt;target&lt;/code&gt;) to be the instance of the Class being decorated; however because we are decorating the class itself, the decoratorFactory can't be invoked with the instance, instead it receives a reference to the Class' constructor function, likewise it does not receive a &lt;code&gt;decoratedPropertyName&lt;/code&gt; argument.:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;decoratorFactory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt; : &lt;span class="kt"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nb"&gt;Function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;decoratedPropertyName?&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;targetType&lt;/span&gt; : &lt;span class="kt"&gt;Function&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
@@ -157,8 +147,7 @@
 
     &lt;span class="cm"&gt;/* ... */&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Next we need to record the &lt;code&gt;injectionKeys&lt;/code&gt; that the user wants to be used to fulfill the constructor's dependencies - our &lt;code&gt;InjectionPoint&lt;/code&gt; object is currently used to record dependencies, however it doesn't really fit for recording a constructor's dependencies:&lt;/p&gt;
 &lt;ul&gt;
@@ -166,7 +155,7 @@
 &lt;li&gt;&lt;code&gt;InjectionPoint#inject()&lt;/code&gt; is expected to perform the injection against the target instance, but we need to Construct a new instance (and return it)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;To deal with these special cases I ended up creating the &lt;code&gt;ConstructorInjectionPoint&lt;/code&gt; class which specialises &lt;code&gt;InjectionPoint&lt;/code&gt; to deal with the issues outlined above:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;ConstructorInjectionPoint&lt;/span&gt; &lt;span class="kr"&gt;extends&lt;/span&gt; &lt;span class="nx"&gt;InjectionPoint&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;ConstructorInjectionPoint&lt;/span&gt; &lt;span class="kr"&gt;extends&lt;/span&gt; &lt;span class="nx"&gt;InjectionPoint&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kr"&gt;constructor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="kr"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;constructor&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;injectionKeys&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
@@ -175,12 +164,11 @@
         &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Unsupported operation #inject()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This style of specialisation is not ideal; the worst offender is that &lt;code&gt;ConstructorInjectionPoint#inject()&lt;/code&gt; throws an unsupported operation error - this design leads to a violation of the Liskov Substitution Principle (all sub-types should be interchangeable with their parent type) so it's something I plan to come back and revisit at a later date. &lt;/p&gt;
 &lt;p&gt;The decorator can now create the appropriate &lt;code&gt;InjectionPoint&lt;/code&gt; type based on the arguments it receives&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;decoratorFactory&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt; : &lt;span class="kt"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="nb"&gt;Function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;decoratedPropertyName?&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;targetType&lt;/span&gt; : &lt;span class="kt"&gt;Function&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;injectionPoint&lt;/span&gt; : &lt;span class="kt"&gt;InjectionPoint&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -199,11 +187,10 @@
 
     &lt;span class="nx"&gt;targetType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;__inject__&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;injectionPoint&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;propertyName&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;injectionPoint&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now that the &lt;code&gt;ConstructorInjectionPoint&lt;/code&gt; is being recorded, we need to modify &lt;code&gt;Injector#instantiate()&lt;/code&gt; to make use of it when creating the resulting instance:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="nx"&gt;instantiate&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Class&lt;/span&gt; : &lt;span class="kt"&gt;Constructable&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;T&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// Create an instance of the target Class applying the Constructor InjectionPoint if it has one.&lt;/span&gt;
     &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;instance&lt;/span&gt; : &lt;span class="kt"&gt;T&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;createInjecteeInstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -226,11 +213,10 @@
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;result&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The &lt;code&gt;invokeConstructor()&lt;/code&gt; is a necessary evil that crops up in a lot of languages where you wish to call a constructor function with the &lt;code&gt;new&lt;/code&gt; keyword.  Note that you can't make use of &lt;code&gt;Function.apply&lt;/code&gt; here as there is no valid scope to pass (the scope is the new instance!), as a result we end up with this familiar pattern, the pyramid of doom:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;invokeConstructor&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Class&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;args&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;any&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;T&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="nx"&gt;args&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;any&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;T&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;invokeConstructor&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;T&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Class&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;args&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;any&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;T&lt;/span&gt; &lt;span class="p"&gt;},&lt;/span&gt; &lt;span class="nx"&gt;args&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;any&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;T&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;args&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nx"&gt;0&lt;/span&gt;: &lt;span class="kt"&gt;return&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
         &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nx"&gt;1&lt;/span&gt;: &lt;span class="kt"&gt;return&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;args&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
@@ -239,18 +225,17 @@
         &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
           &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;I got bored...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;p&gt;As before I've pushed the code to &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection"&gt;Github&lt;/a&gt; and create a &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2"&gt;Pull Request&lt;/a&gt; to highlight changes from the previous post.&lt;/p&gt;</content></entry><entry><title>Injecting into Methods with TypeScript Decorators</title><link href="https://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/" rel="alternate"></link><published>2015-08-03T21:00:00+01:00</published><updated>2015-08-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-03:/2015/injecting-into-methods-with-typescript-decorators/</id><summary type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Person&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;p&gt;As before I've pushed the code to &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/03-ctor-injection"&gt;Github&lt;/a&gt; and create a &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/2"&gt;Pull Request&lt;/a&gt; to highlight changes from the previous post.&lt;/p&gt;</content><category term="TypeScript"></category></entry><entry><title>Injecting into Methods with TypeScript Decorators</title><link href="https://jonnyreeves.co.uk/2015/injecting-into-methods-with-typescript-decorators/" rel="alternate"></link><published>2015-08-03T21:00:00+01:00</published><updated>2015-08-03T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-03:/2015/injecting-into-methods-with-typescript-decorators/</id><summary type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Person&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_firstName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_lastName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
   &lt;span class="kd"&gt;@inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;firstName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;lastName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="nx"&gt;setName&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;first&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;last&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;_firstName …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Person&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;_firstName …&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Expanding upon my &lt;a href="/2015/basic-typescript-dependency-injection-with-decorators/"&gt;last post on Property based Dependency Injection&lt;/a&gt;, let's have a look at what we need to do in order to inject into methods - here's what we want to achieve:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Person&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_firstName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;_lastName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
@@ -264,11 +249,10 @@
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="sb"&gt;`&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;firstName&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt; &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;lastName&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt;`&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Here we are decorating the &lt;code&gt;Person#setName()&lt;/code&gt; method with the &lt;code&gt;@inject&lt;/code&gt; decorator and requesting the values mapped against the 'firstName' and 'lastName' injection keys from the Dependency Container - our test case would look something like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;// Setup the container&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;// Setup the container&lt;/span&gt;
 &lt;span class="nx"&gt;injector&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;firstName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Jonny&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="nx"&gt;injector&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;lastName&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Reeves&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
@@ -279,16 +263,14 @@
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;jonny&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getFullName&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;!==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Jonny Reeves&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;expected jonny.getFullName() to be Jonny Reeves but was &amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;jonny&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getFullName&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;First of all we need to modify our &lt;code&gt;@inject&lt;/code&gt; decorator, originally it only expected a single argument (the &lt;code&gt;injectionKey&lt;/code&gt;), as methods can take more than one argument we need to make use of &lt;a href=""&gt;rest parameters&lt;/a&gt; to accept any number of strings:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We face a slightly tricker challenge in the fact that injecting values into methods requires us to inoke a method rather than just assinging a property on the target object, in the previous implementation the &lt;code&gt;__inject__&lt;/code&gt; Object was a simple hash of property name to injectionKey, but in order to inovoke the target method with the injection values in the correct scope we will need access to the target object as well.  To group this data together I've created an &lt;code&gt;InjectionPoint&lt;/code&gt; object and assign this as the new value in the &lt;code&gt;__inject__&lt;/code&gt; map:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(...&lt;/span&gt;&lt;span class="nx"&gt;injectionKeys&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;recordInjection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt; : &lt;span class="kt"&gt;Object&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="cm"&gt;/* ... */&lt;/span&gt;
 
@@ -296,11 +278,10 @@
                                         &lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;injectionKeys&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we're storing the &lt;code&gt;InjectionPoint&lt;/code&gt; data we need to modify &lt;code&gt;Injector#instantiate()&lt;/code&gt; to make use of it when invoked.  The first change is driven by the fact the target Class' &lt;code&gt;__inject__&lt;/code&gt; property is a hash of propertyNames to &lt;code&gt;InjectionPoint&lt;/code&gt;'s and that an &lt;code&gt;InjectionPoint&lt;/code&gt; provides one or more injectionKeys (before it was a hash of propertyNames to a single injectionKey), &lt;code&gt;Injector#getInjectionValues()&lt;/code&gt; makes light work of this returning a collection of values to be injected:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="cm"&gt;/* ... */&lt;/span&gt;
 
   &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;getInjectionValues&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;injectionPoint&lt;/span&gt; : &lt;span class="kt"&gt;InjectionPoint&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;any&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -308,11 +289,10 @@
       &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;key&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;valuesByInjectionKey&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;key&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we need to determine how these values should be injected (either via a property of the target object, or by invoking a method of the target object).  Seeing as the &lt;code&gt;InjectionPoint&lt;/code&gt; has all the knowledge it needs to perform the correct injection I employed the &lt;a href="http://c2.com/cgi/wiki?HollywoodPrinciple"&gt;Hollywood Principle&lt;/a&gt; and added an &lt;code&gt;InjectionPoint#inject()&lt;/code&gt; method which the &lt;code&gt;Injector&lt;/code&gt; invokes:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;InjectionPoint&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;InjectionPoint&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="cm"&gt;/* ... */&lt;/span&gt;
 
   &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;values&lt;/span&gt; : &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nx"&gt;any&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -325,40 +305,36 @@
     &lt;span class="p"&gt;}&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;p&gt;As before, the code and unit tests can be found over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt; - I've also raised a pull request on the repo to highlight the changes: &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/1"&gt;github.com/jonnyreeves/ts-prop-injection/pull/1&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Basic Typescript Dependency Injection with Decorators</title><link href="https://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/" rel="alternate"></link><published>2015-08-01T21:00:00+01:00</published><updated>2015-08-01T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-01:/2015/basic-typescript-dependency-injection-with-decorators/</id><summary type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.&lt;/p&gt;
+&lt;p&gt;As before, the code and unit tests can be found over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/02-method-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt; - I've also raised a pull request on the repo to highlight the changes: &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/pull/1"&gt;github.com/jonnyreeves/ts-prop-injection/pull/1&lt;/a&gt;.&lt;/p&gt;</content><category term="TypeScript"></category></entry><entry><title>Basic Typescript Dependency Injection with Decorators</title><link href="https://jonnyreeves.co.uk/2015/basic-typescript-dependency-injection-with-decorators/" rel="alternate"></link><published>2015-08-01T21:00:00+01:00</published><updated>2015-08-01T21:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-08-01:/2015/basic-typescript-dependency-injection-with-decorators/</id><summary type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Typescript 1.5 &lt;a href="https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#decorators"&gt;introduced decorators&lt;/a&gt; to the language which lets us experiment with &lt;a href="https://en.wikipedia.org/wiki/Metaprogramming"&gt;meta-programming&lt;/a&gt;. Metadata driven Dependency Injection frameworks allow you to write highly decoupled units which are easy to test and switch out between projects / frameworks.  Let's see how we can use decorators to get some simple property injection working with TypeScript.&lt;/p&gt;
 &lt;p&gt;Let's start with an example of what we want to achieve:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;LoginService&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;LoginService&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="nx"&gt;userModel&lt;/span&gt; : &lt;span class="kt"&gt;UserModel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="nx"&gt;performLogin&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;void&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;userModel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;isLoggedIn&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
       &lt;span class="c1"&gt;// ... implementation omitted...&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Here our &lt;code&gt;LoginService&lt;/code&gt; wants to check if our user is logged in before doing anything; as a result we need to provide a reference to the &lt;code&gt;UserModel&lt;/code&gt; before invoking &lt;code&gt;LoginService#performLogin()&lt;/code&gt;, we can do this manually:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;myUserModel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;UserModel&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;myUserModel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;UserModel&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;myLoginService&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;LoginService&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
 &lt;span class="c1"&gt;// Manually inject the dependency before using the Service.&lt;/span&gt;
 &lt;span class="nx"&gt;myLoginService&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;userModel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;myUserModel&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="nx"&gt;myLoginService&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;performLogin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We can use a decorator to record the fact that &lt;code&gt;LoginService&lt;/code&gt; has a dependency on &lt;code&gt;UserModel&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;LoginService&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;LoginService&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kd"&gt;@inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;UserModel&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="nx"&gt;userModel&lt;/span&gt; : &lt;span class="kt"&gt;UserModel&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we need to implement our &lt;code&gt;@inject&lt;/code&gt; decorator, the contract requires us to export a factory function (ie: a function which returns a function) - this factory function will be invoked each time a new instance of the supplied Class is constructed giving us a chance to modify the behavior of the program at run-time.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;injectionKey&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;inject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;injectionKey&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
 
     &lt;span class="c1"&gt;// Our decorator provides a factory function which will be invoked with an&lt;/span&gt;
     &lt;span class="c1"&gt;// instance of the decorated Class and the name of the decorated property.&lt;/span&gt;
@@ -377,11 +353,10 @@
         &lt;span class="nx"&gt;targetType&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;__inject__&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;decoratedPropertyName&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;};&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we need somewhere to record injection mappings so we have values to inject into decorated properties:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="kr"&gt;private&lt;/span&gt; &lt;span class="nx"&gt;valuesByInjectionKey&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="nx"&gt;injectionKey&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;any&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{};&lt;/span&gt;
 
     &lt;span class="cm"&gt;/**&lt;/span&gt;
@@ -396,17 +371,15 @@
         &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;valuesByInjectionKey&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Continuing our original example we would map the injectionKey &lt;code&gt;UserModel&lt;/code&gt; to the instance of &lt;code&gt;UserModel&lt;/code&gt; that we want injected, eg:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;injector&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;injector&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;span class="nx"&gt;injector&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;mapValue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;UserModel&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;UserModel&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Finally we need to introduce a factory function which will instantiate a class but also fulfill injections based on mappings in the Injector - to enable this we add an &lt;code&gt;#instantiate()&lt;/code&gt; method to &lt;code&gt;Injector&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Injector&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="cm"&gt;/**&lt;/span&gt;
 &lt;span class="cm"&gt;     * Create a new instance of the supplied Class fulfilling any property &lt;/span&gt;
 &lt;span class="cm"&gt;     * injections which are present in the injectionRules map.&lt;/span&gt;
@@ -417,7 +390,7 @@
 
         &lt;span class="c1"&gt;// Loop through all properties decorated with `@inject()` in this Class and&lt;/span&gt;
         &lt;span class="c1"&gt;// try to satisfy them if there is a mapped value.&lt;/span&gt;
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;injectionPoint&lt;/span&gt; &lt;span class="nx"&gt;of&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getInjectionPoints&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nx"&gt;injectionPoint&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;getInjectionPoints&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Class&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
             &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;injectionValue&lt;/span&gt; : &lt;span class="kt"&gt;any&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;valuesByInjectionKey&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;injectionPoint&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;injectionKey&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 
             &lt;span class="c1"&gt;// Perform the injection if we have a value assigned to this injectionKey.&lt;/span&gt;
@@ -452,22 +425,20 @@
     &lt;span class="nx"&gt;propertyName&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="nx"&gt;injectionKey&lt;/span&gt; : &lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The &lt;code&gt;Injector#intantiate()&lt;/code&gt; method looks for the &lt;code&gt;#__inject__&lt;/code&gt; property added to a Class' constructor function by the &lt;code&gt;@inject&lt;/code&gt; decorator and then uses the values that hash contains to fulfil the decorated dependencies of the target Class - ie:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;myUserModel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;UserModel&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;myUserModel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;UserModel&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;span class="nx"&gt;injector&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;mapValue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;UserModel&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;myUserModel&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
 &lt;span class="c1"&gt;// `#userModel` will be injected automatically by by injector&lt;/span&gt;
 &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;myLoginService&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;injector&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;instantiate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;LoginService&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="nx"&gt;myLoginService&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;performLogin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;A complete example with Mocha Tests provided over at &lt;a href="https://github.com/jonnyreeves/ts-prop-injection/tree/01-property-injection"&gt;github.com/jonnyreeves/ts-prop-injection&lt;/a&gt;.  &lt;/p&gt;
-&lt;p&gt;Part 2: &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;Adding support of method injection&lt;/a&gt;.&lt;/p&gt;</content></entry><entry><title>Hello Typescript and Mocha!</title><link href="https://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><published>2015-07-27T20:00:00+01:00</published><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:/2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm init
+&lt;p&gt;Part 2: &lt;a href="/2015/injecting-into-methods-with-typescript-decorators/"&gt;Adding support of method injection&lt;/a&gt;.&lt;/p&gt;</content><category term="TypeScript"></category></entry><entry><title>Hello Typescript and Mocha!</title><link href="https://jonnyreeves.co.uk/2015/hello-typescript-and-mocha/" rel="alternate"></link><published>2015-07-27T20:00:00+01:00</published><updated>2015-07-27T20:00:00+01:00</updated><author><name>Jonny Reeves</name></author><id>tag:jonnyreeves.co.uk,2015-07-27:/2015/hello-typescript-and-mocha/</id><summary type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
 description: Getting started with TypeScript and mocha
@@ -476,11 +447,10 @@ test command: mocha
 git repository:
 keywords:
 license: (ISC)
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Let's see what we can do with TypeScript then.  First things first we  need to create a local project to hack on:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm init
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ npm init
 name: (hello-ts-mocha)
 version: (1.0.0)
 description: Getting started with TypeScript and mocha
@@ -489,61 +459,53 @@ test command: mocha
 git repository:
 keywords:
 license: (ISC)
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now let's grab the TypeScript compiler so we can build the project:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install typescript --save
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;npm install typescript --save&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now let's grab Mocha for our tests&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install mocha --save-dev
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;npm install mocha --save-dev&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2 id="create-a-subject-to-test"&gt;Create a Subject to Test&lt;/h2&gt;
 &lt;p&gt;Time to create our subject that we're going to test, let's do some TDD (:  Create a new file, &lt;code&gt;index.ts&lt;/code&gt; in the project root&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Calculator&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kr"&gt;export&lt;/span&gt; &lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="kr"&gt;class&lt;/span&gt; &lt;span class="nx"&gt;Calculator&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nx"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;x&lt;/span&gt; : &lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;y&lt;/span&gt; : &lt;span class="kt"&gt;number&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;number&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;And now to compile this down to ES5 so we can execute it under node:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;./node_modules/typescript/bin/tsc index.ts --module commonjs
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;./node_modules/typescript/bin/tsc index.ts --module commonjs&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We can simplify the compilation step by adding a prepublish &lt;a href="https://docs.npmjs.com/misc/scripts"&gt;npm script&lt;/a&gt; to the &lt;code&gt;package.json&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
-    ...
-    &amp;quot;scripts&amp;quot;: {
-        &amp;quot;prepublish&amp;quot;: &amp;quot;tsc index.ts --module commonjs &amp;quot;,
-        &amp;quot;test&amp;quot;: &amp;quot;mocha&amp;quot;
-    }
-    ...
-}
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;{&lt;/span&gt;
+&lt;span class="err"&gt;    ...&lt;/span&gt;
+&lt;span class="err"&gt;    &amp;quot;scripts&amp;quot;: {&lt;/span&gt;
+&lt;span class="err"&gt;        &amp;quot;prepublish&amp;quot;: &amp;quot;tsc index.ts --module commonjs &amp;quot;,&lt;/span&gt;
+&lt;span class="err"&gt;        &amp;quot;test&amp;quot;: &amp;quot;mocha&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;    }&lt;/span&gt;
+&lt;span class="err"&gt;    ...&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We can now compile with &lt;code&gt;npm install&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id="adding-a-test"&gt;Adding a Test&lt;/h2&gt;
 &lt;p&gt;Let's create our first test; following convention lets create our test-case in &lt;code&gt;test/CalculatorTest&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Before writing the test-case we need to grab the Mocha Type Definitions (requried for the TypeScript compiler (&lt;code&gt;tsc&lt;/code&gt;) to work).  Easiest way to get these it to use the DefinitelyTyped TypeScript Definition manager (&lt;code&gt;tsd&lt;/code&gt;).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;npm install tsd -g
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;npm install tsd -g&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Once installed we can use it to grab mocha's type definitions:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;tsd install mocha --save
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;tsd install mocha --save&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This will add a &lt;code&gt;typings/&lt;/code&gt; folder to our project.  Here's what our source tree looks like so far:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;hello-ts-mocha
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;hello-ts-mocha
 ├── index.ts
 ├── node_modules
 │   └── typescript
@@ -554,11 +516,10 @@ license: (ISC)
 └── typings
     ├── mocha
     └── tsd.d.ts
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now we can reference the mocha type definition using a &lt;code&gt;/// &amp;lt;reference /&amp;gt;&lt;/code&gt; comment:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;/// &amp;lt;reference path=&amp;quot;../typings/mocha/mocha.d.ts&amp;quot; /&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;/// &amp;lt;reference path=&amp;quot;../typings/mocha/mocha.d.ts&amp;quot; /&amp;gt;&lt;/span&gt;
 &lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="nx"&gt;Calculator&lt;/span&gt; &lt;span class="nx"&gt;from&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;../index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="nx"&gt;describe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Calculator&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -577,22 +538,20 @@ license: (ISC)
         &lt;span class="p"&gt;});&lt;/span&gt;
     &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Before we can run the tests we need to compile them, best way to do this is to add a &lt;code&gt;preTest&lt;/code&gt; NPM script to invoke the typscript compiler before running mocha. Open up the &lt;code&gt;package.json&lt;/code&gt; file again:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
-    ...
-    &amp;quot;scripts&amp;quot;: {
-        &amp;quot;pretest&amp;quot;: &amp;quot;tsc test/*Test.ts --module commonjs&amp;quot;,
-        &amp;quot;test&amp;quot;: &amp;quot;mocha&amp;quot;
-    }
-}
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;{&lt;/span&gt;
+&lt;span class="err"&gt;    ...&lt;/span&gt;
+&lt;span class="err"&gt;    &amp;quot;scripts&amp;quot;: {&lt;/span&gt;
+&lt;span class="err"&gt;        &amp;quot;pretest&amp;quot;: &amp;quot;tsc test/*Test.ts --module commonjs&amp;quot;,&lt;/span&gt;
+&lt;span class="err"&gt;        &amp;quot;test&amp;quot;: &amp;quot;mocha&amp;quot;&lt;/span&gt;
+&lt;span class="err"&gt;    }&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We can now run our test-case with &lt;code&gt;npm test&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm test
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ npm test
 &amp;gt; ts-mocha@1.0.0 pretest /private/tmp/foo
 &amp;gt; tsc test/*Test.ts --module commonjs
 
@@ -610,7 +569,6 @@ license: (ISC)
   1) Calculator #add should add two numbers together:
      Error: Expected 2 + 3 = 5 but was 0
       at Context.&amp;lt;anonymous&amp;gt; (test/CalculatorTest.js:12:23)
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;p&gt;Have fun fixing the test-case :)  Full source over over at &lt;a href="https://github.com/jonnyreeves/hello-ts-mocha"&gt;github.com/jonnyreeves/hello-ts-mocha&lt;/a&gt;&lt;/p&gt;</content></entry></feed>
+&lt;p&gt;Have fun fixing the test-case :)  Full source over over at &lt;a href="https://github.com/jonnyreeves/hello-ts-mocha"&gt;github.com/jonnyreeves/hello-ts-mocha&lt;/a&gt;&lt;/p&gt;</content><category term="TypeScript"></category></entry></feed>

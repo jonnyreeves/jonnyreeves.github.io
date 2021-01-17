@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="https://jonnyreeves.co.uk/theme/css/style.min.css">
+  <link rel="stylesheet" type="text/css" href="https://jonnyreeves.co.uk/theme/css/pygments.min.css">
+  <link rel="stylesheet" type="text/css" href="https://jonnyreeves.co.uk/theme/css/font-awesome.min.css">
+  <link href="https://jonnyreeves.co.uk/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jonny Reeves Atom">
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+<meta name="author" content="Jonny Reeves" />
+<meta name="description" content="My kids love CBBC and CBeebies; with Max, who is currently 6, loving Danger Mouse. CBBC frequently advertise their website, which contains a great collection of mini-games, so naturally when they started promoting the latest Danger Mouse game, Max wanted to play it. Given Max's age I use Screen Time …" />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Jonny Reeves"/>
+<meta property="og:title" content="Making an Unofficial CBBC Anrdoid App"/>
+<meta property="og:description" content="My kids love CBBC and CBeebies; with Max, who is currently 6, loving Danger Mouse. CBBC frequently advertise their website, which contains a great collection of mini-games, so naturally when they started promoting the latest Danger Mouse game, Max wanted to play it. Given Max's age I use Screen Time …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://jonnyreeves.co.uk/2021/making-an-unofficial-cbbc-anrdoid-app/"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2021-01-17 18:00:00+00:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://jonnyreeves.co.uk/author/jonny-reeves.html">
+<meta property="article:section" content="2021"/>
+<meta property="og:image" content="/images/avatar.jpg">  <title>Jonny Reeves &ndash; Making an Unofficial CBBC Anrdoid App</title>
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="/">
+        <img src="/images/avatar.jpg" alt="Jonny Reeves" title="Jonny Reeves">
+      </a>
+      <h1><a href="/">Jonny Reeves</a></h1>
+      <p>code && coffee || music</p>
+      <nav>
+        <ul class="list">
+        </ul>
+      </nav>
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://br.linkedin.com/in/jonnyreeves/en" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-google" href="https://plus.google.com/+JohnReeves" target="_blank"><i class="fa fa-google"></i></a></li>
+        <li><a class="sc-stack-overflow" href="http://stackoverflow.com/users/227349/jonnyreeves" target="_blank"><i class="fa fa-stack-overflow"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/jonnyreeves" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+
+<article>
+  <header>
+    <h1 id="making-an-unofficial-cbbc-anrdoid-app">Making an Unofficial CBBC Anrdoid App</h1>
+    <p>Posted on Sun 17 January 2021 in <a href="https://jonnyreeves.co.uk/category/2021.html">2021</a></p>
+  </header>
+  <div>
+    <p>My kids love CBBC and CBeebies; with Max, who is currently 6, loving Danger Mouse. CBBC frequently advertise their website, which contains a great collection of mini-games, so naturally when they started promoting the latest Danger Mouse game, Max wanted to play it.</p>
+<p><img alt="CBBC Danger Mouse Game" src="/images/2021/cbbc-danger-mouse-game.jpg"></p>
+<p>Given Max's age I use <a href="https://screentimelabs.com">Screen Time</a> to both restict how much time he can spend on his tablet and control which apps he can use. I don't consider the WWW a particuarly safe place for six year olds, so a web-browser is currently off limits to him. This presented a problem: unlike with the excellent <a href="https://www.bbc.co.uk/cbeebies/apps/cbeebies-playtime-island-app">CBeebies Playtime Island App</a>, there is no CBBC app, the only to play the CBBC games is via the <a href="https://www.bbc.co.uk/cbbc">CBBC website</a>.</p>
+<h2 id="lets-get-hacking">Let's get hacking</h2>
+<p>No CBBC App, no problem - I've never written an Android app before, but I said to myself "how hard can this be?" - pretty easy it turns out, and in less than 3 hours I had built my own CBBC App.</p>
+<p>The first step was finding a starter project, with a quick bit of googling I landed upon <a href="https://github.com/successtar/web-to-app">successtar/web-to-app</a> which provided all the boiler plate I needed to create a simple app that spawned a WebView. A quick install of Android Studio later and I had built my first APK which opened https://bbc.co.uk/cbbc. </p>
+<p>A little bit of hacking later and I had customised the icon and <a href="https://github.com/successtar/web-to-app/pull/7">added logic</a> to prevent Max navigating outside of an allowed list of URL prefixes which was necessary as tapping the "BBC" logo in the top left quickly led to BBC News, which isn't always suitable for a 6 year old to explore on their own.</p>
+<p>With all this in place I was able to side-load the APK onto Max's tablet and add it to the list of allowed apps in Screen Time.</p>
+<p><img alt="My unofficial CBBC app in action" src="/images/2021/cbbc-app-in-action.jpg"></p>
+<h2 id="downloading-the-app">Downloading the App</h2>
+<p>It would be great if the BBC could release soemthing similar, but in the meantime, if you want to use this unofficial CBBC app for yourself, you can grab a pre-built APK from the <a href="https://github.com/jonnyreeves/unofficial-cbbc-app/releases">releases page</a> (no additional permissions required), or build it from <a href="https://github.com/jonnyreeves/unofficial-cbbc-app">the source</a> yourself.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'jonnyreeves';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</article>
+
+    <footer>
+      <p>&copy; Jonny Reeves </p>
+<p>Built using <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a></p>    </footer>
+  </main>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30309890-1', 'auto');
+  ga('send', 'pageview');
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "name": "Making an Unofficial CBBC Anrdoid App",
+  "headline": "Making an Unofficial CBBC Anrdoid App",
+  "datePublished": "2021-01-17 18:00:00+00:00",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Jonny Reeves",
+    "url": "https://jonnyreeves.co.uk/author/jonny-reeves.html"
+  },
+  "image": "/images/avatar.jpg",
+  "url": "https://jonnyreeves.co.uk/2021/making-an-unofficial-cbbc-anrdoid-app/",
+  "description": "My kids love CBBC and CBeebies; with Max, who is currently 6, loving Danger Mouse. CBBC frequently advertise their website, which contains a great collection of mini-games, so naturally when they started promoting the latest Danger Mouse game, Max wanted to play it. Given Max's age I use Screen Time …"
+}
+</script></body>
+</html>
